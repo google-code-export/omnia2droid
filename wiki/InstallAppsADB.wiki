@@ -1,0 +1,105 @@
+#summary Configuring your device and installing apps using the Android Debug Bridge (ADB).
+#labels Phase-Support
+
+*UPDATE : With the latest version of the Beta, ADB is working perfectly. Just follow the steps below ;)
+
+= Introduction =
+
+Unlike the iPhone, Android devices have a great feature : they can install any app package (.apk), without needing them to be available on the market. You can do that by copying an .apk file to your phone and launching it using a file explorer, or you can use ADB.
+
+ADB (Android Debug Bridge) is a powerful tool intended for developers. It has a lot of features, including instant debugging of apps, monitoring the Android OS, and installing apps. It can be used over USB and Wifi.
+
+This guide will describe the procedure of installing ADB on your computer, configuring both your computer and your device for it, and installing apps using it.
+Currently, it covers Windows.
+
+
+= Configuring your device =
+
+Open the Android Settings.
+
+Press "Applications" and then "Development"
+
+Make sure "USB debugging" is checked.
+
+Confirm you want to activate it if requested.
+
+= Configuring your computer =
+
+== Downloading the Android SDK ==
+Download the latest Android SDK from Google's website : http://developer.android.com/sdk/index.html
+
+Extract it's contents where you want. For this howto, we will extract them at the root of your filesystem, that is : "C:\"
+
+== Setting up the SDK ==
+Enter the "C:\android-sdk-windows" folder. Launch the "SDK Manager.exe" application.
+
+Cancel the first windows asking you what packages you want to install.
+
+Click on "Available Packages" on the left.
+
+Expand the first entry on the right named "https://dl-ssl.google.com/android/repository/repository.xml". This is the main repository for the Android SDK.
+
+Check the checkbox "USB Driver package".
+
+Click "Install Selected" on the bottom right corner of the page.
+
+Confirm the download by clicking "Accept" and "Install" in the new window.
+
+Close the SDK manager.
+
+== Installing the driver ==
+
+The driver package is located in the "C:\android-sdk-windows\usb_driver" folder.
+Source : http://developer.android.com/sdk/win-usb.html
+
+*Note : users have reported that installing Samsung Kies actually takes care of everything. If so, you can jump to the last section.*
+
+=== Windows Vista: Perform a fresh installation ===
+
+To install the Android USB driver on Windows Vista for the first time:
+
+   1. Connect your Android-powered device to your computer's USB port. Windows will detect the device and launch the Found New Hardware wizard.
+
+   2. Select "Locate and install driver software."
+
+   3. Select "Don't search online."
+
+   4. Select "I don't have the disk. Show me other options."
+
+   5. Select "Browse my computer for driver software."
+
+   6. Click "Browse..." and locate the folder where you copied the installation package. As long as you specified the exact location of the installation package, you may leave "Include subfolders" checked or unchecked—it doesn't matter.
+
+   7. Click "Next." Vista may prompt you to confirm the privilege elevation required for driver installation. Confirm it.
+
+   8. When Vista asks if you'd like to install the Google ADB Interface device, click "Install" to install the driver.
+
+=== Windows XP: Perform a fresh installation ===
+
+To install the Android USB driver on Windows XP for the first time:
+
+   1. Connect your Android-powered device to your computer's USB port. Windows will detect the device and launch the Hardware Update Wizard.
+
+   2. Select "Install from a list or specific location" and click "Next."
+
+   3. Select "Search for the best driver in these locations"; un-check "Search removable media"; and check "Include this location in the search."
+
+   4. Click "Browse..." and locate the folder where you copied the installation package.
+
+   5. Click "Next" to install the driver.
+
+= Installing Apps using ADB =
+
+Copy the .apk you wish to install to the "C:\android-sdk-windows\tools" folder.
+
+Launch a shell on your computer : 
+Press "WINDOWS + R". Type "cmd" and hit "ENTER".
+
+In the new window, type : {{{cd C:\android-sdk-window\tools}}}
+
+Make sure your Android Device is plugged in.
+Type : {{{adb devices}}} Your device should be listed there.
+
+Type : {{{adb install app.apk}}} replacing "app.apk" with the actual name of the .apk you copied before (you can hit the tab key to use automatic completion).
+
+*If everything goes well, your app will be installed. Congratulations !

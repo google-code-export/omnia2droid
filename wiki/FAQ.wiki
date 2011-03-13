@@ -1,0 +1,96 @@
+==FAQ==
+  * [http://code.google.com/p/omnia2droid/wiki/FAQ#General General]
+    * When will we have a full working Android?
+    * Will my phone xxx be supported?
+    * What is this Win-Mo?
+    * So it will run on the top of Win-Mo as an application or what?
+    * Is it a ROM? will it remove Win-Mo completely?
+    * What version of Android beta release is using?
+    * I'm not a programmer but I want to help .. How can I?
+  * [http://code.google.com/p/omnia2droid/wiki/FAQ#Installing_Android Installing Android]
+    * "My Storage" is gone .. How can I run Android on my device?
+    * I'm always having kernel panic and that phone will restart in 30 seconds .. What should I do ?
+  * [http://code.google.com/p/omnia2droid/wiki/FAQ#Using_Android Using Android]
+    * What's the key map?
+    * How to turn phone off?
+    * Will the beta release has Android Market implemented in it?
+    * Where all my PIM will be saved in Android?
+  * [http://code.google.com/p/omnia2droid/wiki/FAQ#Helping_the_FAQ_get_better Helping the FAQ get better]
+    * please help out by using comment
+    * thanks to all contributors
+----
+
+=General=
+
+==When will we have a full working Android?==
+Hard to say .. but we are half way there .. and the project is in progress ..
+
+==Will my phone xxx be supported?==
+Not in the beta, first aim is to support Omnia2 (i8000). Not supported doesn't mean other simular phones don't work at all, but the hardware parts that differ from Omnia2 probably don't work (eg. hardware keyboard on OmniaPro/b7610, CDMA phonepart on OmniaII/i920, ..). The sources will go public eventually so other people can use it to support their phones/hardware/porting project. If their phone hardware is simular to Omnia2 (i8000) it shouldn't be much work ... 
+
+==What is this Win-Mo?== 
+It stands for Windows Mobile, the standard Operation System for Omnia2 smartphone.
+
+==So it will run on the top of Win-Mo as an application or what?==
+When you start Android (from Win-Mo), Android will take over everything in the device (all 256 MB RAM for example) and Win-Mo won't be there anymore ..
+
+==Is it a ROM? will it remove Win-Mo completely?==
+No this is not a ROM .. so Win-Mo won't be affected by it .. and whenever you want to switch back to Win-Mo just restart the device ..
+
+==What version of Android beta release is using?==
+Android 2.1 Eclair 
+
+==I'm not a programmer but I want to help .. How can I?==
+check the developer requests [http://code.google.com/p/omnia2droid/wiki/Developer_requests here]. This contains needed techpapers, information, drivers etc. You can also comment usefull things on the wiki pages (faq/guides/..) so our project evolves.
+
+----
+
+=Installing Android=
+
+=="My Storage" is gone .. How can I run Android on my device?==
+Standard install needs "My Storage", but there is a modified version for installing from sd card.If you want to use it for install without "My Storage":
+  # unpack [http://87.229.73.80/beta1024.zip beta1024.zip] or [http://87.229.73.80/beta512.zip beta512.zip] in root of microSD card. 
+  # in sd card, enter o2beta folder, overwrite old sd.cpio.gz with modded sd.cpio.gz in [http://omnia2droid.googlecode.com/files/sd-cpio-v1.zip this] package. 
+  # run haret.exe in o2beta folder for installing Android.
+
+Of course you can also try [http://code.google.com/p/omnia2droid/wiki/Guides#Tweaking_and_manual_install Tweaking and manual install] if you want to.
+
+== I'm always having kernel panic and that phone will restart in 30 seconds .. What should I do ? ==
+It's really normal to have a kernel panic .. it might happen due to alot of reasons .. 
+    * Make sure you have placed the right files in the right places .
+    * Try to turn Bluetooth and wifi off before starting .
+    * Try to disconnect network data connections .
+    * (in Alpha release) Some users reported that converting ROOTFS file name to small letters works (i.e rootfs.img)
+    
+----
+
+=Using Android=
+
+==What's the key map?==
+|| *Omnia2 key in Win-Mo* || *Android function* ||
+|| Cube key || Menu (pressed for search) ||
+|| Camera key || Back ||
+|| Volume up key || Volume up ||
+|| Volume down key || Volume down ||
+|| Stand-by key || Stand-by (pressed for phone options like power off)||
+|| Back key || Search ||
+|| Call key || Phone app / call (pressed for voice dialer) ||
+|| Hang-up key || Stand-by? / hang-up ||
+
+Sometimes a picture can say more ....
+    http://www.pictureupload.de/originals/pictures/291010214237_Omnia_II_Keymap_Final.PNG
+
+==How to turn phone off?==
+(pressing and holding) the Stand-by key (WinMo Lock Key) takes you to the "phone options" menu. Choose "power off".
+
+==Will the beta release has Android Market implemented in it?==
+Yes, and since now we got Wi-Fi working downloading applications should be a piece of cake . anyway, There are workarounds to add apps: mount external microSD card on linux (liveCD) to add .apk files to the ROOTFS or use ADB on Windows (getting USB to work with windows can be [http://code.google.com/p/omnia2droid/wiki/InstallAppsADB difficult]...).
+
+==Where all my PIM will be saved in Android?==
+They all will be saved in the ext2/ext3 Android partition on the external microSD card (ROOTFS) file. To exchange PIM data look [http://code.google.com/p/omnia2droid/wiki/Guides#PIM_backup_and_then_restore_it_to_Android here].
+
+----
+
+=Helping the FAQ get better=
+  * please help out by using comment
+  * thanks to all contributors

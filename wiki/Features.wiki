@@ -1,0 +1,76 @@
+#labels features,builds,releases
+==Features==
+Sections:
+  * [http://code.google.com/p/omnia2droid/wiki/Features#Supported_features_in_public_alpha_release Supported features in public alpha release]
+  *  [http://code.google.com/p/omnia2droid/wiki/Features#Supported_features_in_latest_public_beta_release Supported features in latest public beta release]
+  * [http://code.google.com/p/omnia2droid/wiki/Features#Features_under_active_development Features under active development]
+  * [http://code.google.com/p/omnia2droid/wiki/Features#Features_under_development Features under development]
+  * [http://code.google.com/p/omnia2droid/wiki/Features#Possible_future_features Possible future features]
+----
+
+==Supported features in public alpha release==
+  * [http://www.modaco.com/content-page/298997/closed-android-on-omnia-2/page/700/#entry1255545 Get it here]
+  * Android 2.1 (Eclair)
+  * Display and touchscreen
+  * Hardware keys
+  * Internal storage
+  * I920: landscape only modus (boot with uncompressed image)
+
+==Supported features in latest public beta release==
+  * [http://o2droid.phj.hu/index_en.php Get it here]
+  * *Hardware*
+    * Display & Touch screen
+    * Hardware keys
+    * Internal & External storage
+    * Vibrator
+    * FM radio
+    * Sound & Audio output via 3.5mm jack
+    * Orientation (Accelometer), Magnetic (Compass), Light and Temperature sensors
+
+  * *Connectivity* 
+    * Phone & messaging
+    * Wifi
+    * GSM data (GPRS/2G/3G/..)
+    * USB (ADB)
+    * GPS
+
+  * *Software*
+    * Android 2.1 (Eclair)
+    * Android market  
+    * Superuser access (rooted) 
+    * 2D/3D acceleration (libs are not included due to legal issues)
+    * Open-source patches: [http://o2droid.phj.hu/trac/browser I8000] [http://code.google.com/p/omnia2droid/issues/detail?id=6 B7610] [http://howto.homelinux.com/trac/log/ M715&M8400]  
+
+  * *Other Features*
+    * Battery driver/charging
+    * Brightness control/backlight
+
+  * *Compatibility on Omnia II (I8000) like phones*
+    * Omnia pro (B7610): wifi not working [http://code.google.com/p/omnia2droid/issues/detail?id=12 issue]
+    * Omnia pro (B7610): sensors working but inverted [http://code.google.com/p/omnia2droid/issues/detail?id=29 issue]
+    * Omnia pro (B7610): hardware keyboard not working [http://code.google.com/p/omnia2droid/issues/detail?id=6 fixed]
+    * Omnia pro (B7610): some hardware buttons not working [http://code.google.com/p/omnia2droid/issues/detail?id=6 fixed]
+    * Omnia pro (B7610): vibration not working  [http://code.google.com/p/omnia2droid/issues/detail?id=6 fixed]
+    * T*Omnia II (M715): not working when not connected to USB [ftp://howto.homelinux.com/o2droid/images fixed]
+    * T*Omnia II (M715): headphone plug problem [ftp://howto.homelinux.com/o2droid/images fixed]
+    * T*Omnia II (M715): some hardware buttons not working  [ftp://howto.homelinux.com/o2droid/images fixed]
+    * T*Omnia II (M715): phone not working (>rev??)  
+    * Show Omnia (M8400): wifi not working [ftp://howto.homelinux.com/o2droid/images fixed]
+    * Show Omnia (M8400): USB/headphone plug/hardware buttons problems [ftp://howto.homelinux.com/o2droid/images fixed]
+    * Verizon Omnia II (I920): not working
+ 
+==Features under active development==
+  * Camera's
+  * Proximity sensor (only kernel support yet)
+  * Bluetooth (only kernel support yet)
+  * I920: Beta support 
+
+==Features under development==
+  * Android 2.2 (Froyo) {some Beta/Eclair features broken)
+  * Android 2.3 (Gingerbread) {slooooow and some Beta/Eclair features broken}
+ 
+==Possible future features==
+  * Android kernel and image build from github.com
+  * TV-Out 
+  * B7610: wifi driver
+  * I920: CDMA phone part
