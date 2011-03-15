@@ -255,9 +255,16 @@ static void kxsd9_workqueue_func(struct work_struct *work)
 	y = kxsd9_get_valid_value(&buf_read[2]);
 	z = kxsd9_get_valid_value(&buf_read[4]);
 
+#ifdef PHONE_I8000
 	acc_data.x = (x - 2080) / -3;
 	acc_data.y = (y - 2080) / -3;
 	acc_data.z = (z - 2080) / -3;
+#endif
+#ifdef PHONE_B7610
+	acc_data.x = (x - 2080) / 3;
+	acc_data.y = (y - 2080) / 3;
+	acc_data.z = (z - 2080) / -3;
+#endif
 
 	gprintk("\ninput_report_abs\n");
 
