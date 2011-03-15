@@ -980,7 +980,9 @@ static void dpram_phone_power_on(void)
 #ifdef GPIO_CP_BOOT_SEL
 	gpio_set_value(GPIO_CP_BOOT_SEL, GPIO_LEVEL_HIGH);
 #endif
+#ifdef GPIO_USIM_BOOT
 	gpio_set_value(GPIO_USIM_BOOT, GPIO_LEVEL_HIGH);
+#endif
 
 //	gpio_set_value(GPIO_PHONE_RST_N, GPIO_LEVEL_LOW);
 	interruptible_sleep_on_timeout(&dpram_wait, 40);	//	mdelay(200);
@@ -1232,7 +1234,9 @@ print_onedram_status();
 #ifdef GPIO_CP_BOOT_SEL
 		gpio_set_value(GPIO_CP_BOOT_SEL, GPIO_LEVEL_LOW);
 #endif
+#ifdef GPIO_USIM_BOOT
 		gpio_set_value(GPIO_USIM_BOOT, GPIO_LEVEL_LOW);
+#endif
 	}
 
 	static int dpram_phone_getstatus(void)
@@ -2404,12 +2408,14 @@ static void init_hw_setting(void)
 	s3c_gpio_setpull(GPIO_CP_BOOT_SEL, S3C_GPIO_PULL_NONE); 
 #endif
 
+#ifdef GPIO_USIM_BOOT
 	if (gpio_is_valid(GPIO_USIM_BOOT)) {
 		if (gpio_request(GPIO_USIM_BOOT, S3C_GPIO_LAVEL(GPIO_USIM_BOOT)))
 			printk(KERN_ERR "Filed to request GPIO_USIM_BOOT!\n");
 		gpio_direction_output(GPIO_USIM_BOOT, GPIO_LEVEL_LOW);
 	}
 	s3c_gpio_setpull(GPIO_USIM_BOOT, S3C_GPIO_PULL_NONE); 
+#endif
 
 	if (gpio_is_valid(GPIO_PHONE_RST_N)) {
 		if (gpio_request(GPIO_PHONE_RST_N, S3C_GPIO_LAVEL(GPIO_PHONE_RST_N)))

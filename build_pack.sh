@@ -1,5 +1,8 @@
 #!/bin/bash
-# script to (simplyfy the) build a kernel_update
+# script to make kernels, modules and an update zip for I8000 like phones
+# made by Mosci, adapted by Elbee
+####
+
 KERNEL_MODULES_PATH=~/omnia2droid/svn/trunk/out
 if [ ! -d "${KERNEL_MODULES_PATH}" ]
 then
@@ -7,9 +10,18 @@ then
 	exit 1;
 fi
 
-# let's try ... see if we have a revision-string
-if [ $# -eq 1 ] 
+# let's try ... see if we have a PHONE_ID and REVISION_ID
+if [ $# -eq 2 ] 
 then
+	export PHONEMODEL=$1
+        ./make_kernel -ckme
+
+	if [ $? -ne 0 ]
+	then
+		echo "Making kernel and modules for $1 phone failed!"	
+		exit 1;
+	fi
+
 	if [ ! -d "./o2b2update" ]
 	then
 		echo -e "./o2b2update not found ... "
@@ -82,33 +94,39 @@ then
 			exit 1;
 		fi
 
-		# create zip-file with new zImage & new o2b2upadte
-		echo "try to create Kernel_Rev${1}.zip ..."
-		zip ./Kernel_Rev${1}.zip ./o2b2update.tar.gz ./zImage
+		# create zip-file with new zImage & new o2b2update
+		FileName="./Kernel-${1}-${2}.zip"
+
+		echo "try to create ${FileName} ..."
+		zip ${FileName} ./o2b2update.tar.gz ./zImage
 		if [ $? -gt 0 ]
 		then
-			 echo -e "\nERROR! while creating zip-file Kernel_Rev${1}.zip of o2b2update.tar.gz & zImage\n"
+			 echo -e "\nERROR! while creating zip-file ${FileName} of o2b2update.tar.gz & zImage\n"
 			 exit 1;
 		else
-			echo "file: Kernel_Rev${1}.zip created";
+			echo "file: ${FileName} created";
 		fi
 		
-		mv  Kernel_Rev${1}.zip ../
+		mv  ${FileName} ../
 		if [ $? -eq 0 ]
 		then
 			cd ../
-			echo "file: Kernel_Rev${1}.zip contains modules (o2b2update.tar.gz) & zImage"
+			echo "file: ${FileName} contains modules (o2b2update.tar.gz) & zImage"
 			exit 0;
 		else
-			echo -e "\nERROR! - seems that the file Kernel_Rev${1}.zip is not present (created)\n"
+			echo -e "\nERROR! - seems that the file ${FileName} is not present (created)\n"
 			exit 1;
 		fi
+
+ 		# remove ./o2b2update path with contents
+		cd ..
+		rm -rf ./o2b2update
 	else
 		echo "could not change into directory ./o2b2update";
 		exit 1;
 	fi
 else
  		
- 		echo -e "Usage: ${0} <REV>\n\te.g.: ${0} 93"	
+ 		echo -e "Usage: ${0} <PHONE_ID> <REVISION_ID>\n\nFor example: ${0} I8000 GC-REV6\nFor example: ${0} B7610 PHJ-REV100"
 		exit 1; 		
 fi
