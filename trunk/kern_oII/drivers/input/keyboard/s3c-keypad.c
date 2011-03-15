@@ -208,12 +208,22 @@ static irqreturn_t s3c_keygpio_isr(int irq, void *dev_id)
 	// upside/down.
 	if (in_sleep) {
 		if (key_status == prev_key_status) {
+#ifdef PHONE_I8000
 			INPUT_REPORT_KEY(dev, 26, key_status ? 1 : 0); 
+#endif
+#ifdef PHONE_B7610
+			INPUT_REPORT_KEY(dev, KEY_POWER, key_status ? 1 : 0); 
+#endif
 		}
 		in_sleep = 0;
 	}
 
-	INPUT_REPORT_KEY(dev, 26, key_status ? 0 : 1);
+#ifdef PHONE_I8000
+	INPUT_REPORT_KEY(dev, 26, key_status ? 0 : 1); 
+#endif
+#ifdef PHONE_B7610
+	INPUT_REPORT_KEY(dev, KEY_POWER, key_status ? 0 : 1); 
+#endif
 
 	prev_key_status = key_status;
 	//printk(KERN_DEBUG "s3c_keygpio_isr pwr key_status =%d\n", key_status);
