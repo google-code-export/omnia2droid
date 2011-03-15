@@ -1,7 +1,12 @@
 VERSION = 2
 PATCHLEVEL = 6
 SUBLEVEL = 31
-EXTRAVERSION = -bfs310
+ifeq ($(PHONEMODEL),"B7610")
+  EXTRAVERSION = -bfs310-b6710
+endif
+ifeq ($(PHONEMODEL),"I8000")
+  EXTRAVERSION = -bfs310-i8000
+endif
 NAME = BFS Powered
 
 # *DOCUMENTATION*
@@ -324,10 +329,10 @@ CHECK		= sparse
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 MODFLAGS	= -DMODULE
-CFLAGS_MODULE   = $(MODFLAGS)
+CFLAGS_MODULE   = $(MODFLAGS) -DPHONE_${PHONEMODEL}
 AFLAGS_MODULE   = $(MODFLAGS)
 LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
+CFLAGS_KERNEL	= -DPHONE_${PHONEMODEL}
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 

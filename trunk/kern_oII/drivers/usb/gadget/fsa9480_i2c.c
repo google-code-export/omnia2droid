@@ -395,6 +395,7 @@ void fsa9480_check_usb_connection(void)
 #define SWITCH_MODEM		2
 static void usb_sel(int sel)
 {
+#ifdef GPIO_USB_SEL
     DEBUG_FSA9480("[FSA9480]%s\n ", __func__);
 	if (sel == SWITCH_PDA) { // PDA
 		gpio_set_value(GPIO_USB_SEL, 0);
@@ -403,6 +404,7 @@ static void usb_sel(int sel)
 	}
 
 	usb_path = sel;
+#endif
 }
 
 /* for sysfs control (/sys/class/sec/switch/usb_sel) */
@@ -589,12 +591,14 @@ static int fsa9480_codec_probe(struct i2c_adapter *adap, int addr, int kind)
 	s3c_gpio_setpull(GPIO_JACK_INT_N, S3C_GPIO_PULL_NONE);
 
 	/* USB_SEL */
+#ifdef GPIO_USB_SEL
 	if (gpio_is_valid(GPIO_USB_SEL)) {
 		if (gpio_request(GPIO_USB_SEL, S3C_GPIO_LAVEL(GPIO_USB_SEL))) 
 			DEBUG_FSA9480(KERN_ERR "[FSA9480]Failed to request GPIO_USB_SEL! \n");
 		gpio_direction_output(GPIO_USB_SEL, 0);
 	}
 	s3c_gpio_setpull(GPIO_USB_SEL, S3C_GPIO_PULL_NONE);
+#endif
 	
 	fsa9480_i2c_client.adapter = adap;
 	fsa9480_i2c_client.addr = addr;

@@ -26,45 +26,35 @@ static void __iomem *key_base;
 #define KEY_RELEASED 0
 
 
-//#if defined (ANDROID_I8000)
-
+#ifdef PHONE_I8000
 #define KEYPAD_COLUMNS	3	
 #define KEYPAD_ROWS	3
-#define MAX_KEYPAD_NR	9
+#define MAX_KEYPAD_NR   KEYPAD_COLUMNS * KEYPAD_ROWS
+#endif
 
-//#elif defined (ANDROID_B7610)
-
-//   #define KEYPAD_COLUMNS       7
-// #define KEYPAD_ROWS    7
-// #define MAX_KEYPAD_NR  49
-
-
-//#endif
-
-
-
-
+#ifdef PHONE_B7610
+#define KEYPAD_COLUMNS  8
+#define KEYPAD_ROWS     7
+#define MAX_KEYPAD_NR   KEYPAD_COLUMNS * KEYPAD_ROWS
+#endif
 
 int keypad_keycode[] = {
-
-//#if defined (ANDROID_I8000)
-
+#ifdef PHONE_I8000
 //              50,8,0,0,58,42,		// KEYCODE_FOCUS, KEYCODE_1, KEYCODE_UNKNOWN, KEYCODE_UNKNOWN, KEYCODE_MEDIA_PREVIOUS, KEYCODE_ENTER
-
        KEY_POWER,              KEY_SEARCH,                     KEY_CONFIG,
        KEY_SEND,               KEY_CONFIG,                     KEY_VOLUMEUP,
        102,               KEY_BACK,                       KEY_VOLUMEDOWN, //key_MENU
+#endif
+#ifdef PHONE_B7610
+                KEY_Q,    KEY_A,     KEY_LEFTSHIFT, KEY_LEFTALT,  KEY_POWER, KEY_MENU, KEY_K,          KEY_W,          KEY_S,     KEY_Z,
+                KEY_BACK, KEY_SLEEP, KEY_PHONE,     KEY_L,        KEY_E,     KEY_D,    KEY_X,          KEY_RIGHTSHIFT, KEY_ESC,   KEY_BACK,
+                KEY_M,    KEY_R,     KEY_F,         KEY_C,        KEY_COMMA, KEY_I,    KEY_VOLUMEDOWN, KEY_UP,         KEY_T,     KEY_G,
+                KEY_V,    KEY_SPACE, KEY_O,         KEY_VOLUMEUP, KEY_DOWN,  KEY_Y,    KEY_H,          KEY_B,          KEY_DOT,   KEY_HOME,
+                KEY_P,    KEY_ENTER, KEY_U,         KEY_J,        KEY_N,     KEY_LEFT, KEY_HOME,       KEY_BACKSPACE,  KEY_RIGHT,
+#endif
+	};
 
-/*#elif defined (ANDROID_B7610)
-		1,2,3,4,5,6,7,8,
-		9,10,11,12,13,14,15,16,
-		17,18,19,20,21,22,23,24,
-		25,26,27,28,29,30,31,32,
-		33,34,35,36,37,38,39,40,
-		41,42,43,44,45,46,47,48,
-		49,50,51,52,53,54,55,56,
-		57,58,59,60,61,62,63,64
-#else
+/*
 int keypad_keycode[] = {
 		1, 2, KEY_1, KEY_Q, KEY_A, 6, 7, KEY_LEFT,
 		9, 10, KEY_2, KEY_W, KEY_S, KEY_Z, KEY_RIGHT, 16,
@@ -75,13 +65,7 @@ int keypad_keycode[] = {
 		KEY_M, KEY_L, KEY_7, KEY_U, KEY_J, KEY_N, 55, KEY_ENTER,
 		KEY_LEFTSHIFT, KEY_9, KEY_8, KEY_I, KEY_K, KEY_B, 63, KEY_COMMA
 	};
-#endif
-#endif */
-};
-
-
-
-
+*/
 
 #define KEYPAD_ROW_GPIOCON      S3C64XX_GPKCON
 #define KEYPAD_ROW_GPIOPUD      S3C64XX_GPKPUD

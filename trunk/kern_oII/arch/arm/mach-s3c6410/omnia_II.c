@@ -776,6 +776,7 @@ void s3c_setup_keypad_cfg_gpio(int rows, int columns)
 	unsigned int gpio;
 	unsigned int end;
 
+#ifndef PHONE_B7610
 	end = S3C64XX_GPK(8 + rows);
 
 	/* Set all the necessary GPK pins to special-function 0 */
@@ -791,6 +792,7 @@ void s3c_setup_keypad_cfg_gpio(int rows, int columns)
 		s3c_gpio_cfgpin(gpio, S3C_GPIO_SFN(3));
 		s3c_gpio_setpull(gpio, S3C_GPIO_PULL_NONE);
 	}
+#endif
 }
 
 EXPORT_SYMBOL(s3c_setup_keypad_cfg_gpio);
