@@ -1,1 +1,1 @@
-cmd_../modules/pp/s3c_pp.o := /opt/cross/bin/arm-linux-gnueabi-ld -EL    -r -o ../modules/pp/s3c_pp.o ../modules/pp/s3c_pp_common.o ../modules/pp/s3c_pp_6400.o 
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/pp/s3c_pp.o := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL    -r -o /home/elbee/omnia2droid/svn/trunk/modules/pp/s3c_pp.o /home/elbee/omnia2droid/svn/trunk/modules/pp/s3c_pp_common.o /home/elbee/omnia2droid/svn/trunk/modules/pp/s3c_pp_6400.o 

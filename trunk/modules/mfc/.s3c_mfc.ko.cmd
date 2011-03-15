@@ -1,1 +1,1 @@
-cmd_../modules/mfc/s3c_mfc.ko := /opt/cross/bin/arm-linux-gnueabi-ld -EL -r   --build-id -o ../modules/mfc/s3c_mfc.ko ../modules/mfc/s3c_mfc.o ../modules/mfc/s3c_mfc.mod.o
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/mfc/s3c_mfc.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/mfc/s3c_mfc.ko /home/elbee/omnia2droid/svn/trunk/modules/mfc/s3c_mfc.o /home/elbee/omnia2droid/svn/trunk/modules/mfc/s3c_mfc.mod.o

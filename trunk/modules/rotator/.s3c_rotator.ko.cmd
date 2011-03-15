@@ -1,1 +1,1 @@
-cmd_../modules/rotator/s3c_rotator.ko := /opt/cross/bin/arm-linux-gnueabi-ld -EL -r   --build-id -o ../modules/rotator/s3c_rotator.ko ../modules/rotator/s3c_rotator.o ../modules/rotator/s3c_rotator.mod.o
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/rotator/s3c_rotator.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/rotator/s3c_rotator.ko /home/elbee/omnia2droid/svn/trunk/modules/rotator/s3c_rotator.o /home/elbee/omnia2droid/svn/trunk/modules/rotator/s3c_rotator.mod.o

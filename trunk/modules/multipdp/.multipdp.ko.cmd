@@ -1,1 +1,1 @@
-cmd_../modules/multipdp/multipdp.ko := /opt/cross/bin/arm-linux-gnueabi-ld -EL -r   --build-id -o ../modules/multipdp/multipdp.ko ../modules/multipdp/multipdp.o ../modules/multipdp/multipdp.mod.o
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/multipdp/multipdp.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/multipdp/multipdp.ko /home/elbee/omnia2droid/svn/trunk/modules/multipdp/multipdp.o /home/elbee/omnia2droid/svn/trunk/modules/multipdp/multipdp.mod.o
