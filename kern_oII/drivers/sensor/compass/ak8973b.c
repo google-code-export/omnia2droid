@@ -192,8 +192,8 @@ static int akm_aot_release(struct inode *inode, struct file *file)
 static void AKECS_Report_Value(short *rbuf)
 {
 	struct ak8973b_data *data = i2c_get_clientdata(this_client);
-	#if 0
-	gprintk("Orientaion: yaw = %d, pitch = %d, roll = %d\n", rbuf[0],
+//	#if 0
+	gprintk("Orientation: yaw = %d, pitch = %d, roll = %d\n", rbuf[0],
 			rbuf[1], rbuf[2]);
 	gprintk("tmp = %d, m_stat= %d, g_stat=%d\n", rbuf[3],
 			rbuf[4], rbuf[5]);
@@ -201,7 +201,7 @@ static void AKECS_Report_Value(short *rbuf)
 			rbuf[6], rbuf[7], rbuf[8]);
 	gprintk("Magnetic:   x = %d LSB, y = %d LSB, z = %d LSB\n\n",
 			rbuf[9], rbuf[10], rbuf[11]);
-	#endif
+//	#endif
 	/*if flag is set, execute report */
 	/* Report magnetic sensor information */
 	if (atomic_read(&m_flag)) {
@@ -269,11 +269,12 @@ static void AKECS_CloseDone(void)
 /*----------------------------------------------------------------------------*/
 static void AKECS_Reset (void)
 {
-      
+#ifdef GPIO_MSENSE_RST
 	gpio_set_value(GPIO_MSENSE_RST, GPIO_LEVEL_LOW);
 	udelay(120);
 	gpio_set_value(GPIO_MSENSE_RST, GPIO_LEVEL_HIGH);
 	gprintk("AKECS RESET COMPLETE\n");
+#endif
 }
 
 /*----------------------------------------------------------------------------*/
@@ -745,6 +746,7 @@ static void ak8973b_early_resume(struct early_suspend *handler)
 
 static void ak8973b_init_hw(void)
 {
+#ifdef GPIO_MSENSE_RST
 #if 0	
 	s3c_gpio_cfgpin(GPIO_MSENSE_IRQ, S3C_GPIO_SFN(GPIO_MSENSE_IRQ_AF));
 	s3c_gpio_setpull(GPIO_MSENSE_IRQ, S3C_GPIO_PULL_NONE);
@@ -761,6 +763,7 @@ static void ak8973b_init_hw(void)
 	s3c_gpio_setpull(GPIO_MSENSE_RST, S3C_GPIO_PULL_NONE);
 
 	gprintk("gpio setting complete!\n");
+#endif
 }
 
 static struct file_operations akmd_fops = {
@@ -955,8 +958,9 @@ static int i2c_ak8973b_detach_client(struct i2c_client *client)
 	akm = NULL;	
 	this_client = NULL;
 	
+#ifdef GPIO_MSENSE_RST
 	gpio_free(GPIO_MSENSE_RST);
-	
+#endif	
 	gprintk("end\n");
 	return 0;
 }

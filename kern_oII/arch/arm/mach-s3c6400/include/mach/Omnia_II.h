@@ -46,7 +46,10 @@
 #define GPIO_AP_FLM_RXD_AF	(2)
 #define GPIO_AP_FLM_TXD		S3C64XX_GPA(1)
 #define GPIO_AP_FLM_TXD_AF	(2)
-
+#ifdef PHONE_B7610
+#define GPIO_VIB_EN		S3C64XX_GPA(3)
+#define GPIO_VIB_EN_AF		(1) // meaning 1 value not clear yet
+#endif
 #define GPIO_AP_BT_RXD          S3C64XX_GPA(4)
 #define GPIO_AP_BT_RXD_AF       (2)
 #define GPIO_AP_BT_TXD          S3C64XX_GPA(5)
@@ -250,6 +253,17 @@
 #define GPIO_KBR1_AF            (3)
 #define GPIO_KBR2               S3C64XX_GPK(10)
 #define GPIO_KBR2_AF            (3)
+#ifdef PHONE_B7610
+#define GPIO_KBR3               S3C64XX_GPK(11)
+#define GPIO_KBR3_AF            (3)
+#define GPIO_KBR4               S3C64XX_GPK(12)
+#define GPIO_KBR4_AF            (3)
+#define GPIO_KBR5               S3C64XX_GPK(13)
+#define GPIO_KBR5_AF            (3)
+#define GPIO_KBR6               S3C64XX_GPK(14)
+#define GPIO_KBR6_AF            (3)
+#endif
+#ifdef PHONE_I8000
 #define GPIO_FLM_SEL		S3C64XX_GPK(11)
 #define GPIO_FLM_SEL_AF		(1)
 #define GPIO_CAM_CIF_nRST       S3C64XX_GPK(12)
@@ -258,6 +272,7 @@
 #define GPIO_CAM_CIF_nSTBY_AF   (1)
 #define GPIO_MSENSE_RST		S3C64XX_GPK(14)
 #define GPIO_MSENSE_RST_AF	(1)
+#endif
 #define GPIO_VREG_MSMP_26V	S3C64XX_GPK(15)
 #define GPIO_VREG_MSMP_26V_AF	(0)
 
@@ -268,6 +283,19 @@
 #define GPIO_KBC1_AF            (3)
 #define GPIO_KBC2               S3C64XX_GPL(2)
 #define GPIO_KBC2_AF            (3)
+#ifdef PHONE_B7610
+#define GPIO_KBC3               S3C64XX_GPL(3)
+#define GPIO_KBC3_AF            (3)
+#define GPIO_KBC4               S3C64XX_GPL(4)
+#define GPIO_KBC4_AF            (3)
+#define GPIO_KBC5               S3C64XX_GPL(5)
+#define GPIO_KBC5_AF            (3)
+#define GPIO_KBC6               S3C64XX_GPL(6)
+#define GPIO_KBC6_AF            (3)
+#define GPIO_KBC7               S3C64XX_GPL(7)
+#define GPIO_KBC7_AF            (3)
+#endif
+#ifdef PHONE_I8000
 #define GPIO_CAM_3M_nSTBY	S3C64XX_GPL(3)
 #define GPIO_CAM_3M_nSTBY_AF	(1)
 #define GPIO_VIB_EN             S3C64XX_GPL(4)
@@ -278,6 +306,7 @@
 #define GPIO_PHONE_ON_AF	(1)
 #define GPIO_USIM_BOOT          S3C64XX_GPL(7)
 #define GPIO_USIM_BOOT_AF       (1)
+#endif
 #define GPIO_MIC_SEL		S3C64XX_GPL(9)
 #define GPIO_MIC_SEL_AF		(1)
 #define GPIO_FM_INT             S3C64XX_GPL(10)
@@ -418,7 +447,9 @@
 #define GPIO_BT_RST_N	GPIO_BT_nRST
 #define GPIO_BOOT	GPIO_BOOT_MODE
 #define GPIO_WLAN_RST_N	GPIO_WLAN_nRST
+#ifndef PHONE_B7610
 #define GPIO_MCAM_RST_N	GPIO_CAM_CIF_nRST
+#endif
 #define GPIO_VIBTONE_PWM	GPIO_VIB_PWM
 #define GPIO_TF_CLK	GPIO_T_FLASH_CLK
 #define GPIO_TF_CMD	GPIO_T_FLASH_CMD
@@ -491,20 +522,39 @@
 #define GPIO_KEYSCAN_0	GPIO_KBR0
 #define GPIO_KEYSCAN_1	GPIO_KBR1
 #define GPIO_KEYSCAN_2	GPIO_KBR2
+#ifdef PHONE_B7610
+#define GPIO_KEYSCAN_3	GPIO_KBR3
+#define GPIO_KEYSCAN_4	GPIO_KBR4
+#define GPIO_KEYSCAN_5	GPIO_KBR5
+#define GPIO_KEYSCAN_6	GPIO_KBR6
+#define GPIO_KEYSCAN_7	GPIO_KBR7
+#endif
 #define GPIO_FM_RST_N	GPIO_FM_nRST
 #define GPIO_FM_RST_N_AF	GPIO_FM_nRST_AF
 #define GPIO_KEYSENSE_0	GPIO_KBC0
 #define GPIO_KEYSENSE_1	GPIO_KBC1
 #define GPIO_KEYSENSE_2	GPIO_KBC2
+#ifdef PHONE_B7610
+#define GPIO_KEYSENSE_3	GPIO_KBC3
+#define GPIO_KEYSENSE_4	GPIO_KBC4
+#define GPIO_KEYSENSE_5	GPIO_KBC5
+#define GPIO_KEYSENSE_6	GPIO_KBC6
+#endif
+
+#ifndef PHONE_B7610
 #define GPIO_CAM_3M_STBY_N	GPIO_CAM_3M_nSTBY
 #define GPIO_CAM_3M_STBY_N_AF	GPIO_CAM_3M_nSTBY_AF
+#endif
+
 #define GPIO_MIC_SEL_N	GPIO_MIC_SEL
 #define GPIO_MIC_SEL_N_AF	GPIO_MIC_SEL_AF
 
+#ifndef PHONE_B7610
 #define GPIO_USB_SEL		GPIO_CP_USB_ON
 #define GPIO_USB_SEL_AF		GPIO_CP_USB_ON_AF
 #define GPIO_CP_BOOT_SEL	GPIO_FLM_SEL
-#define GPIO_CP_BOOT_SEL_AF	GGPIO_FLM_SEL_AF
+#define GPIO_CP_BOOT_SEL_AF	GPIO_FLM_SEL_AF
+#endif
 
 #define GPIO_ONEDRAM_INT_N	GPIO_nONED_INT_AP
 #define GPIO_WLAN_HOST_WAKE	GPIO_HOST_WAKE
