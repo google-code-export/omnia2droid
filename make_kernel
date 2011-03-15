@@ -12,8 +12,8 @@ EABI=~/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-
 #path where all should get together
 EXPORTDIR=${PWD}/out
 
-#PHONEMODEL=I8000; export PHONEMODEL
-PHONEMODEL=B7610; export PHONEMODEL
+PHONEMODEL=I8000; export PHONEMODEL
+#PHONEMODEL=B7610; export PHONEMODEL
 
 #multicore compiling?
 J=-j2

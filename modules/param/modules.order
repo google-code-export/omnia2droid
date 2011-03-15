@@ -1,2 +1,2 @@
-kernel/../modules/param/param.ko
-kernel/../modules/param/crc32.ko
+kernel//home/elbee/omnia2droid/svn/trunk/modules/param/param.ko
+kernel//home/elbee/omnia2droid/svn/trunk/modules/param/crc32.ko

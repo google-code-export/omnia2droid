@@ -1,1 +1,1 @@
-cmd_../modules/jpeg/s3c_jpeg.ko := /opt/cross/bin/arm-linux-gnueabi-ld -EL -r   --build-id -o ../modules/jpeg/s3c_jpeg.ko ../modules/jpeg/s3c_jpeg.o ../modules/jpeg/s3c_jpeg.mod.o
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/jpeg/s3c_jpeg.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/jpeg/s3c_jpeg.ko /home/elbee/omnia2droid/svn/trunk/modules/jpeg/s3c_jpeg.o /home/elbee/omnia2droid/svn/trunk/modules/jpeg/s3c_jpeg.mod.o

@@ -1,1 +1,1 @@
-cmd_../modules/g2d/s3c_g2d_driver.ko := /opt/cross/bin/arm-linux-gnueabi-ld -EL -r   --build-id -o ../modules/g2d/s3c_g2d_driver.ko ../modules/g2d/s3c_g2d_driver.o ../modules/g2d/s3c_g2d_driver.mod.o
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/g2d/s3c_g2d_driver.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/g2d/s3c_g2d_driver.ko /home/elbee/omnia2droid/svn/trunk/modules/g2d/s3c_g2d_driver.o /home/elbee/omnia2droid/svn/trunk/modules/g2d/s3c_g2d_driver.mod.o

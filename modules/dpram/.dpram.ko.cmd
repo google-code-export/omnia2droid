@@ -1,1 +1,1 @@
-cmd_../modules/dpram/dpram.ko := /opt/cross/bin/arm-linux-gnueabi-ld -EL -r   --build-id -o ../modules/dpram/dpram.ko ../modules/dpram/dpram.o ../modules/dpram/dpram.mod.o
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/dpram/dpram.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/dpram/dpram.ko /home/elbee/omnia2droid/svn/trunk/modules/dpram/dpram.o /home/elbee/omnia2droid/svn/trunk/modules/dpram/dpram.mod.o

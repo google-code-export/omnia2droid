@@ -1,1 +1,1 @@
-cmd_../modules/vibetonz/vibrator.ko := /opt/cross/bin/arm-linux-gnueabi-ld -EL -r   --build-id -o ../modules/vibetonz/vibrator.ko ../modules/vibetonz/vibrator.o ../modules/vibetonz/vibrator.mod.o
+cmd_/home/elbee/omnia2droid/svn/trunk/modules/vibetonz/vibrator.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/vibetonz/vibrator.ko /home/elbee/omnia2droid/svn/trunk/modules/vibetonz/vibrator.o /home/elbee/omnia2droid/svn/trunk/modules/vibetonz/vibrator.mod.o
