@@ -1,1 +1,0 @@
-cmd_/home/elbee/omnia2droid/svn/trunk/modules/fm_si4709/Si4709_driver.ko := /home/elbee/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-ld -EL -r   --build-id -o /home/elbee/omnia2droid/svn/trunk/modules/fm_si4709/Si4709_driver.ko /home/elbee/omnia2droid/svn/trunk/modules/fm_si4709/Si4709_driver.o /home/elbee/omnia2droid/svn/trunk/modules/fm_si4709/Si4709_driver.mod.o
