@@ -74,3 +74,6 @@ http://ext4.wiki.kernel.org/index.php/Ext3_Data%3DOrdered_vs_Data%3DWriteback_mo
 <br/>
 = Battery life benchmarks =
 Soon.
+
+https://docs.google.com/leaf?id=0B6Z0_2ag0vJVMWM4NWUyN2YtOWEwYi00MWJkLWFkZWYtZjc1NzQzYTQzM2Fm&hl=en&nonsense=batt.png
+.
