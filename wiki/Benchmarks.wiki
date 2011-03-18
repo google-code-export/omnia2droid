@@ -1,4 +1,8 @@
 #labels filesystem,benchmark,ext4
+<wiki:toc max_depth="2" />
+<br/>
+<br/>
+
 = Filesystem benchmarks =
 
 == Intro ==
