@@ -73,7 +73,21 @@ http://ext4.wiki.kernel.org/index.php/Ext3_Data%3DOrdered_vs_Data%3DWriteback_mo
 <br/>
 <br/>
 = Battery life benchmarks =
-Soon.
 
-https://docs.google.com/leaf?id=0B6Z0_2ag0vJVMWM4NWUyN2YtOWEwYi00MWJkLWFkZWYtZjc1NzQzYTQzM2Fm&hl=en&nonsense=batt.png
-.
+
+== SoC-to-gauge relationship ==
+According to svn rev102 changes, you can see that Android battery gauge has different profile (called "Windows Mobile like") implemented. SoC state readings was used so far. Now SoC state is only used as variable to calculate value reported to system:<br/>
+{{{value = 140*(1-exp(-SoC/70))-4}}}
+<br/>
+Then result is being mapped using special table, that's why it's so non-linear.
+
+https://spreadsheets.google.com/oimg?key=0AqZ0_2ag0vJVdEZsbDVkb2tDOUFwX05BWlFxUDQzZ3c&oid=3&zx=unh9ebdirmls&nonsense=batt_chart.png
+
+Legend explanation:<br/>
+ * calculated means value is only calculated by formula
+ * gague means value is calculated and mapped using special table, so this value is reported to android
+
+
+
+== Life benchmarks ==
+Soon.
