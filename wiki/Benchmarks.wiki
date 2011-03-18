@@ -79,7 +79,7 @@ http://ext4.wiki.kernel.org/index.php/Ext3_Data%3DOrdered_vs_Data%3DWriteback_mo
 According to svn rev102 changes, you can see that Android battery gauge has different profile (called "Windows Mobile like") implemented. SoC state readings was used so far. Now SoC state is only used as variable to calculate value reported to system:<br/>
 {{{value = 140*(1-exp(-SoC/70))-4}}}
 <br/>
-Then result is being mapped using special table, that's why it's so non-linear.
+Then result is being mapped using special table, that's why it's so non-linear. For "what is SoC" explanation please refer to http://en.wikipedia.org/wiki/State_Of_Charge
 
 https://spreadsheets.google.com/oimg?key=0AqZ0_2ag0vJVdEZsbDVkb2tDOUFwX05BWlFxUDQzZ3c&oid=3&zx=unh9ebdirmls&nonsense=batt_chart.png
 
