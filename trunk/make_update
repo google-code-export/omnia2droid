@@ -120,7 +120,7 @@ then
 
  		# remove ./o2b2update path with contents
 		cd ..
-		rm -rf ./o2b2update
+		rm -rf ./o2b2update/
 	else
 		echo "could not change into directory ./o2b2update";
 		exit 1;

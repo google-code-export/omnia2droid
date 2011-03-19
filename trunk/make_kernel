@@ -16,6 +16,13 @@ EXPORTDIR=${PWD}/out
 J=-j2
 #J=""
 
+if [ -z ${PHONEMODEL} ]
+then
+  echo "PHONEMODEL variable not set, set to default: I8000."
+  export PHONEMODEL="I8000"
+fi
+
+
 #//////////////////////////  FUNCTIONS /////////////////////////////
 
 function kernel() {
