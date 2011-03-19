@@ -273,8 +273,8 @@ static void kxsd9_workqueue_func(struct work_struct *work)
 	input_report_abs(kx_data->input_dev, ABS_Z, z);
 	input_sync(kx_data->input_dev);
 
-//	printk("Read value [x=%d, y=%d, z=%d]\n", x, y, z);
-	gprintk("Read value [x=%d, y=%d, z=%d]\n", acc_data.x, acc_data.y, acc_data.z);
+	gprintk("Read value [x=%d, y=%d, z=%d]\n", x, y, z);
+	gprintk("Read value [ax=%d, ay=%d, az=%d]\n", acc_data.x, acc_data.y, acc_data.z);
 
 //	printk("============ END ============\n");
 }
