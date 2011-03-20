@@ -24,8 +24,8 @@ typedef void (sdio_irq_handler_t)(struct sdio_func *);
  * Structure used to hold embedded SDIO device data from platform layer
  */
 struct sdio_embedded_func {
-	 uint8_t f_class;
-	 uint32_t f_maxblksize;
+	uint8_t f_class;
+	uint32_t f_maxblksize;
 };
 
 /*
@@ -75,6 +75,7 @@ struct sdio_func {
 
 #define sdio_get_drvdata(f)	dev_get_drvdata(&(f)->dev)
 #define sdio_set_drvdata(f,d)	dev_set_drvdata(&(f)->dev, d)
+#define dev_to_sdio_func(d)	container_of(d, struct sdio_func, dev)
 
 /*
  * SDIO function device driver
@@ -88,6 +89,8 @@ struct sdio_driver {
 
 	struct device_driver drv;
 };
+
+#define to_sdio_driver(d)	container_of(d, struct sdio_driver, drv)
 
 /**
  * SDIO_DEVICE - macro used to describe a specific SDIO device

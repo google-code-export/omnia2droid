@@ -14,8 +14,41 @@
 #include <mach/hardware.h>
 
 #include <plat/gpio-cfg.h>
+#include <linux/module.h>
+#include <linux/ioport.h>
+#include <linux/io.h>
+#include <linux/platform_device.h>
+#include <linux/init.h>
+#include <linux/sysrq.h>
+#include <linux/console.h>
+#include <linux/tty.h>
+#include <linux/tty_flip.h>
+#include <linux/serial_core.h>
+#include <linux/serial.h>
+#include <linux/delay.h>
+
+#include <linux/miscdevice.h>
+#include <linux/types.h>
+#include <linux/ioctl.h>
+#include <linux/platform_device.h>
 
 #define LP8720_ID	0xFA
+
+#define GENERAL_SETTINGS_REG	0x00
+#define LDO1_SETTINGS_REG		0x01
+#define LDO2_SETTINGS_REG		0x02
+#define LDO3_SETTINGS_REG		0x03
+#define LDO4_SETTINGS_REG		0x04
+#define LDO5_SETTINGS_REG		0x05
+#define BUCK_SETTINGS1_REG		0x06
+#define BUCK_SETTINGS2_REG		0x07
+#define ENABLE_BITS_REG			0x08
+#define PULLDOWN_BITS_REG		0x09
+#define STATUS_BITS_REG			0x0A
+#define INTERRUPT_BITS_REG		0x0B
+#define INTERRUPT_MASK_REG		0x0C
+
+
 
 static struct i2c_driver lp8720_driver;
 
@@ -153,39 +186,70 @@ static void lp8720_exit(void)
 #define INTERRUPT_BITS_REG		0x0B
 #define INTERRUPT_MASK_REG		0x0C
 
-void s5k4ca_sensor_power_init(void)
+/*void s5k4ca_sensor_power_init(void)
 {
 	u8 data;
 
 	if (!lp8720_init()) {
 		lp8720_read(lp8720_i2c_client, LDO1_SETTINGS_REG, &data);	
 		data &= ~(0x1F << 0);	
-		data |= (0x19 << 0);	/* AF 2.8V */
+		data |= (0x19 << 0);	
 		lp8720_write(lp8720_i2c_client, LDO1_SETTINGS_REG, data);	
 		printk("LDO1_SETTINGS_REG 0x%02x, DATA 0x%02x\n", LDO1_SETTINGS_REG, data);
 
 		lp8720_read(lp8720_i2c_client, LDO2_SETTINGS_REG, &data);	
 		data &= ~(0x1F << 0);	
-		data |= (0x19 << 0);	/* AVDD 2.8V */
+		data |= (0x19 << 0);	
 		lp8720_write(lp8720_i2c_client, LDO2_SETTINGS_REG, data);	
 		printk("LDO2_SETTINGS_REG 0x%02x, DATA 0x%02x\n", LDO2_SETTINGS_REG, data);
 
 		lp8720_read(lp8720_i2c_client, LDO3_SETTINGS_REG, &data);	
 		data &= ~(0x1F << 0);	
-		data |= (0x0C << 0);	/* DVDD 1.8V */
+		data |= (0x0C << 0);	
 		lp8720_write(lp8720_i2c_client, LDO3_SETTINGS_REG, data);	
 		printk("LDO3_SETTINGS_REG 0x%02x, DATA 0x%02x\n", LDO3_SETTINGS_REG, data);
 		
 		lp8720_read(lp8720_i2c_client, LDO5_SETTINGS_REG, &data);	
 		data &= ~(0x1F << 0);	
-		data |= (0x19 << 0);	/* IO 2.8V */
+		data |= (0x19 << 0);	
 		lp8720_write(lp8720_i2c_client, LDO5_SETTINGS_REG, data);	
 		printk("LDO5_SETTINGS_REG 0x%02x, DATA 0x%02x\n", LDO5_SETTINGS_REG, data);
 		
 		lp8720_read(lp8720_i2c_client, ENABLE_BITS_REG, &data);	
 		data &= ~(0x1F << 0);	
-		data |= (0x17 << 0);	/* LDO5, LDO3, LDO2, LDO1 */
+		data |= (0x17 << 0);	
 		lp8720_write(lp8720_i2c_client, ENABLE_BITS_REG, data);	
 		printk("ENABLE_BITS_REG 0x%02x, DATA 0x%02x\n", ENABLE_BITS_REG, data);
 	}
+} */
+
+void ce131_sensor_power_init(void)
+{
+	u8 data;
+
+	if (!lp8720_init()) {
+		data = 0x5;	
+		lp8720_write(lp8720_i2c_client, GENERAL_SETTINGS_REG, data);
+		data = 0x79;	
+		lp8720_write(lp8720_i2c_client, LDO1_SETTINGS_REG, data);		
+		data = 0x79;	
+		lp8720_write(lp8720_i2c_client, LDO2_SETTINGS_REG, data);	
+		data = 0x6c;
+		lp8720_write(lp8720_i2c_client, LDO3_SETTINGS_REG, data);	
+		data = 0x71;
+		lp8720_write(lp8720_i2c_client, LDO4_SETTINGS_REG, data);	
+		data = 0x7d;	
+		lp8720_write(lp8720_i2c_client, LDO5_SETTINGS_REG, data);	
+		data = 0xb;	
+		lp8720_write(lp8720_i2c_client, BUCK_SETTINGS1_REG, data);	
+		data = 0x9;	
+		lp8720_write(lp8720_i2c_client, BUCK_SETTINGS2_REG, data);	
+		data = 0xbf;
+		lp8720_write(lp8720_i2c_client, ENABLE_BITS_REG, data);	
+		data = 0x3f;
+		lp8720_write(lp8720_i2c_client, PULLDOWN_BITS_REG, data);	
+		data = 0x03;
+		lp8720_write(lp8720_i2c_client, INTERRUPT_MASK_REG, data);	
+	}
 }
+

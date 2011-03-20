@@ -178,7 +178,7 @@
 #define SENSOR_FLASH_MOVIE	(1 << 30)
 #define SENSOR_EXIF_DATA	(1 << 31)
 
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131
 	#define SENSOR_GET_FWVERSION	(1 << 31) | ( 1 << 0)  
 //	#define SENSOR_SET_PREVIEW		(1 << 31) | ( 2 << 0)  
 //	#define SENSOR_START_CAPTURE	(1 << 31) | ( 3 << 0)  
@@ -193,7 +193,7 @@
 	#define SENSOR_DIG_ZOOM			(1 << 31) | (12 << 0)  
 	#define SENSOR_WDR				(1 << 31) | (13 << 0)  
 	#define SENSOR_FW_UPDATE		(1 << 31) | (14 << 0)  
-#endif
+//#endif
 
 #define SENSOR_MAX			0xffffffff
 
@@ -343,9 +343,9 @@ typedef struct {
 	u32			polarity_pclk;
 	u32			polarity_vsync;
 	u32			polarity_href;
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131
 	u32			href_mask;
-#endif
+//#endif
 	u32			user;			/* MAX 2 (codec, preview) */
 	u32			irq_old_priority;	/* BUS PRIORITY register */
 	u32			status;
@@ -461,9 +461,9 @@ struct v4l2_input_handler {
 };
 
 /* Externs */
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131
 extern int s3c_camif_control_global_capture(camif_cfg_t *cfg,int value);
-#endif
+//#endif
 extern camif_cfg_t* s3c_camif_get_fimc_object(int);
 extern int s3c_camif_start_dma(camif_cfg_t *);
 extern int s3c_camif_stop_dma(camif_cfg_t *);

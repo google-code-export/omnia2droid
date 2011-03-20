@@ -66,7 +66,7 @@ static atomic_t mv_flag;
 static short akmd_delay = 0;
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-static atomic_t suspend_flag = ATOMIC_INIT(0);
+//static atomic_t suspend_flag = ATOMIC_INIT(0);
 #endif /* CONFIG_HAS_EARLYSUSPEND */ 
 
 /* following are the sysfs callback functions */

@@ -20,8 +20,8 @@ endif
 ifeq ($(CONFIG_MACH_SPICA),y)
 EXTRA_CFLAGS 	+= -DCONFIG_VIDEO_SAMSUNG_S5K4CA  
 endif
-ifeq ($(CONFIG_MACH_SATURN),y)
-EXTRA_CFLAGS 	+= -DCONFIG_VIDEO_SAMSUNG_S5K4CA  
+ifeq ($(CONFIG_MACH_SMDK6410),y)
+EXTRA_CFLAGS 	+= -DCONFIG_VIDEO_SAMSUNG_CE131
 endif
 ifeq ($(CONFIG_MACH_ORION_6410),y)
 EXTRA_CFLAGS 	+= -DCONFIG_VIDEO_SAMSUNG_S5K4CA  
@@ -48,7 +48,7 @@ s3c_camera-y	+= s3c_camif.o s3c_camera_driver.o
 # 3M Camera Sensor
 #
 
-s3c_camera-y += $(SENSOR_DIR)/s5k4ca.o
+s3c_camera-y += $(SENSOR_DIR)/ce131.o
 
 #
 # 5M Camera Sensor
@@ -72,9 +72,6 @@ endif
 ifeq ($(CONFIG_MACH_CYGNUS),y)
 #s3c_camera-y += $(SENSOR_DIR)/ait848.o
 endif
-ifeq ($(CONFIG_MACH_SMDK6410),y)
-s3c_camera-y += $(SENSOR_DIR)/ait848.o
-endif
 ifeq ($(CONFIG_MACH_BONANZA),y)
 s3c_camera-y += $(SENSOR_DIR)/ce131.o
 endif
@@ -85,15 +82,12 @@ endif
 ifeq ($(CONFIG_MACH_BIGBANG),y)
 s3c_camera-y += $(SENSOR_DIR)/po4010.o
 endif
-ifeq ($(CONFIG_MACH_SMDK6410),y)
-s3c_camera-y += $(SENSOR_DIR)/po4010.o
-endif
 
 #
 # Camera Power
 #
 
-ifeq ($(CONFIG_MACH_CAPELA),y)
+ifeq ($(CONFIG_MACH_SMDK6410),y)
 s3c_camera-y += $(SENSOR_DIR)/power/lp8720.o
 endif
 
@@ -105,9 +99,6 @@ ifeq ($(CONFIG_MACH_INSTINCTQ),y)
 s3c_camera-y += $(SENSOR_DIR)/flash/aat1271a.o
 endif
 ifeq ($(CONFIG_MACH_CYGNUS),y)
-s3c_camera-y += $(SENSOR_DIR)/flash/aat1271a.o
-endif
-ifeq ($(CONFIG_MACH_SMDK6410),y)
 s3c_camera-y += $(SENSOR_DIR)/flash/aat1271a.o
 endif
 

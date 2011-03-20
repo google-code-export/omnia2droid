@@ -632,6 +632,12 @@ config VIDEO_SAMSUNG_S5K4CA
 	help
 	  TBA
 
+config VIDEO_SAMSUNG_CE131
+	tristate "NEC CE131 (5.0M CIS module)"
+	depends on VIDEO_SAMSUNG
+	help
+	  TBA
+
 config VIDEO_SAMSUNG_PO4010
 	tristate "PO4010N (0.1M CIS module, 352x288)"
 	depends on VIDEO_SAMSUNG
