@@ -49,14 +49,21 @@
 
 #include "s3c_camif.h"
 
+#include <mach/gpio.h>
+
+
+
 static unsigned int irq_old_priority;
 camif_cfg_t s3c_fimc[CAMIF_DEV_NUM];
+
+
 
 /*************************************************************************
  * Utility part
  ************************************************************************/
 camif_cfg_t *s3c_camif_get_fimc_object(int nr)
 {
+	//printk("s3c_camif_get_fimc_object called \n"); DEBUG
 	camif_cfg_t *ret = NULL;
 
 	switch (nr) {
@@ -77,6 +84,7 @@ camif_cfg_t *s3c_camif_get_fimc_object(int nr)
 
 int s3c_camif_get_frame_num(camif_cfg_t *cfg)
 {
+	//printk("s3c_camif_get_frame_num \n"); DEBUG
 	unsigned int index = 0;
 
 	if (cfg->dma_type & CAMIF_CODEC)
@@ -103,6 +111,7 @@ int s3c_camif_get_frame_num(camif_cfg_t *cfg)
 
 unsigned char* s3c_camif_get_frame(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_get_frame \n");
 	unsigned char *ret = NULL;
 	unsigned int cnt = cfg->cur_frame_num;
 
@@ -122,6 +131,7 @@ unsigned char* s3c_camif_get_frame(camif_cfg_t *cfg)
 
 int s3c_camif_get_fifo_status(camif_cfg_t *cfg)
 {
+	//printk("s3c_camif_get_fifo_status \n"); debug
 	unsigned int reg, val, flag;
 
 	if (cfg->dma_type & CAMIF_CODEC) {
@@ -179,10 +189,10 @@ void s3c_camif_set_polarity(camif_cfg_t *cfg)
 	if (cis->polarity_href)
 		cmd |= S3C_CIGCTRL_INVPOLHREF;
 
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131
 	if (cis->href_mask)
 		cmd |= S3C_CIGCTRL_HREF_MASK;
-#endif
+//#endif
 
 	val = readl(cfg->regs + S3C_CIGCTRL);
 	val |= cmd;
@@ -194,6 +204,7 @@ void s3c_camif_set_polarity(camif_cfg_t *cfg)
  ************************************************************************/
 static int s3c_camif_request_memory(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_request_memory \n");
 	unsigned int t_size = 0, i = 0;
 	unsigned int area = 0;
 
@@ -326,6 +337,7 @@ static void s3c_camif_calc_burst_length(unsigned int hsize, unsigned int *mburst
 
 int s3c_camif_setup_dma(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_setup_dma \n");
 	unsigned int width = cfg->target_x;
 	unsigned int val, yburst_m, yburst_r, cburst_m, cburst_r;
 
@@ -498,6 +510,7 @@ int s3c_camif_input_msdma_preview(camif_cfg_t * cfg)
 
 static int s3c_camif_input_msdma(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_input_msdma \n");
 	if (cfg->input_channel == MSDMA_FROM_PREVIEW)
 		s3c_camif_input_msdma_preview(cfg);
 
@@ -510,6 +523,7 @@ static int s3c_camif_input_msdma(camif_cfg_t *cfg)
 #elif defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 int s3c_camif_input_msdma_codec(camif_cfg_t * cfg)
 {
+	printk("s3c_camif_input_msdma_codec \n");
 	int ret = 0;
 	u32 addr_start_Y = 0, addr_start_CB = 0, addr_start_CR = 0;
 	u32 addr_end_Y = 0, addr_end_CB = 0, addr_end_CR = 0;
@@ -587,6 +601,7 @@ int s3c_camif_input_msdma_codec(camif_cfg_t * cfg)
 
 int s3c_camif_input_msdma_preview(camif_cfg_t * cfg)
 {
+	printk("s3c_camif_input_msdma_preview \n");
 	int ret = 0;
 	unsigned int addr_start_Y = 0, addr_start_CB = 0, addr_start_CR = 0;
 	unsigned int addr_end_Y = 0, addr_end_CB = 0, addr_end_CR = 0;
@@ -664,6 +679,7 @@ int s3c_camif_input_msdma_preview(camif_cfg_t * cfg)
 
 static int s3c_camif_input_msdma(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_input_msdma \n");
 	if (cfg->input_channel == MSDMA_FROM_PREVIEW)
 		s3c_camif_input_msdma_preview(cfg);
 	else if (cfg->input_channel == MSDMA_FROM_CODEC)
@@ -675,12 +691,14 @@ static int s3c_camif_input_msdma(camif_cfg_t *cfg)
 
 static int s3c_camif_input_camera(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_input_camera \n");
 	unsigned int val;
 
 	s3c_camif_set_offset(cfg->cis);
 
 	if (cfg->dma_type & CAMIF_CODEC)
 	{
+	printk("s3c_camif_input_camera:CAMIF_CODEC  \n");
 		#if defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 			val = readl(cfg->regs + S3C_MSCOCTRL);
 			val &= ~(1 << 3);
@@ -689,6 +707,7 @@ static int s3c_camif_input_camera(camif_cfg_t *cfg)
 	}
 	else if (cfg->dma_type & CAMIF_PREVIEW)
 	{
+	printk("s3c_camif_input_camera:CAMIF_PREVIEW  \n");
 		#if defined(CONFIG_CPU_S3C2443) || defined(CONFIG_CPU_S3C2450)
 			val = readl(cfg->regs + S3C_CIMSCTRL);
 			val &= ~(1 << 2);
@@ -707,6 +726,7 @@ static int s3c_camif_input_camera(camif_cfg_t *cfg)
 
 static int s3c_camif_setup_input_path(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_setup_input_path \n");
 	if (cfg->input_channel == CAMERA_INPUT)
 		s3c_camif_input_camera(cfg);
 	else
@@ -720,6 +740,7 @@ static int s3c_camif_setup_input_path(camif_cfg_t *cfg)
  ************************************************************************/
 static int s3c_camif_output_pp_codec_rgb(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_output_pp_codec_rgb \n");
 	int i;
 	unsigned int val;
 	unsigned int area = cfg->target_x * cfg->target_y;
@@ -772,6 +793,7 @@ static int s3c_camif_output_pp_codec_rgb(camif_cfg_t *cfg)
 
 static int s3c_camif_output_pp_codec(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_output_pp_codec \n");
 	unsigned int i, cbcr_size = 0;
 	unsigned int area = cfg->target_x * cfg->target_y;
 	unsigned int one_p_size;
@@ -929,6 +951,7 @@ static int s3c_camif_io_duplex_preview(camif_cfg_t *cfg)
 #elif defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 static int s3c_camif_io_duplex_preview(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_io_duplex_preview \n");
 	unsigned int cbcr_size = 0;
 	unsigned int area = cfg->cis->source_x * cfg->cis->source_y;
 	unsigned int val;
@@ -1004,6 +1027,7 @@ static int s3c_camif_io_duplex_preview(camif_cfg_t *cfg)
 
 static int s3c_camif_output_pp_preview(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_output_pp_preview \n");
 	int i;
 	unsigned int area            = cfg->target_x * cfg->target_y;
 	unsigned int one_p_size      = 0;
@@ -1063,6 +1087,7 @@ static int s3c_camif_output_pp_preview(camif_cfg_t *cfg)
 
 static int s3c_camif_output_pp(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_output_pp \n");
 	if (cfg->dma_type & CAMIF_CODEC)
 		s3c_camif_output_pp_codec(cfg);
 	else if ( cfg->dma_type & CAMIF_PREVIEW)
@@ -1073,12 +1098,14 @@ static int s3c_camif_output_pp(camif_cfg_t *cfg)
 
 static int s3c_camif_output_lcd(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_output_lcd \n");
 	/* To Be Implemented */
 	return 0;
 }
 
 static int s3c_camif_setup_output_path(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_setup_output_path \n");
 	if (cfg->output_channel == CAMIF_OUT_FIFO)
 		s3c_camif_output_lcd(cfg);
 	else
@@ -1092,6 +1119,7 @@ static int s3c_camif_setup_output_path(camif_cfg_t *cfg)
  ************************************************************************/
 static int s3c_camif_set_target_area(camif_cfg_t *cfg)
 {
+	printk("ss3c_camif_set_target_area \n");
 	unsigned int rect = cfg->target_x * cfg->target_y;
 
 	if (cfg->dma_type & CAMIF_CODEC)
@@ -1105,6 +1133,7 @@ static int s3c_camif_set_target_area(camif_cfg_t *cfg)
 #if defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 static inline int s3c_camif_set_ratio(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_set_ratio \n");
 	unsigned int cmd = (S3C_CICOSCCTRL_CSCR2Y_WIDE | S3C_CICOSCCTRL_CSCY2R_WIDE);
 
 	if (cfg->dma_type & CAMIF_CODEC)
@@ -1211,6 +1240,7 @@ static inline int s3c_camif_set_ratio(camif_cfg_t *cfg)
 
 static int s3c_camif_calc_ratio(unsigned int src_width, unsigned int dst_width, unsigned int *ratio, unsigned int *shift)
 {
+	printk("s3c_camif_calc_ratio \n");
 	// kcoolsw
 	//if (src_width >= 64 * dst_width)
 	if (src_width >= (dst_width << 6))
@@ -1261,6 +1291,7 @@ static int s3c_camif_calc_ratio(unsigned int src_width, unsigned int dst_width, 
 
 static int s3c_camif_setup_scaler(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_setup_scaler \n");
 	int tx = cfg->target_x, ty=cfg->target_y;
 	int sx, sy;
 
@@ -1337,15 +1368,18 @@ static int s3c_camif_setup_scaler(camif_cfg_t *cfg)
  ************************************************************************/
 int s3c_camif_set_source_format(camif_cis_t *cis)
 {
+	printk("s3c_camif_set_source_format \n");
 	camif_cfg_t *cfg = s3c_camif_get_fimc_object(CODEC_MINOR);
 	unsigned int cmd = 0;
 
 	/* Configure CISRCFMT --Source Format */
-	if (cis->itu_fmt & CAMIF_ITU601)
+	if (cis->itu_fmt & CAMIF_ITU601){
 		cmd = CAMIF_ITU601;
+		printk("s3c_camif_set_source_format = ITU601 \n");}
 	else {
 		assert(cis->itu_fmt & CAMIF_ITU656);
 		cmd = CAMIF_ITU656;
+		printk("s3c_camif_set_source_format = ITU656 \n");
 	}
 
 	cmd |= (S3C_CISRCFMT_SOURCEHSIZE(cis->source_x) | S3C_CISRCFMT_SOURCEVSIZE(cis->source_y));
@@ -1363,14 +1397,35 @@ int s3c_camif_set_source_format(camif_cis_t *cis)
  *            Order422_Co [1:0]   : 11 Cr0Y0Cb0Y1
  *                                  00 Y0Cb0Y1Cr0
  * */
+
+	
+
 	if(cfg->sc.scalerbypass)
-	{	cmd = (cis->order422 >> 14);
+	{
+		printk("!#$ CMD	cis->order422 >> 14 \n");
+		cmd = (cis->order422 >> 14);
 		writel((readl(cfg->regs + S3C_CICOCTRL) & ~(0x3 << 0)) | cmd, cfg->regs + S3C_CICOCTRL);
+		printk("##1 ORDERING FOR JPEG cmd = %x \n",cmd); //MARC HERE CE131 CHANGE
 	}
 	else
 	{
-		cmd = CAMIF_YCBYCR;		// + mihee 090725
+		printk("!#$ cis->order422 >> 14 \n");
+		//cmd = CAMIF_YCBYCR;		// + mihee 090725
+		cmd = (cis->order422 >> 14); //MARC = 2
+		//cmd = 3;	
 		writel((readl(cfg->regs + S3C_CICOCTRL) & ~(0x3 << 0)) | cmd, cfg->regs + S3C_CICOCTRL);
+		//writel(cmd, cfg->regs + S3C_CICOCTRL);
+		printk("##2 ORDERING FOR JPEG cmd = %x \n",cmd); //MARC HERE CE131 CHANGE
+		printk(" CISRCFMT = %x \n", readl(cfg->regs + S3C_CISRCFMT));
+		printk(" CIGCTRL  = %x \n", readl(cfg->regs + S3C_CIGCTRL));
+		printk(" CIWDOFST   = %x \n", readl(cfg->regs + S3C_CIWDOFST ));
+		printk(" CICOTRGFMT  = %x \n", readl(cfg->regs + S3C_CICOTRGFMT));
+		printk(" CICOCTRL  = %x \n", readl(cfg->regs + S3C_CICOCTRL));
+		printk(" CIPRSCCTRL = %x \n", readl(cfg->regs + S3C_CIPRSCCTRL));
+		printk(" CIPRCTRL = %x \n", readl(cfg->regs + S3C_CIPRCTRL));
+		printk(" MSCOCTRL = %x \n", readl(cfg->regs + S3C_MSCOCTRL));
+		printk(" MSPRCTRL = %x \n", readl(cfg->regs + S3C_MSPRWIDTH + 4));
+
 	}
 #endif
 #endif
@@ -1381,6 +1436,7 @@ int s3c_camif_set_source_format(camif_cis_t *cis)
 #if defined(CONFIG_CPU_S3C2443) || defined(CONFIG_CPU_S3C2450) || defined(CONFIG_CPU_S3C2416)
 static int s3c_camif_set_target_format(camif_cfg_t *cfg)
 {
+
 	unsigned int cmd = 0;
 
 	if (cfg->dma_type & CAMIF_CODEC)
@@ -1421,6 +1477,7 @@ static int s3c_camif_set_target_format(camif_cfg_t *cfg)
 #elif defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 static int s3c_camif_set_target_format(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_set_target_format \n");
 	unsigned int cmd = 0;
 
 	if (cfg->dma_type & CAMIF_CODEC)
@@ -1480,9 +1537,10 @@ static int s3c_camif_set_target_format(camif_cfg_t *cfg)
 /*************************************************************************
  * Control part
  ************************************************************************/
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131
 int s3c_camif_control_global_capture(camif_cfg_t *cfg,int value)
 {
+	printk("CE131:s3c_camif_control_global_capture\n");
 	unsigned int val;
 
 	val = readl(cfg->regs + S3C_CIIMGCPT);
@@ -1492,10 +1550,11 @@ int s3c_camif_control_global_capture(camif_cfg_t *cfg,int value)
 		val &= ~(S3C_CIIMGCPT_IMGCPTEN);
 	writel(val, cfg->regs + S3C_CIIMGCPT);
 }
-#endif
+//#endif
 
 int s3c_camif_control_fimc(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_control_fimc  \n");
 	if (s3c_camif_request_memory(cfg)) {
 		printk(KERN_ERR "Instead of using consistent_alloc(). Let me use dedicated mem for DMA\n");
 		return -1;
@@ -1523,12 +1582,14 @@ int s3c_camif_control_fimc(camif_cfg_t *cfg)
 int s3c_camif_start_dma(camif_cfg_t *cfg)
 {
 	unsigned int n_cmd = readl(cfg->regs + S3C_CIIMGCPT);
+	printk("s3c_camif_start_dma called, cmd= %x \n", n_cmd);
 	unsigned int val;
 	unsigned int timeout = 300;
 
 restart_dma:
 	switch(cfg->capture_enable) {
 	case CAMIF_BOTH_DMA_ON:
+		printk("s3c_camif_start_dma:CAMIF_BOTH_DMA_ON \n");
 		s3c_camif_reset(CAMIF_RESET, 0); /* Flush Camera Core Buffer */
 
 		// (091124 / kcoolsw) : for scalerbypass mode
@@ -1551,11 +1612,11 @@ restart_dma:
 		break;
 
 	case CAMIF_DMA_ON:
-
+		printk("s3c_camif_start_dma:CAMIF_DMA_ON \n");
 		s3c_camif_reset(CAMIF_RESET, 0); /* Flush Camera Core Buffer */	// - mihee 090730 multishot lockup
 		
 		if (cfg->dma_type & CAMIF_CODEC) {
-
+			printk("s3c_camif_start_dma:CAMIF_DMA_ON : CAMIF_CODEC \n");
 			// (091124 / kcoolsw) : for scalerbypass mode
 			/*
 			val = readl(cfg->regs + S3C_CICOSCCTRL);
@@ -1578,10 +1639,8 @@ restart_dma:
 				writel(val, cfg->regs + S3C_CICOSCCTRL);
 			}
 
-#if defined(CONFIG_CPU_S3C2443) || defined(CONFIG_CPU_S3C2450) || defined(CONFIG_CPU_S3C2416)
-			n_cmd |= (1 << 24);
-#endif
 		} else {
+			printk("s3c_camif_start_dma:CAMIF_DMA_ON : else \n");
 			val = readl(cfg->regs + S3C_CIPRSCCTRL);
 			val |= S3C_CIPRSCCTRL_START;
 			writel(val, cfg->regs + S3C_CIPRSCCTRL);
@@ -1594,14 +1653,14 @@ restart_dma:
 		/* First settting, to wait VSYNC fall  */
 		/* By VESA spec,in 640x480 @60Hz
 		   MAX Delay Time is around 64us which "while" has.*/
-#ifndef CONFIG_VIDEO_SAMSUNG_CE131
+/*#ifndef CONFIG_VIDEO_SAMSUNG_CE131 //NOT DEFINED --> LAST m: by enabled, was disabled
 		while(1)
 		{
 			if((S3C_CICOSTATUS_VSYNC & readl(cfg->regs + S3C_CICOSTATUS)))
 				break;
 			msleep(1);
 			timeout--;
-	//		printk("timeout = %d\n", timeout);
+			//printk("timeout = %d\n", timeout);
 			if(!timeout){
 				n_cmd = readl(cfg->regs + S3C_CIIMGCPT);
 				timeout = 300;
@@ -1609,33 +1668,23 @@ restart_dma:
 			}
 
 		}
-#endif
+#endif */ //FIXME MARC
 		break;
 
 	default:
 		break;
 	}
 
-#if defined(CONFIG_CPU_S3C2443)
-	if (cfg->dma_type & CAMIF_CODEC) {
-		if (cfg->dst_fmt & CAMIF_RGB24)
-			n_cmd |= (3 << 25);
-		else if (cfg->dst_fmt & CAMIF_RGB16)
-			n_cmd |= (1 << 25);
-		else if (cfg->dst_fmt & CAMIF_YCBCR420)
-			n_cmd |= (2 << 25);
-	}
-#endif
-
 	val = readl(cfg->regs + S3C_CIIMGCPT);
 	val &= ~(0x7 << 29);
 	writel(val | n_cmd | S3C_CIIMGCPT_IMGCPTEN, cfg->regs + S3C_CIIMGCPT);
-
+	printk("s3c_camif_start_dma ended \n");
 	return 0;
 }
 
 int s3c_camif_stop_dma(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_stop_dma \n");
 	unsigned int n_cmd = readl(cfg->regs + S3C_CIIMGCPT);
 	unsigned int val;
 
@@ -1704,6 +1753,7 @@ int s3c_camif_stop_dma(camif_cfg_t *cfg)
 #if defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 int s3c_camif_start_codec_msdma(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_start_codec_msdma \n");
 	int ret = 0;
 	u32 val;
 
@@ -1721,6 +1771,7 @@ int s3c_camif_start_codec_msdma(camif_cfg_t *cfg)
 
 int s3c_camif_start_preview_msdma(camif_cfg_t * cfg)
 {
+	printk("s3c_camif_start_preview_msdma \n");
 	unsigned int val;
 	int ret = 0;
 
@@ -1827,6 +1878,7 @@ int s3c_camif_do_postprocess(camif_cfg_t *cfg)
 
 int s3c_camif_set_offset(camif_cis_t *cis)
 {
+	printk("s3c_camif_set_offset \n");
 	camif_cfg_t *cfg = s3c_camif_get_fimc_object(CODEC_MINOR);
 	unsigned int h = cis->win_hor_ofst;     /* Camera input offset ONLY */
 	unsigned int v = cis->win_ver_ofst;     /* Camera input offset ONLY */
@@ -1879,6 +1931,7 @@ void s3c_camif_set_priority(int flag)
  ************************************************************************/
 void s3c_camif_enable_lastirq(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_enable_lastirq \n");
 	unsigned int val;
 
 	if (cfg->capture_enable == CAMIF_BOTH_DMA_ON) {
@@ -1904,6 +1957,7 @@ void s3c_camif_enable_lastirq(camif_cfg_t *cfg)
 
 void s3c_camif_disable_lastirq(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_disable_lastirq \n");
 	unsigned int val;
 
 	if (cfg->capture_enable == CAMIF_BOTH_DMA_ON) {
@@ -1930,6 +1984,7 @@ void s3c_camif_disable_lastirq(camif_cfg_t *cfg)
 #if defined(CONFIG_CPU_S3C6400) || defined(CONFIG_CPU_S3C6410)
 void s3c_camif_clear_irq(int irq)
 {
+	//printk("s3c_camif_clear_irq \n"); DEBUG
 	camif_cfg_t *cfg = s3c_camif_get_fimc_object(CODEC_MINOR);
 	unsigned int val = 0;
 
@@ -2002,6 +2057,7 @@ static int s3c_camif_set_gpio(void)
 	s3c_gpio_cfgpin(GPIO_CAM_VSYNC, S3C_GPIO_SFN(GPIO_CAM_VSYNC_AF));
 	s3c_gpio_setpull(GPIO_CAM_VSYNC, S3C_GPIO_PULL_NONE);
 #else
+	printk("s3c_camif_set_gpio \n");
 	s3c_gpio_cfgpin(S3C64XX_GPF(5), S3C_GPIO_SFN(2));
 	s3c_gpio_setpull(S3C64XX_GPF(5), S3C_GPIO_PULL_NONE);
 	s3c_gpio_cfgpin(S3C64XX_GPF(6), S3C_GPIO_SFN(2));
@@ -2035,21 +2091,25 @@ static int s3c_camif_set_gpio(void)
 
 void s3c_camif_reset(int is, int delay)
 {
+	printk("s3c_camif_reset \n");
 	camif_cfg_t *cfg = s3c_camif_get_fimc_object(CODEC_MINOR);
 	unsigned int val;
 	unsigned int tmp;
 
 	switch (is) {
 	case CAMIF_RESET:
-		tmp = readl(cfg->regs + S3C_CISRCFMT);
-
+		printk("case = CAMIF_RESET \n");
+		tmp = readl(cfg->regs + S3C_CISRCFMT); //THE PROBLEM OFFICER
+		printk(" S3C_CISRCFMT = %x \n", tmp);
+		printk(" CIGCTRL  = %x \n", readl(cfg->regs + S3C_CIGCTRL));
 		// (091124 / kcoolsw) : for continuous zooming
 		//if (tmp &= (1 << 31)) {
 		if (tmp & (1 << 31)) {
+			printk("ITU-R BT 601 \n");
 			//tmp |= (1 << 31);
 			//writel(tmp, cfg->regs + S3C_CISRCFMT);
 			
-			/* ITU-R BT 601 */
+			// ITU-R BT 601
 			val = readl(cfg->regs + S3C_CIGCTRL);
 			val |= S3C_CIGCTRL_SWRST;
 
@@ -2067,8 +2127,11 @@ void s3c_camif_reset(int is, int delay)
 			val = readl(cfg->regs + S3C_CIGCTRL);
 			val &= ~S3C_CIGCTRL_SWRST;
 			writel(val, cfg->regs + S3C_CIGCTRL);
+
+			
 		} else {
-			/* ITU-R BT 656 */
+			// ITU-R BT 656
+			printk("ITU-R BT 656 \n");
 			tmp = readl(cfg->regs + S3C_CISRCFMT);
 			tmp |= (1 << 31);
 			writel(tmp, cfg->regs + S3C_CISRCFMT);
@@ -2091,7 +2154,7 @@ void s3c_camif_reset(int is, int delay)
 			tmp &= ~(1 << 31);
 			writel(tmp, cfg->regs + S3C_CISRCFMT);
 		}
-
+		printk(" finished s3c_cam reset \n");
 		break;
 
 	case CAMIF_EX_RESET_AH:
@@ -2138,13 +2201,14 @@ void s3c_camif_reset(int is, int delay)
 
 void s3c_camif_init(void)
 {
+	printk("s3c_camif_init \n");
 	s3c_camif_reset(CAMIF_RESET, 0);
 	s3c_camif_set_gpio();
 }
 
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131
 EXPORT_SYMBOL(s3c_camif_control_global_capture);
-#endif
+//#endif
 EXPORT_SYMBOL(s3c_camif_get_fimc_object);
 EXPORT_SYMBOL(s3c_camif_set_polarity);
 EXPORT_SYMBOL(s3c_camif_get_frame);

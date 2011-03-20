@@ -64,9 +64,15 @@
 #include "s3c_camif.h"
 #include "videodev2_s3c.h"
 
+#include <mach/map.h>
+
+#define DUMP_SETTINGS 0xAA
+
 #ifdef CONFIG_S3C64XX_DOMAIN_GATING
 #define USE_CAMERA_DOMAIN_GATING
 #endif /* CONFIG_S3C64XX_DOMAIN_GATING */
+
+
 
 // function define
 //#define MEASURE_INIT_OPERATION
@@ -113,6 +119,11 @@ struct clk *cam_clock;
 struct clk *cam_hclk;
 EXPORT_SYMBOL(cam_clock);
 EXPORT_SYMBOL(cam_hclk);
+
+static void __iomem *s3c_camif_base;
+static struct resource *s3c_camif_mem;
+
+
 
 static camif_cis_t default_msdma_input = {
 	itu_fmt:       	CAMIF_ITU601,
@@ -185,8 +196,8 @@ static int NUMBER_OF_INPUTS = 0;
 CAM_PP property;
 
 extern int s3c_camif_do_postprocess(camif_cfg_t *cfg);
-#ifndef CONFIG_VIDEO_SAMSUNG_CE131
-extern void s5k4ca_sensor_enable(void);
+#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+extern void ce131_sensor_enable(void);
 #endif
 
 /*************************************************************************
@@ -318,15 +329,21 @@ static int s3c_camif_get_sensor_format(unsigned int    in_width, unsigned int   
 		if(2048 <= in_width || 1536 <= in_height)
 			sensor_type = SENSOR_QXGA;
 		else
-			sensor_type = SENSOR_XGA;
+			sensor_type = SENSOR_VGA; //XGA ORIGINAL
 	}
 	#elif defined(CONFIG_VIDEO_SAMSUNG_CE131)
+	{
+		if(2048 <= in_width || 1536 <= in_height)
+			sensor_type = SENSOR_QXGA;
+		else
+			sensor_type = SENSOR_VGA; //XGA ORIGINAL
+	}/*
 	{
 		if(2560 <= in_width || 1920 <= in_height)
 			sensor_type = SENSOR_QSXGA;
 		else
 			sensor_type = SENSOR_XGA;
-	}
+	}*/
 	#elif defined(CONFIG_VIDEO_SAMSUNG_S5K3AA)
 	{
 		if(1280 <= in_width || 1024 <= in_height)
@@ -362,13 +379,10 @@ static int s3c_camif_start_capture(camif_cfg_t * cfg)
 	int ret = 0;
 
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +s3c_camif_start_capture\n"));
-
+	printk("s3c_camif_start_capture  \n");
 	cfg->capture_enable = CAMIF_DMA_ON;
-
 	s3c_camif_start_dma(cfg);
-
 	cfg->status = CAMIF_STARTED;
-
 	// (091124 / kcoolsw) : for digital zoom..
 	//if (!(cfg->fsm == CAMIF_SET_LAST_INT || cfg->fsm == CAMIF_CONTINUOUS_INT))
 	if(cfg->sc.scalerbypass == 0)
@@ -381,6 +395,18 @@ static int s3c_camif_start_capture(camif_cfg_t * cfg)
 	if (cfg->input_channel == MSDMA_FROM_CODEC)
 		s3c_camif_start_codec_msdma(cfg);
 #endif
+
+		printk(" CISRCFMT = %x \n", readl(cfg->regs + S3C_CISRCFMT));
+		printk(" CIGCTRL  = %x \n", readl(cfg->regs + S3C_CIGCTRL));
+		printk(" CIWDOFST   = %x \n", readl(cfg->regs + S3C_CIWDOFST ));
+		printk(" CICOTRGFMT  = %x \n", readl(cfg->regs + S3C_CICOTRGFMT));
+		printk(" CICOCTRL  = %x \n", readl(cfg->regs + S3C_CICOCTRL));
+		printk(" CIPRSCCTRL = %x \n", readl(cfg->regs + S3C_CIPRSCCTRL));
+		printk(" CIPRCTRL = %x \n", readl(cfg->regs + S3C_CIPRCTRL));
+		printk(" MSCOCTRL = %x \n", readl(cfg->regs + S3C_MSCOCTRL));
+		printk(" MSPRCTRL = %x \n", readl(cfg->regs + S3C_MSPRWIDTH + 4));
+
+
 
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] -s3c_camif_start_capture\n"));
 	return ret;
@@ -506,7 +532,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 		#if defined(CONFIG_VIDEO_SAMSUNG_S5K4CA)
 			res = SENSOR_QXGA;
 		#elif defined(CONFIG_VIDEO_SAMSUNG_CE131)
-			res = SENSOR_QSXGA;
+			res = SENSOR_QXGA; //FIXME res = SENSOR_QSXGA;
 		#elif defined(CONFIG_VIDEO_SAMSUNG_S5K3AA)
 			res = SENSOR_SXGA;
 		#elif defined(CONFIG_VIDEO_SAMSUNG_S5K3BA)
@@ -518,9 +544,9 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 	else if (mode == SENSOR_DEFAULT)
 	{
 		#if defined(CONFIG_VIDEO_SAMSUNG_S5K4CA)
-			res = SENSOR_XGA;
+			res = SENSOR_VGA; //XGA original
 		#elif defined(CONFIG_VIDEO_SAMSUNG_CE131)
-			res = SENSOR_XGA;
+			res = SENSOR_VGA;//			res = SENSOR_XGA;
 		#elif defined(CONFIG_VIDEO_SAMSUNG_S5K3AA)
 			res = SENSOR_VGA;
 		#elif defined(CONFIG_VIDEO_SAMSUNG_S5K3BA)
@@ -539,7 +565,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 	switch (res) 
 	{
 		case SENSOR_QSXGA:
-			//printk("Resolution changed into QSXGA (2592x1944) mode\n");
+			printk("Resolution changed into QSXGA (2592x1944) mode\n");
 			cis->source_x = 2560;
 			cis->source_y = 1920;
 
@@ -552,7 +578,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 			break;
 
 		case SENSOR_QXGA:
-			//printk("Resolution changed into QXGA (2048x1536) mode\n");
+			printk("Resolution changed into QXGA (2048x1536) mode\n");
 			cis->source_x = 2048;
 			cis->source_y = 1536;
 
@@ -560,7 +586,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 			break;
 
 		case SENSOR_UXGA:
-			//printk("Resolution changed into UXGA (1600x1200) mode\n");
+			printk("Resolution changed into UXGA (1600x1200) mode\n");
 			cis->source_x = 1600;
 			cis->source_y = 1200;
 
@@ -568,7 +594,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 			break;
 
 		case SENSOR_SXGA:
-			//printk("Resolution changed into SXGA (1280x1024) mode\n");
+			printk("Resolution changed into SXGA (1280x1024) mode\n");
 			cis->source_x = 1280;
 			cis->source_y = 1024;
 
@@ -576,7 +602,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 			break;
 
 		case SENSOR_XGA:
-			//printk("Resolution changed into XGA (1024x768) mode\n");
+			printk("Resolution changed into XGA (1024x768) mode\n");
 			cis->source_x = 1024;
 			cis->source_y = 768;
 
@@ -584,7 +610,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 			break;
 
 		case SENSOR_SVGA:
-			//printk("Resolution changed into SVGA (800x600) mode\n");
+			printk("Resolution changed into SVGA (800x600) mode\n");
 			cis->source_x = 800;
 			cis->source_y = 600;
 
@@ -592,7 +618,7 @@ static void s3c_camif_change_mode(camif_cfg_t *cfg, int mode)
 			break;
 
 		case SENSOR_VGA:
-			//printk("Resolution changed into VGA (640x480) mode\n");
+			printk("Resolution changed into VGA (640x480) mode\n");
 			cis->source_x = 640;
 			cis->source_y = 480;
 
@@ -693,15 +719,16 @@ static int s3c_camif_restart(camif_cfg_t *cfg)
 
 	return ret;
 }
-*/
-/*
+
+
 static int s3c_camif_send_sensor_command(camif_cfg_t *cfg, unsigned int cmd, void *arg)
 {
+	printk("s3c_camif_send_sensor_command \n");
 	cfg->cis->sensor->driver->command(cfg->cis->sensor, cmd, arg);
 
 	return 0;
-}*/
-
+}
+*/
 /*************************************************************************
  * V4L2 part
  ************************************************************************/
@@ -806,22 +833,24 @@ static int s3c_camif_v4l2_s_fmt(camif_cfg_t *cfg, unsigned long arg)
 	switch (f->type)
 	{
 		case V4L2_BUF_TYPE_VIDEO_CAPTURE:
+			printk("s3c_camif_v4l2_s_fmt:VIDEO_CAPTURE \n");
 			cfg->v2.frmbuf.fmt   = f->fmt.pix;
 			cfg->v2.status       |= CAMIF_v4L2_DIRTY;
 			cfg->v2.status      &= ~CAMIF_v4L2_DIRTY; /* dummy ? */
 #ifdef CONFIG_VIDEO_SAMSUNG_CE131
-			sensor_type = SENSOR_QSXGA; // 5M 
+			sensor_type = SENSOR_QXGA;  // FIXME 3M			sensor_type = SENSOR_QSXGA; // 5M 
 #else
 			sensor_type = SENSOR_QXGA;  // 3M
 #endif
 			break;
 
 		case V4L2_BUF_TYPE_VIDEO_OVERLAY:
+			printk("s3c_camif_v4l2_s_fmt:VIDEO_OVERLAY \n");
 			cfg->v2.frmbuf.fmt   = f->fmt.pix;
 			cfg->v2.status       |= CAMIF_v4L2_DIRTY;
 			cfg->v2.status      &= ~CAMIF_v4L2_DIRTY; /* dummy ? */
 
-			sensor_type = SENSOR_XGA;
+			sensor_type = SENSOR_VGA; //FIXME original XGA
 			break;
 
 		default:
@@ -967,14 +996,70 @@ static int s3c_camif_v4l2_g_campp(camif_cfg_t *cfg, unsigned long arg)
 
 static int s3c_camif_v4l2_g_ctrl(camif_cfg_t *cfg, unsigned long arg)
 {
-	__TRACE_CAMERA_DRV(printk("[CAM-DRV] =s3c_camif_v4l2_g_ctrl\n"));
-	return 0;
+	//__TRACE_CAMERA_DRV(printk("[CAM-DRV] =s3c_camif_v4l2_g_ctrl\n"));
+	printk("## s3c_camif_v4l2_g_ctrl \n");
+	struct v4l2_control *ctrl = (struct v4l2_control *) arg;
+	int err = -ENOIOCTLCMD;
+
+	#define V4L2_CID_CAM_JPEG_MAIN_SIZE		(V4L2_CID_PRIVATE_BASE + 32)
+
+	switch (ctrl->id) {
+/*	case V4L2_CID_EXPOSURE:
+		ctrl->value = userset.exposure_bias;
+		err = 0;
+		break;
+
+	case V4L2_CID_AUTO_WHITE_BALANCE:
+		ctrl->value = userset.auto_wb;
+		err = 0;
+		break;
+
+	case V4L2_CID_WHITE_BALANCE_PRESET:
+		ctrl->value = userset.manual_wb;
+		err = 0;
+		break;
+
+	case V4L2_CID_COLORFX:
+		ctrl->value = userset.effect;
+		err = 0;
+		break;
+
+	case V4L2_CID_CONTRAST:
+		ctrl->value = userset.contrast;
+		err = 0;
+		break;
+
+	case V4L2_CID_SATURATION:
+		ctrl->value = userset.saturation;
+		err = 0;
+		break;
+
+	case V4L2_CID_SHARPNESS:
+		ctrl->value = userset.sharpness;
+		err = 0;
+		break;
+*/
+	case V4L2_CID_CAM_JPEG_MAIN_SIZE:
+		printk("## V4L2_CID_CAM_JPEG_MAIN_SIZE \n");
+		//ctrl->value = 4;//state->jpeg.main_size;
+		err = 0;
+		//ctrl = (struct v4l2_control *) arg; 
+		ctrl->value = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_GET_JPEG_SIZE, (void *) arg);
+		//ctrl->value = 4;
+		break;
+
+	default:
+		printk("no such ctrl\n");
+		break;
+	}
+	
+	return err;
 }
 
 static int s3c_camif_v4l2_s_ctrl(camif_cfg_t *cfg, unsigned long arg)
 {
 	struct v4l2_control *ctrl = (struct v4l2_control *) arg;
-
+	printk("s3c_camif_v4l2_s_ctrl \n");
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +s3c_camif_v4l2_s_ctrl\n"));
 
 	switch (ctrl->id) {
@@ -1050,6 +1135,7 @@ static int s3c_camif_v4l2_s_ctrl(camif_cfg_t *cfg, unsigned long arg)
 
 /*		case V4L2_CID_CONTRAST:
 		case V4L2_CID_AUTO_WHITE_BALANCE:
+			printk("SENSOR_EFFECT \n");
 			s3c_camif_send_sensor_command(cfg, SENSOR_WB, ctrl);
 			property.white_balance = ctrl->value;
 			break;
@@ -1060,6 +1146,7 @@ static int s3c_camif_v4l2_s_ctrl(camif_cfg_t *cfg, unsigned long arg)
 			break;
 
 		case V4L2_CID_FLASH_CAMERA:
+			printk("V4L2_CID_FLASH_CAMERA \n");
 			s3c_camif_send_sensor_command(cfg, SENSOR_FLASH_CAMERA, ctrl);
 			break;
 
@@ -1068,13 +1155,14 @@ static int s3c_camif_v4l2_s_ctrl(camif_cfg_t *cfg, unsigned long arg)
 			break;
 	
 		case SENSOR_EFFECT:
+			printk("SENSOR_EFFECT \n");
 			s3c_camif_send_sensor_command(cfg, SENSOR_EFFECT, ctrl);
 			break;
 
 		case V4L2_CID_MODE_SET:
 			s3c_camif_send_sensor_command(cfg, SENSOR_MODE_SET, ctrl);
-			break;*/
-
+			break;
+*/
 		default:
 			printk(KERN_ERR "Invalid control id: %d\n", ctrl->id);
 			return -1;
@@ -1122,7 +1210,7 @@ static int s3c_camif_v4l2_g_input(camif_cfg_t *cfg, unsigned long arg)
 static int s3c_camif_v4l2_s_input(camif_cfg_t *cfg, unsigned int index)
 {
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +s3c_camif_v4l2_s_input\n"));
-
+	printk("s3c_camif_v4l2_s_input index = %d \n", index);
 	if (index >= NUMBER_OF_INPUTS)
 		return -EINVAL;
 	else
@@ -1155,8 +1243,8 @@ static int s3c_camif_v4l2_s_input(camif_cfg_t *cfg, unsigned int index)
 		{
 			printk(KERN_ERR "s3c_camif_init_sensor fail\n");
 			return -1;
-		}
-
+		} 
+		printk("finished s3c_camif_init_sensor \n");
 		s3c_camif_init_campp();
 	}
 
@@ -1314,6 +1402,7 @@ static int s3c_camif_v4l2_qbuf(camif_cfg_t *cfg, unsigned long arg)
 
 	if (cfg->dma_type & CAMIF_PREVIEW)
 	{
+		printk("s3c_camif_v4l2_qbuf: dma_type & CAMIF_PREVIEW\n");
 		old_virt_addr = cfg->img_buf[index].virt_rgb;
 
 		cfg->img_buf[index].phys_rgb = phys_addr;
@@ -1321,6 +1410,7 @@ static int s3c_camif_v4l2_qbuf(camif_cfg_t *cfg, unsigned long arg)
 	}
 	else if (cfg->dma_type & CAMIF_CODEC)
 	{
+		printk("s3c_camif_v4l2_qbuf: dma_type & CAMIF_CODEC\n");
 		// modified by sangyub 
 		// phys_rgb and phys_y is shared
 		if ((cfg->dst_fmt & CAMIF_RGB16) || (cfg->dst_fmt & CAMIF_RGB24))
@@ -1928,6 +2018,7 @@ static int s3c_camif_request_irq(camif_cfg_t * cfg)
  ************************************************************************/
 long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 {
+	//printk("s3c_camif_ioctl: cmd= %u arg=%x \n", (cmd&0x000000FF), arg); //debug
 #ifdef MEASURE_CAPTURE_OPERATION
 	do_gettimeofday(&interval_cend);
 	(printk("[CAM-DRV] =camif_ioctl_interval %4d msec=\n", ((interval_cend.tv_sec*1000000+interval_cend.tv_usec) - (interval_cstart.tv_sec*1000000+interval_cstart.tv_usec))/1000));
@@ -1942,7 +2033,7 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 	switch (cmd)
 	{
-	case VIDIOC_QUERYCAP:
+	case VIDIOC_QUERYCAP: 
 		ret = s3c_camif_v4l2_querycap(cfg, arg);
 		break;
 
@@ -1954,11 +2045,11 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		ret = s3c_camif_v4l2_s_fbuf(cfg, arg);
 		break;
 
-	case VIDIOC_G_FMT:
+	case VIDIOC_G_FMT: 
 		ret = s3c_camif_v4l2_g_fmt(cfg, arg);
 		break;
 
-	case VIDIOC_S_FMT:
+	case VIDIOC_S_FMT: //5
 		ret = s3c_camif_v4l2_s_fmt(cfg, arg);
 		break;
 
@@ -1975,10 +2066,11 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 
 	case VIDIOC_G_CTRL:
+		printk("## VIDIOC_G_CTRL \n");
 		ret = s3c_camif_v4l2_g_ctrl(cfg, arg);
 		break;
 
-	case VIDIOC_STREAMON:
+	case VIDIOC_STREAMON: //18 STUCK
 #ifdef MEASURE_INIT_OPERATION
 		if(measure_init_flag)
 		{
@@ -1997,7 +2089,7 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		ret = s3c_camif_v4l2_g_input(cfg, arg);
 		break;
 
-	case VIDIOC_S_INPUT:
+	case VIDIOC_S_INPUT: //39
 #ifdef MEASURE_INIT_OPERATION
 		if(measure_init_flag)
 		{
@@ -2031,7 +2123,7 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		ret = s3c_camif_v4l2_enum_output(cfg, arg);
 		break;
 
-	case VIDIOC_REQBUFS:
+	case VIDIOC_REQBUFS: //8
 #ifdef MEASURE_INIT_OPERATION
 		if(measure_init_flag)
 		{
@@ -2046,7 +2138,7 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		ret = s3c_camif_v4l2_querybuf(cfg, arg);
 		break;
 		
-	case VIDIOC_QBUF:
+	case VIDIOC_QBUF: //15
 		ret = s3c_camif_v4l2_qbuf(cfg, arg);
 		break;
 
@@ -2127,6 +2219,7 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 
 	case VIDIOC_S_SENSOR:
+		printk("VIDIOC_S_SENSOR \n");
 #ifdef MEASURE_INIT_OPERATION
 		if(measure_init_flag)
 		{
@@ -2149,22 +2242,26 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		}
 #endif
 
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131 //FIXME
 		ctrl = (struct v4l2_control *)arg;
-		if(ctrl->value & SENSOR_CAPTURE)
-			s3c_camif_control_global_capture(cfg,0);
-#endif
+		if(ctrl->value & SENSOR_CAPTURE){
+			printk("sensor capture before camif-control \n");
+			//s3c_camif_control_global_capture(cfg,0);
+		}
+//#endif
 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_MODE_SET, (void *) arg);
 
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131 //FIXME
 		if(ctrl->value & SENSOR_CAPTURE)
 		{
-			s3c_camif_control_global_capture(cfg,1);
-			ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_JPEG_TRANSFER, (void *) arg);
-			s3c_camif_control_global_capture(cfg,0);
+			printk("sensor capture before jpeg_transfer \n");
+			//s3c_camif_control_global_capture(cfg,1);
+			//ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_JPEG_TRANSFER, (void *) arg);
+			//s3c_camif_control_global_capture(cfg,0);
 		}
-#endif
+//#endif
 		break;
 
 	case VIDIOC_S_FOCUS_AUTO:
@@ -2237,13 +2334,15 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_EXIF_DATA, (void *) arg);
 		break;
 
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131 //FIXME
 	case VIDIOC_S_SENSOR_DIG_ZOOM:
+		printk("CE131: VIDIOC_S_SENSOR_DIG_ZOOM \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_DIG_ZOOM, (void *) arg);
 		break;
 
 	case VIDIOC_S_WDR:
+		printk("CE131: VIDIOC_S_WDR \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_WDR, (void *) arg);
 		break;
@@ -2259,6 +2358,7 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 */	
 	case VIDIOC_S_PREVIEW_SIZE:
+		printk("CE131: VIDIOC_S_PREVIEW_SIZE \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_SET_PREVIEW_SIZE, (void *) arg);
 		break;
@@ -2279,37 +2379,45 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;*/
 
 	case VIDIOC_S_CAPTURE_SIZE:
+		printk("CE131: VIDIOC_S_CAPTURE_SIZE \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_SET_CAPTURE_SIZE, (void *) arg);
 		break;
 
 	case VIDIOC_G_JPEG_SIZE:
+		printk("CE131: VIDIOC_G_JPEG_SIZE \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_GET_JPEG_SIZE, (void *) arg);
 		break;
 
 	case VIDIOC_S_JPEG_QUAL:
+		printk("CE131: VIDIOC_S_JPEG_QUAL \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_SET_JPEG_QUAL, (void *) arg);
 		break;
 
 	case VIDIOC_S_FIX_FRAMERATE:
+		printk("CE131: VIDIOC_S_FIX_FRAMERATE \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_FIX_FRAMERATE, (void *) arg);
 		break;
 
 	case VIDIOC_G_FWVERSION:
+		printk("CE131: VIDIOC_G_FWVERSION \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_GET_FWVERSION, (void *) arg);
 		break;
 
 	case VIDIOC_S_FW_UPDATE:
+		printk("CE131: VIDIOC_S_FW_UPDATE \n");
 		ctrl = (struct v4l2_control *) arg; 
 		ret = cfg->cis->sensor->driver->command(cfg->cis->sensor, SENSOR_FW_UPDATE, (void *) arg);
 		break;	
-#endif
+
+//#endif
 
 	default:	/* For v4l compatability */
+		printk("default! \n");
 		ret = v4l_compat_translate_ioctl(file, cmd, (void *) arg, (v4l2_kioctl)s3c_camif_ioctl);
 		break;
 	} /* End of Switch  */
@@ -2325,22 +2433,25 @@ long s3c_camif_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 static int s3c_cam_exclusive_open(void)
 {
+	printk("s3c_cam_exclusive_open \n");
 	return test_and_set_bit(0, &s3c_cam_in_use) ? -EBUSY : 0;
 }
 
 static int s3c_cam_exclusive_release(void)
 {
+	printk("s3c_cam_exclusive_release \n");
 	clear_bit(0, &s3c_cam_in_use);
 	return 0;
 }
 
 int s3c_camif_open(struct file *file)
 {
+
 	int err;
 	int minor = video_devdata(file)->minor;
 
-	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +s3c_camif_open\n"));
-
+	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +s3c_camif_opena\n"));
+	printk("s3c_camif_open \n");
 #ifdef MEASURE_INIT_OPERATION
 	do_gettimeofday(&start);
 #endif
@@ -2362,6 +2473,7 @@ int s3c_camif_open(struct file *file)
 #endif
 
 	{
+	printk("s3c_camif_open:s3c_camif_get_fimc_object(minor);  \n");
 	camif_cfg_t *cfg = s3c_camif_get_fimc_object(minor);
 
 	if (!cfg->cis) {
@@ -2398,9 +2510,10 @@ int s3c_camif_open(struct file *file)
 
 	file->private_data = cfg;
 
-#ifndef CONFIG_VIDEO_SAMSUNG_CE131
-	s5k4ca_sensor_enable();
+#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+	ce131_sensor_enable();
 #endif
+
 
 #ifdef MEASURE_INIT_OPERATION
 	do_gettimeofday(&t0);
@@ -2414,6 +2527,7 @@ int s3c_camif_open(struct file *file)
 
 int s3c_camif_release(struct file *file)
 {
+	printk("s3c_camif_release \n");
 	int minor = video_devdata(file)->minor;
 	camif_cfg_t *cfg = s3c_camif_get_fimc_object(minor);
 
@@ -2458,6 +2572,7 @@ int s3c_camif_release(struct file *file)
 
 ssize_t s3c_camif_read(struct file * file, char *buf, size_t count, loff_t * pos)
 {
+	printk("s3c_camif_read \n");
 	camif_cfg_t *cfg = NULL;
 	size_t end;
 
@@ -2648,6 +2763,7 @@ struct video_device preview_template = {
  ************************************************************************/
 int s3c_camif_init_sensor(camif_cfg_t *cfg)
 {
+	printk("s3c_camif_init_sensor \n");
 	camif_cis_t *cis = cfg->cis;
 	camif_cis_t *initialized_cis;
 
@@ -2657,7 +2773,7 @@ int s3c_camif_init_sensor(camif_cfg_t *cfg)
 	spcon_val = spcon_val & (0x3FFFFFFF);
 	__raw_writel(spcon_val, S3C64XX_SPCON);
 
-	if (!cis->sensor) {
+	if (!cis->sensor) { 
 		initialized_cis = (camif_cis_t *)((cis->init_sensor) ? cis : NULL);
 		if (initialized_cis == NULL) {
 			printk(KERN_ERR "An I2C client for CIS sensor isn't registered\n");
@@ -2676,10 +2792,10 @@ int s3c_camif_init_sensor(camif_cfg_t *cfg)
 			return -1;
 		}
 		cis->init_sensor = 1;
-	}
+	} 
 
 	cis->sensor->driver->command(cis->sensor, USER_ADD, NULL);
-
+	printk("finished the initialized_cis \n");
 	return 0;
 }
 
@@ -2741,73 +2857,74 @@ static int s3c_camif_init_codec(camif_cfg_t * cfg)
 
 static int s3c_camif_probe(struct platform_device *pdev)
 {
+	printk("s3c_camif_probe \n");
+	
 	struct resource *res;
 	camif_cfg_t *codec, *preview;
 	int ret = 0;
+
 	
 #ifdef USE_CAMERA_DOMAIN_GATING
+	printk(" domain gating =y \n");
 	s3c_set_normal_cfg(S3C64XX_DOMAIN_I, S3C64XX_ACTIVE_MODE, S3C64XX_CAMERA);
 	if(s3c_wait_blk_pwr_ready(S3C64XX_BLK_I)) {
 		return -1;
 	}
-#endif /* USE_CAMERA_DOMAIN_GATING */
+#endif // USE_CAMERA_DOMAIN_GATING 
+	printk(" domain gating done... \n");
 
-	/* Initialize fimc objects */
+	// Initialize fimc objects
 	codec = s3c_camif_get_fimc_object(CODEC_MINOR);
 	preview = s3c_camif_get_fimc_object(PREVIEW_MINOR);
 
 	memset(codec, 0, sizeof(camif_cfg_t));
 	memset(preview, 0, sizeof(camif_cfg_t));
 
-	/* Set the fimc name */
+
+	// Set the fimc name 
 	strcpy(codec->shortname, CODEC_DEV_NAME);
 	strcpy(preview->shortname, PREVIEW_DEV_NAME);
 
-	/* get resource for io memory */
+	// get resource for io memory 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
 	if (!res) {
 		printk("Failed to get io memory region resouce.\n");
 		return -1;
 	}
 
-	/* request mem region */
-	res = request_mem_region(res->start, res->end - res->start + 1, pdev->name);
 
-	if (!res) {
+	// request mem region
+	s3c_camif_mem = request_mem_region(res->start, res->end - res->start + 1, pdev->name);
+	if (s3c_camif_mem == NULL) {
 		printk("Failed to request io memory region.\n");
 		return -1;
 	}
 
-	/* ioremap for register block */
-	codec->regs = preview->regs = ioremap(res->start, res->end - res->start + 1);
-
-	if (codec->regs == NULL) {
+	// ioremap for register block
+	s3c_camif_base = codec->regs = preview->regs = ioremap_nocache(s3c_camif_mem->start, s3c_camif_mem->end - s3c_camif_mem->start + 1);
+	if (s3c_camif_base == NULL) {
 		printk(KERN_ERR "Failed to remap register block\n");
 		return -1;
 	}
+	
 
-	/* ioremap for reserved memory */
-	// kcoolsw
-	//codec->pp_phys_buf = CAMERA_MEM_START;
-	//codec->pp_virt_buf = ioremap_nocache(codec->pp_phys_buf, YUV_MEM);
 
-	//preview->pp_phys_buf = CAMERA_MEM_START + (CAMERA_MEM_SIZE - YUV_MEM);
-	//preview->pp_virt_buf = ioremap_nocache(preview->pp_phys_buf, RGB_MEM);
 
-	/* Device init */
+	// Device init
 	s3c_camif_init();
+
 	s3c_camif_init_codec(codec);
+
 	s3c_camif_init_preview(preview);
 
-	/* Set irq */
+	// Set irq
 	codec->irq   = platform_get_irq(pdev, FIMC_CODEC_INDEX);
 	preview->irq = platform_get_irq(pdev, FIMC_PREVIEW_INDEX);
 
 	s3c_camif_request_irq(codec);
 	s3c_camif_request_irq(preview);
 
-	/* Register to video device */
+	// Register to video device
 	if (video_register_device(codec->v, VFL_TYPE_GRABBER, CODEC_MINOR) != 0) {
 		printk(KERN_ERR "Couldn't register this codec driver\n");
 		return -1;
@@ -2837,7 +2954,7 @@ static int s3c_camif_probe(struct platform_device *pdev)
 		ret = PTR_ERR(cam_hclk);
 	}
 
-	/* Print banner */
+	// Print banner 
 	printk(KERN_INFO "S3C FIMC v%s\n", FIMC_VER);
 
 #if 1	// for idle Current GPIO Setting
@@ -2856,11 +2973,12 @@ static int s3c_camif_probe(struct platform_device *pdev)
 
 #ifdef USE_CAMERA_DOMAIN_GATING
 	s3c_set_normal_cfg(S3C64XX_DOMAIN_I, S3C64XX_LP_MODE, S3C64XX_CAMERA);
-#endif /* USE_CAMERA_DOMAIN_GATING */
+#endif // USE_CAMERA_DOMAIN_GATING
 
 	NUMBER_OF_INPUTS++;
 
 	wake_lock_init(&camera_wake_lock, WAKE_LOCK_SUSPEND, "camera_lock");
+	printk(" s3c_camif_probe end... \n");
 
 	return 0;
 }
@@ -2909,7 +3027,9 @@ static struct platform_driver s3c_camif_driver =
 #ifdef CONFIG_VIDEO_SAMSUNG_MODULE
 static int s3c_camif_register(void)
 {
-	return platform_driver_register(&s3c_camif_driver);
+	printk("s3c_camif_register module \n");
+
+	//return platform_driver_register(&s3c_camif_driver);
 }
 
 static void s3c_camif_unregister(void)
@@ -2940,12 +3060,14 @@ extern void ait848_sensor_remove(void);
 
 static int s3c_camif_register(void)
 {
+	printk("s3c_camif_register non-module \n"); //here did it go
+
 	platform_driver_register(&s3c_camif_driver);
-
+	printk("s3c_camif_register registered camif driver \n"); //here did it go
 #ifdef CONFIG_VIDEO_SAMSUNG_S5K4CA
-	s5k4ca_sensor_add();
+	s5k4ca_sensor_add(); 
+	printk("s5k4ca_sensor_added \n");
 #endif
-
 #ifdef CONFIG_VIDEO_SAMSUNG_CE131
 	ce131_sensor_add();
 #endif
@@ -2985,6 +3107,7 @@ static void s3c_camif_unregister(void)
 
 int s3c_camif_add_sensor(struct v4l2_input *input, struct v4l2_input_handler * input_handler)
 {
+	printk("s3c_camif_add_sensor \n");
 	if ((input == NULL) ||
 		(input_handler == NULL) ||
 		(NUMBER_OF_INPUTS >= MAX_NUMBER_OF_INPUTS))
@@ -3029,6 +3152,7 @@ void s3c_camif_remove_sensor(struct v4l2_input *input, struct v4l2_input_handler
 
 void s3c_camif_open_sensor(camif_cis_t *cis)
 {
+	printk("s3c_camif_open_sensor \n");
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +s3c_camif_open_sensor\n"));
 #if 0
 	clk_set_rate(cam_clock, cis->camclk);
@@ -3041,6 +3165,7 @@ void s3c_camif_open_sensor(camif_cis_t *cis)
 void s3c_camif_register_sensor(camif_cis_t *cis)
 {
 	camif_cfg_t *codec, *preview;
+	printk("s3c_camif_register_sensor \n");
 
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +s3c_camif_register_sensor\n"));
 

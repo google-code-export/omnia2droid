@@ -215,7 +215,7 @@ const struct v4l2_fmtdesc fimc_preview_formats[] = {
 #define VIDIOC_S_FLASH_MOVIE		_IOW  ('V', 99, void *)
 #define VIDIOC_S_EXIF_DATA			_IOW  ('V',100, void *)
 
-#ifdef CONFIG_VIDEO_SAMSUNG_CE131
+//#ifdef CONFIG_VIDEO_SAMSUNG_CE131
 	#define VIDIOC_S_SENSOR_DIG_ZOOM	_IOW  ('V',101, void *)
 	#define VIDIOC_S_WDR				_IOW  ('V',102, void *)
 //	#define VIDIOC_S_AF					_IOW  ('V',103, void *)
@@ -230,7 +230,7 @@ const struct v4l2_fmtdesc fimc_preview_formats[] = {
 	#define VIDIOC_S_FIX_FRAMERATE		_IOW  ('V',112, void *)
 	#define VIDIOC_G_FWVERSION			_IOW  ('V',113, void *)
 	#define VIDIOC_S_FW_UPDATE			_IOW  ('V',114, void *)
-#endif
+//#endif
 
 #endif
 

@@ -59,7 +59,6 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 {
 	int err;
 	struct mmc_host *host;
-	char *name,c;
 
 	if (!idr_pre_get(&mmc_host_idr, GFP_KERNEL))
 		return NULL;
@@ -68,13 +67,8 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 	if (!host)
 		return NULL;
 
-	name = dev_name(dev);
-	c = *(name + strlen(name) - 1);	//the last character in s3c-sdhci.x
-//printk("MMC: %s : %c\n",name,c);	
 	spin_lock(&mmc_host_lock);
-//phj: mmc0=shdci.1 mmc1=sdhci.0 mmc2...mmcn instead of first sdhci dev=mmc0...
-	err = idr_get_new_above(&mmc_host_idr, host, (c=='1'?0:(c=='0'?1:2)), &host->index);
-//	err = idr_get_new(&mmc_host_idr, host, &host->index);
+	err = idr_get_new(&mmc_host_idr, host, &host->index);
 	spin_unlock(&mmc_host_lock);
 	if (err)
 		goto free;
@@ -89,6 +83,7 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 	spin_lock_init(&host->lock);
 	init_waitqueue_head(&host->wq);
 	INIT_DELAYED_WORK(&host->detect, mmc_rescan);
+	INIT_DELAYED_WORK_DEFERRABLE(&host->disable, mmc_host_deeper_disable);
 
 	/*
 	 * By default, hosts do not support SGIO or large requests.
