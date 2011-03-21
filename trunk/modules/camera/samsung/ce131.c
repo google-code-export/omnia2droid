@@ -70,7 +70,7 @@
 } while (0)
 
 
-
+#ifdef GPIO_CAM_3M_STBY_N
 #define	MCAM_STB_DIS do {	\
 	/* CAM_3M STB Low */	\
 	if (gpio_is_valid(GPIO_CAM_3M_STBY_N)) {	\
@@ -80,13 +80,15 @@
 	}	\
 	s3c_gpio_setpull(GPIO_CAM_3M_STBY_N, S3C_GPIO_PULL_NONE);	\
 } while (0)
+#endif
 
 
-
+#ifdef GPIO_CAM_3M_STBY_N
 #define	MCAM_STB_EN do {	\
 	/* MCAM STB High */	\
 	gpio_set_value(GPIO_CAM_3M_STBY_N, GPIO_LEVEL_HIGH);	\
 } while (0)
+#endif
 
 #define	CAM_PWR_EN do {	\
 	gpio_direction_output(GPIO_CAM_EN, GPIO_LEVEL_HIGH);	\
@@ -388,7 +390,9 @@ static void ce131_sensor_gpio_init(void)
 
 	CAM_PWR_DIS;
 
+#ifdef MCAM_STB_DIS
 	MCAM_STB_DIS;
+#endif
 
 	__TRACE_CAM_SENSOR(printk("[CAM-SENSOR] -%s\n",__func__));
 }
@@ -413,7 +417,9 @@ void ce131_sensor_enable(void)
 	printk("functie! ce131_sensor_enable \n");
 	ce131_sensor_gpio_init();
 
+#ifdef MCAM_STB_EN
 	MCAM_STB_EN;
+#endif
 
 	/* > 0 ms */
 	msleep(1);	
@@ -451,7 +457,9 @@ static void ce131_sensor_disable(void)
 	printk("functie! ce131_sensor_disable \n");
 	I2C_CAM_DIS;
 	
+#ifdef MCAM_STB_DIS
 	MCAM_STB_DIS;
+#endif
 
 	// > 20 cycles 
 	msleep(1);
