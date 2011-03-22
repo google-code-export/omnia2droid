@@ -63,7 +63,6 @@ Sections:
   * Camera's
   * Proximity sensor (only kernel support yet)
   * Bluetooth (only kernel support yet)
-  * I920: Beta support 
 
 ==Features under development==
   * Android 2.2 (Froyo) {some Beta/Eclair features broken)
@@ -73,4 +72,3 @@ Sections:
   * Android kernel and image build from github.com
   * TV-Out 
   * B7610: wifi driver
-  * I920: CDMA phone part
