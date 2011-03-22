@@ -83,6 +83,7 @@
 #endif
 
 
+
 #ifdef GPIO_CAM_3M_STBY_N
 #define	MCAM_STB_EN do {	\
 	/* MCAM STB High */	\
@@ -107,19 +108,7 @@
 	gpio_direction_output(GPIO_MCAM_RST_N, GPIO_LEVEL_HIGH);	\
 } while (0)
 
-#define I2C_CAM_EN do {		\
-	s3c_gpio_cfgpin(GPIO_I2C1_SCL, S3C_GPIO_SFN(GPIO_I2C1_SCL_AF));	\
-	s3c_gpio_cfgpin(GPIO_I2C1_SDA, S3C_GPIO_SFN(GPIO_I2C1_SDA_AF));	\
-	s3c_gpio_setpull(GPIO_I2C1_SCL, S3C_GPIO_PULL_NONE);		\
-	s3c_gpio_setpull(GPIO_I2C1_SDA, S3C_GPIO_PULL_NONE);		\
-} while (0)
 
-#define I2C_CAM_DIS do {	\
-	s3c_gpio_cfgpin(GPIO_I2C1_SCL, S3C_GPIO_INPUT);			\
-	s3c_gpio_cfgpin(GPIO_I2C1_SDA, S3C_GPIO_INPUT);			\
-	s3c_gpio_setpull(GPIO_I2C1_SCL, S3C_GPIO_PULL_DOWN);		\
-	s3c_gpio_setpull(GPIO_I2C1_SDA, S3C_GPIO_PULL_DOWN);		\
-} while (0)
 
 
 #define CMD_INIT			0xF0
@@ -385,12 +374,12 @@ static void ce131_sensor_gpio_init(void)
 {
 	printk("functie! ce131_sensor_gpio_init \n");
 	__TRACE_CAM_SENSOR(printk("[CAM-SENSOR] +%s\n",__func__));
-	I2C_CAM_DIS;
-	MCAM_RST_DIS;
-
+	//I2C_CAM_DIS;
 	CAM_PWR_DIS;
 
-#ifdef MCAM_STB_DIS
+	MCAM_RST_DIS;
+
+#ifdef GPIO_CAM_3M_STBY_N
 	MCAM_STB_DIS;
 #endif
 
@@ -417,18 +406,13 @@ void ce131_sensor_enable(void)
 	printk("functie! ce131_sensor_enable \n");
 	ce131_sensor_gpio_init();
 
-#ifdef MCAM_STB_EN
-	MCAM_STB_EN;
-#endif
 
 	/* > 0 ms */
 	msleep(1);	
 
-//#if defined(CONFIG_LDO_LP8720)
-	ce131_sensor_power_init();	
-//#endif
 
-	CAM_PWR_EN;
+	ce131_sensor_power_init();	
+
 
 	/* > 0 ms */
 	msleep(1);
@@ -442,41 +426,39 @@ void ce131_sensor_enable(void)
 	
 	msleep(1);
 
+	CAM_PWR_EN;
+#ifdef GPIO_CAM_3M_STBY_N
+	MCAM_STB_EN;
+#endif
+
+	msleep(1);
 	MCAM_RST_EN;
 	
-	msleep(40);
+	mdelay(5);
 	
-	I2C_CAM_EN;
 	(printk("[CAM-SENSOR] -%s\n",__func__));
-
-
 }
 
 static void ce131_sensor_disable(void)
 {
 	printk("functie! ce131_sensor_disable \n");
-	I2C_CAM_DIS;
-	
-#ifdef MCAM_STB_DIS
+
+	MCAM_RST_DIS;
+	msleep(1);
+#ifdef GPIO_CAM_3M_STBY_N
 	MCAM_STB_DIS;
 #endif
-
-	// > 20 cycles 
 	msleep(1);
 
+	CAM_PWR_DIS;
+	// > 20 cycles 
+
+	// > 0 ms 
+	msleep(1);
 	// MCLK Disable 
 	clk_disable(cam_clock);
 	clk_disable(cam_hclk);
 
-	// > 0 ms 
-	msleep(1);
-
-	MCAM_RST_DIS;
-
-	// > 0 ms 
-	msleep(1);
-
-	CAM_PWR_DIS;
 	(printk("[CAM-SENSOR] -%s\n",__func__)); 
 }
 
