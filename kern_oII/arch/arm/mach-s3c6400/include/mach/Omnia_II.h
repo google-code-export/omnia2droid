@@ -48,7 +48,7 @@
 #define GPIO_AP_FLM_TXD_AF	(2)
 #ifdef PHONE_B7610
 #define GPIO_VIB_EN		S3C64XX_GPA(3)
-#define GPIO_VIB_EN_AF		(1) // meaning 1 value not clear yet
+#define GPIO_VIB_EN_AF		(1)
 #endif
 #define GPIO_AP_BT_RXD          S3C64XX_GPA(4)
 #define GPIO_AP_BT_RXD_AF       (2)
@@ -68,8 +68,14 @@
 #define GPIO_CAM_SCL_AF		(6)
 #define GPIO_CAM_SDA		S3C64XX_GPB(3)
 #define GPIO_CAM_SDA_AF		(6)
+#ifdef PHONE_B7610
+#define GPIO_CAM_3M_nSTBY	S3C64XX_GPB(4)
+#define GPIO_CAM_3M_nSTBY_AF	(1)
+#endif
+#ifdef PHONE_I8000
 #define GPIO_TFLASH_EN		S3C64XX_GPB(4)
 #define GPIO_TFLASH_EN_AF	(1)
+#endif
 #define GPIO_AP_SCL		S3C64XX_GPB(5)
 #define GPIO_AP_SCL_AF		(2)
 #define GPIO_AP_SDA		S3C64XX_GPB(6)
@@ -78,6 +84,10 @@
 /* GPC Group */
 #define GPIO_TP10024		S3C64XX_GPC(0)
 #define GPIO_TP10024_AF		(1)
+#ifdef PHONE_B7610
+#define GPIO_CAM_CIF_nRST       S3C64XX_GPC(1)
+#define GPIO_CAM_CIF_nRST_AF    (1)
+#endif
 
 #define GPIO_WLAN_SPI_RXD	S3C64XX_GPC(4)
 #define GPIO_WLAN_SPI_RXD_AF	(2)
@@ -91,7 +101,10 @@
 /* GPD Group */
 #define GPIO_I2S_SCLK           S3C64XX_GPD(0)
 #define GPIO_I2S_SCLK_AF        (3)
-
+#ifdef PHONE_B7610
+#define GPIO_CAM_CIF_nSTBY      S3C64XX_GPD(1)
+#define GPIO_CAM_CIF_nSTBY_AF   (1)
+#endif
 #define GPIO_I2S_SYNC           S3C64XX_GPD(2)
 #define GPIO_I2S_SYNC_AF        (3)
 #define GPIO_I2S_SDI            S3C64XX_GPD(3)
@@ -243,8 +256,10 @@
 #define GPIO_UART_SEL_AF	(1)
 #define GPIO_FM_nRST            S3C64XX_GPK(5)
 #define GPIO_FM_nRST_AF         (1)
+#ifdef PHONE_I8000
 #define GPIO_CAM_EN             S3C64XX_GPK(6)
 #define GPIO_CAM_EN_AF          (1)
+#endif
 #define GPIO_PHONE_RST_N	S3C64XX_GPK(7)
 #define GPIO_PHONE_RST_N_AF	(1)
 #define GPIO_KBR0               S3C64XX_GPK(8)
@@ -391,6 +406,10 @@
 #define GPIO_PS_HOLD_PDA_AF     (1)
 
 /* GPQ Group */
+#ifdef PHONE_B7610
+#define GPIO_CAM_EN             S3C64XX_GPQ(5)
+#define GPIO_CAM_EN_AF          (1)
+#endif
 
 //COMPATABILITY DEFINES
 
