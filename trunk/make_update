@@ -13,7 +13,19 @@ fi
 # let's try ... see if we have a PHONE_ID and REVISION_ID
 if [ $# -eq 2 ] 
 then
-	export PHONEMODEL=$1
+	case $1 in
+	I8000)
+		export PHONEMODEL=$1
+	;;
+	B7610)
+		export PHONEMODEL=$1
+	;;
+	*)
+		echo "Phonemodel $1 not supported, try I8000 or B7610 ..."	
+		exit 1;
+	;;
+	esac
+
         ./make_kernel -ckme
 
 	if [ $? -ne 0 ]
@@ -71,7 +83,25 @@ then
 		else
 			 echo "modules copied"
 		fi
+
+		# include other files than ./modules/* in update file
+		OLDPATH=`pwd`
+		cd ../updates/ALL/beta2           ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
+		cd ../updates/${PHONEMODEL}/beta2 ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
+		find . -type d -name "\.svn" -exec rm -rf {} \;
 		
+		# create tar-ball from modules
+		tar -cvzpf o2b2update.tar.gz *
+		if [ $? -eq 0 ]
+		then
+			# grant all permissions (just to get sure)
+			chmod 777 o2b2update.tar.gz
+			echo "o2b2update.tar.gz created"
+		else
+			echo -e "\nERROR! while creating tar-ball (o2b2update.tar.gz)\n"
+			exit 1;
+		fi
+
 		# copy kernel
 		cp ${KERNEL_MODULES_PATH}/zImage ./
 		if [ $? -gt 0 ]
@@ -82,23 +112,15 @@ then
 			 echo "zImage copied"
 		fi
 		
-		# create tar-ball from modules
-		tar -czpf o2b2update.tar.gz ./modules
-		if [ $? -eq 0 ]
-		then
-			# grant all permissions (just to get sure)
-			chmod 777 o2b2update.tar.gz
-			 echo "o2b2update.tar.gz created"
-		else
-			echo -e "\nERROR! while creating tar-ball (o2b2update.tar.gz)\n"
-			exit 1;
-		fi
-
 		# create zip-file with new zImage & new o2b2update
 		FileName="./Kernel-${1}-${2}.zip"
 
+		OLDPATH=`pwd`
+		cd ../updates ; cp -rf changelog.txt ${OLDPATH}       ; cd ${OLDPATH}
+		cd ../updates ; cp -rf changelog-B7610.txt ${OLDPATH} ; cd ${OLDPATH}
+
 		echo "try to create ${FileName} ..."
-		zip ${FileName} ./o2b2update.tar.gz ./zImage
+		zip ${FileName} ./o2b2update.tar.gz ./zImage ./changelog.txt ./changelog-B7610.txt
 		if [ $? -gt 0 ]
 		then
 			 echo -e "\nERROR! while creating zip-file ${FileName} of o2b2update.tar.gz & zImage\n"
@@ -112,15 +134,13 @@ then
 		then
 			cd ../
 			echo "file: ${FileName} contains modules (o2b2update.tar.gz) & zImage"
-			exit 0;
 		else
 			echo -e "\nERROR! - seems that the file ${FileName} is not present (created)\n"
 			exit 1;
 		fi
 
  		# remove ./o2b2update path with contents
-		cd ..
-		rm -rf ./o2b2update/
+		rm -rf ./o2b2update
 	else
 		echo "could not change into directory ./o2b2update";
 		exit 1;

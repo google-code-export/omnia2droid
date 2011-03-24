@@ -1,0 +1,9 @@
+2011-03-24:
+- fixed cam startup (missing GPIO pins found)
+- fixed landscape upsidedown screen (acc sensor fix)
+
+2011-03-04:
+- fixed vibration (missing GPIO pin found)
+- fixed stability (patched unmapped GPIO pins)
+- added hardware keyboard support (modified keypad driver)
+- fixed keymapping (new .kl and .kcm.bin files)
