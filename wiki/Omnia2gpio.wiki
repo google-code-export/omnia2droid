@@ -6,7 +6,6 @@ unmapped GPIO pins for b7610:
   * GPIO_CP_USB_ON
   * GPIO_PHONE_ON
   * GPIO_FLM_SEL
-  * GPIO_MSENSE_RST
   * GPIO_USIM_BOOT
   * GPIO_TFLASH_EN (new)
 
