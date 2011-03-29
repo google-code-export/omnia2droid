@@ -25,32 +25,27 @@ static void __iomem *key_base;
 #define KEY_PRESSED 1
 #define KEY_RELEASED 0
 
-
-#ifdef PHONE_I8000
+#ifdef PHONE_B7610
+#define KEYPAD_COLUMNS  8
+#define KEYPAD_ROWS     7
+#define MAX_KEYPAD_NR   KEYPAD_COLUMNS * KEYPAD_ROWS
+#else
 #define KEYPAD_COLUMNS	3	
 #define KEYPAD_ROWS	3
 #define MAX_KEYPAD_NR   KEYPAD_COLUMNS * KEYPAD_ROWS
 #endif
 
-#ifdef PHONE_B7610
-#define KEYPAD_COLUMNS  8
-#define KEYPAD_ROWS     7
-#define MAX_KEYPAD_NR   KEYPAD_COLUMNS * KEYPAD_ROWS
-#endif
-
 int keypad_keycode[] = {
-#ifdef PHONE_I8000
-//              50,8,0,0,58,42,		// KEYCODE_FOCUS, KEYCODE_1, KEYCODE_UNKNOWN, KEYCODE_UNKNOWN, KEYCODE_MEDIA_PREVIOUS, KEYCODE_ENTER
-       KEY_POWER,              KEY_SEARCH,                     KEY_CONFIG,
-       KEY_SEND,               KEY_CONFIG,                     KEY_VOLUMEUP,
-       102,               KEY_BACK,                       KEY_VOLUMEDOWN, //key_MENU
-#endif
 #ifdef PHONE_B7610
                 KEY_Q,    KEY_A,     KEY_LEFTSHIFT, KEY_LEFTALT,  KEY_POWER, KEY_MENU, KEY_K,          KEY_W,          KEY_S,     KEY_Z,
                 KEY_BACK, KEY_SLEEP, KEY_PHONE,     KEY_L,        KEY_E,     KEY_D,    KEY_X,          KEY_RIGHTSHIFT, KEY_ESC,   KEY_BACK,
                 KEY_M,    KEY_R,     KEY_F,         KEY_C,        KEY_COMMA, KEY_I,    KEY_VOLUMEDOWN, KEY_UP,         KEY_T,     KEY_G,
                 KEY_V,    KEY_SPACE, KEY_O,         KEY_VOLUMEUP, KEY_DOWN,  KEY_Y,    KEY_H,          KEY_B,          KEY_DOT,   KEY_HOME,
                 KEY_P,    KEY_ENTER, KEY_U,         KEY_J,        KEY_N,     KEY_LEFT, KEY_HOME,       KEY_BACKSPACE,  KEY_RIGHT,
+#else
+       KEY_POWER, KEY_SEARCH, KEY_CONFIG,
+       KEY_SEND,  KEY_CONFIG, KEY_VOLUMEUP,
+       102,       KEY_BACK,   KEY_VOLUMEDOWN, //key_MENU
 #endif
 	};
 

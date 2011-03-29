@@ -49,6 +49,30 @@ function kernel() {
 	cd ${OLDPWD}
 }
 
+function uncompressed_kernel() {
+	cd ${KDIR}
+	echo -n "building uncompressed kernel ... "
+	make $J ARCH=arm CROSS_COMPILE=${EABI} Image
+	if [ $? -eq 0 ]
+	then
+	   echo "done."
+	   echo -n "Kernel created ... copy to ${EXPORTDIR}/Image ... "
+	   cp  arch/arm/boot/Image ${EXPORTDIR}/
+	   if [ $? -eq 0 ]
+	   then
+	   	echo "done."
+	   else
+	   	echo "failed!"
+	   	exit 1;
+	   fi
+	else
+	   echo
+	   echo "Error ... kernel not compiled!";
+	   exit 1;
+	fi
+	cd ${OLDPWD}
+}
+
 function modules() {
 	cd ${KDIR}
 	echo -n "building modules ... "
@@ -149,9 +173,10 @@ function usage() {
 cat << EOF
 	This Script builds kernel, modules & extramodules
 	
-	USAGE:   $0 -[k|m|e|c|n|m|h]
+	USAGE:   $0 -[k|u|m|e|c|n|m|h]
 	OPTIONS:
-		-k  				builds the kernel 
+		-k  				builds the kernel (compressed zImage) 
+		-u  				builds the kernel (uncompressed Image)
 		-m  				builds the kernel-modules
 		-e  				builds the extra-modules
 		-c  				cleans the kernelsource
@@ -165,11 +190,15 @@ EOF
 
 #//////////////////////// OPTIONS ////////////////////////
 
-while getopts “kmecnmh” OPTION
+while getopts “kumecnmh” OPTION
 do
      case $OPTION in
               k)
 		kernel              	
+              ;;
+		
+              u)
+		uncompressed_kernel              	
               ;;
               
               m)
@@ -199,7 +228,7 @@ do
                 exit 0;
               ;;	
               
-              ?)
+              *)
               	usage
               	exit 1;
               ;;
