@@ -71,8 +71,7 @@
 #ifdef PHONE_B7610
 #define GPIO_CAM_3M_nSTBY	S3C64XX_GPB(4)
 #define GPIO_CAM_3M_nSTBY_AF	(1)
-#endif
-#ifdef PHONE_I8000
+#else
 #define GPIO_TFLASH_EN		S3C64XX_GPB(4)
 #define GPIO_TFLASH_EN_AF	(1)
 #endif
@@ -256,7 +255,7 @@
 #define GPIO_UART_SEL_AF	(1)
 #define GPIO_FM_nRST            S3C64XX_GPK(5)
 #define GPIO_FM_nRST_AF         (1)
-#ifdef PHONE_I8000
+#ifndef PHONE_B7610
 #define GPIO_CAM_EN             S3C64XX_GPK(6)
 #define GPIO_CAM_EN_AF          (1)
 #endif
@@ -278,7 +277,7 @@
 #define GPIO_KBR6               S3C64XX_GPK(14)
 #define GPIO_KBR6_AF            (3)
 #endif
-#ifdef PHONE_I8000
+#ifndef PHONE_B7610
 #define GPIO_FLM_SEL		S3C64XX_GPK(11)
 #define GPIO_FLM_SEL_AF		(1)
 #define GPIO_CAM_CIF_nRST       S3C64XX_GPK(12)
@@ -310,7 +309,7 @@
 #define GPIO_KBC7               S3C64XX_GPL(7)
 #define GPIO_KBC7_AF            (3)
 #endif
-#ifdef PHONE_I8000
+#ifndef PHONE_B7610
 #define GPIO_CAM_3M_nSTBY	S3C64XX_GPL(3)
 #define GPIO_CAM_3M_nSTBY_AF	(1)
 #define GPIO_VIB_EN             S3C64XX_GPL(4)

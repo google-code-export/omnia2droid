@@ -16,17 +16,24 @@ then
 	case $1 in
 	I8000)
 		export PHONEMODEL=$1
+        	./make_kernel -ckme
+		image=zImage
 	;;
 	B7610)
 		export PHONEMODEL=$1
+        	./make_kernel -ckme
+		image=zImage
+	;;
+	I920)
+		export PHONEMODEL=$1
+        	./make_kernel -cume
+		image=Image
 	;;
 	*)
-		echo "Phonemodel $1 not supported, try I8000 or B7610 ..."	
+		echo "Phonemodel $1 not supported, try models like I8000, B7610, I920, ..."	
 		exit 1;
 	;;
 	esac
-
-        ./make_kernel -ckme
 
 	if [ $? -ne 0 ]
 	then
@@ -63,9 +70,9 @@ then
 		fi
 		
 		# remove older version zImage
-		if [ -f ./zImage ]
+		if [ -f ./${image} ]
 		then
-			rm -f ./zImage
+			rm -f ./${image}
 		fi
 		
 		# remove older version o2b2update
@@ -103,16 +110,16 @@ then
 		fi
 
 		# copy kernel
-		cp ${KERNEL_MODULES_PATH}/zImage ./
+		cp ${KERNEL_MODULES_PATH}/${image} ./
 		if [ $? -gt 0 ]
 		then
-			 echo -e "\nERROR! no zImage found in  ${KERNEL_MODULES_PATH}\n"
+			 echo -e "\nERROR! no ${image} found in  ${KERNEL_MODULES_PATH}\n"
 			 exit 1;
 		else
-			 echo "zImage copied"
+			 echo "${image} copied"
 		fi
 		
-		# create zip-file with new zImage & new o2b2update
+		# create zip-file with new (z)Image & new o2b2update
 		FileName="./Kernel-${1}-${2}.zip"
 
 		OLDPATH=`pwd`
@@ -120,10 +127,10 @@ then
 		cd ../updates ; cp -rf changelog-B7610.txt ${OLDPATH} ; cd ${OLDPATH}
 
 		echo "try to create ${FileName} ..."
-		zip ${FileName} ./o2b2update.tar.gz ./zImage ./changelog.txt ./changelog-B7610.txt
+		zip ${FileName} ./o2b2update.tar.gz ./${image} ./changelog.txt ./changelog-B7610.txt
 		if [ $? -gt 0 ]
 		then
-			 echo -e "\nERROR! while creating zip-file ${FileName} of o2b2update.tar.gz & zImage\n"
+			 echo -e "\nERROR! while creating zip-file ${FileName} of o2b2update.tar.gz & ${image}\n"
 			 exit 1;
 		else
 			echo "file: ${FileName} created";
@@ -133,7 +140,7 @@ then
 		if [ $? -eq 0 ]
 		then
 			cd ../
-			echo "file: ${FileName} contains modules (o2b2update.tar.gz) & zImage"
+			echo "file: ${FileName} contains modules (o2b2update.tar.gz) & ${image}"
 		else
 			echo -e "\nERROR! - seems that the file ${FileName} is not present (created)\n"
 			exit 1;
