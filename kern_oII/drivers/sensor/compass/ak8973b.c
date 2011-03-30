@@ -269,12 +269,10 @@ static void AKECS_CloseDone(void)
 /*----------------------------------------------------------------------------*/
 static void AKECS_Reset (void)
 {
-#ifdef GPIO_MSENSE_RST
 	gpio_set_value(GPIO_MSENSE_RST, GPIO_LEVEL_LOW);
 	udelay(120);
 	gpio_set_value(GPIO_MSENSE_RST, GPIO_LEVEL_HIGH);
 	gprintk("AKECS RESET COMPLETE\n");
-#endif
 }
 
 /*----------------------------------------------------------------------------*/
@@ -752,12 +750,10 @@ static void ak8973b_early_resume(struct early_suspend *handler)
 
 static void ak8973b_init_hw(void)
 {
-#ifdef GPIO_MSENSE_RST
 #if 0	
 	s3c_gpio_cfgpin(GPIO_MSENSE_IRQ, S3C_GPIO_SFN(GPIO_MSENSE_IRQ_AF));
 	s3c_gpio_setpull(GPIO_MSENSE_IRQ, S3C_GPIO_PULL_NONE);
 	set_irq_type(IRQ_COMPASS_INT, IRQ_TYPE_EDGE_RISING);
-#endif
 
 	if(gpio_is_valid(GPIO_MSENSE_RST)){
 		if(gpio_request(GPIO_MSENSE_RST, S3C_GPIO_LAVEL(GPIO_MSENSE_RST)))
@@ -964,9 +960,7 @@ static int i2c_ak8973b_detach_client(struct i2c_client *client)
 	akm = NULL;	
 	this_client = NULL;
 	
-#ifdef GPIO_MSENSE_RST
 	gpio_free(GPIO_MSENSE_RST);
-#endif	
 	gprintk("end\n");
 	return 0;
 }

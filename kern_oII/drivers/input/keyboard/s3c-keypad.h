@@ -26,7 +26,7 @@ static void __iomem *key_base;
 #define KEY_RELEASED 0
 
 #ifdef PHONE_B7610
-#define KEYPAD_COLUMNS  8
+#define KEYPAD_COLUMNS  7
 #define KEYPAD_ROWS     7
 #define MAX_KEYPAD_NR   KEYPAD_COLUMNS * KEYPAD_ROWS
 #else

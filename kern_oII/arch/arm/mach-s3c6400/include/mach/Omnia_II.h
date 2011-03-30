@@ -86,8 +86,10 @@
 #ifdef PHONE_B7610
 #define GPIO_CAM_CIF_nRST       S3C64XX_GPC(1)
 #define GPIO_CAM_CIF_nRST_AF    (1)
-#endif
 
+#define GPIO_MSENSE_RST		S3C64XX_GPC(3)
+#define GPIO_MSENSE_RST_AF	(1)
+#endif
 #define GPIO_WLAN_SPI_RXD	S3C64XX_GPC(4)
 #define GPIO_WLAN_SPI_RXD_AF	(2)
 #define GPIO_WLAN_SPI_CLK	S3C64XX_GPC(5)
@@ -247,15 +249,23 @@
 #define GPIO_TA_EN_AF		(1)
 #define GPIO_AUDIO_EN           S3C64XX_GPK(1)
 #define GPIO_AUDIO_EN_AF        (1)
+#ifdef PHONE_B7610
+#define GPIO_FLM_SEL		S3C64XX_GPK(2)
+#define GPIO_FLM_SEL_AF		(1)
+#else
 #define GPIO_TVOUT_SEL		S3C64XX_GPK(2)
 #define GPIO_TVOUT_SEL_AF       (1)
+#endif
 #define GPIO_MICBIAS_EN		S3C64XX_GPK(3)
 #define GPIO_MICBIAS_EN_AF	(1)
 #define GPIO_UART_SEL		S3C64XX_GPK(4)
 #define GPIO_UART_SEL_AF	(1)
 #define GPIO_FM_nRST            S3C64XX_GPK(5)
 #define GPIO_FM_nRST_AF         (1)
-#ifndef PHONE_B7610
+#ifdef PHONE_B7610
+#define GPIO_PHONE_ON		S3C64XX_GPL(6)
+#define GPIO_PHONE_ON_AF	(1)
+#else
 #define GPIO_CAM_EN             S3C64XX_GPK(6)
 #define GPIO_CAM_EN_AF          (1)
 #endif
@@ -306,8 +316,6 @@
 #define GPIO_KBC5_AF            (3)
 #define GPIO_KBC6               S3C64XX_GPL(6)
 #define GPIO_KBC6_AF            (3)
-#define GPIO_KBC7               S3C64XX_GPL(7)
-#define GPIO_KBC7_AF            (3)
 #endif
 #ifndef PHONE_B7610
 #define GPIO_CAM_3M_nSTBY	S3C64XX_GPL(3)
@@ -318,9 +326,10 @@
 #define GPIO_CP_USB_ON_AF	(1)
 #define GPIO_PHONE_ON		S3C64XX_GPL(6)
 #define GPIO_PHONE_ON_AF	(1)
+#endif
 #define GPIO_USIM_BOOT          S3C64XX_GPL(7)
 #define GPIO_USIM_BOOT_AF       (1)
-#endif
+
 #define GPIO_MIC_SEL		S3C64XX_GPL(9)
 #define GPIO_MIC_SEL_AF		(1)
 #define GPIO_FM_INT             S3C64XX_GPL(10)
@@ -371,8 +380,13 @@
 #define GPIO_INTB_AF            (2)
 #define GPIO_DET_35		S3C64XX_GPN(10)
 #define GPIO_DET_35_AF		(2)
+#ifdef PHONE_B7610
+#define GPIO_HALL_SW		S3C64XX_GPN(11)
+#define GPIO_HALL_SW_AF		(2) // check
+#else
 #define GPIO_EAR_SEND_END	S3C64XX_GPN(11)
 #define GPIO_EAR_SEND_END_AF	(2)
+#endif
 #define GPIO_RESOUT_N_AP	S3C64XX_GPN(12)
 #define GPIO_RESOUT_N_AP_AF	(0)
 #define GPIO_BOOT_EINT13        S3C64XX_GPN(13)
@@ -465,9 +479,7 @@
 #define GPIO_BT_RST_N	GPIO_BT_nRST
 #define GPIO_BOOT	GPIO_BOOT_MODE
 #define GPIO_WLAN_RST_N	GPIO_WLAN_nRST
-#ifdef GPIO_CAM_3M_nRST
 #define GPIO_MCAM_RST_N	GPIO_CAM_3M_nRST
-#endif
 #define GPIO_VIBTONE_PWM	GPIO_VIB_PWM
 #define GPIO_TF_CLK	GPIO_T_FLASH_CLK
 #define GPIO_TF_CMD	GPIO_T_FLASH_CMD
@@ -529,13 +541,11 @@
 #define GPIO_LCD_R_7	GPIO_LCD_D23
 #define GPIO_LCD_R_7_AF	GPIO_LCD_D23_AF
 
-
 #define GPIO_LCD_CLK	GPIO_LCD_MCLK	
 #define GPIO_LCD_CLK_AF	GPIO_LCD_MCLK_AF
 
 #define GPIO_CHG_EN	GPIO_TA_EN
 #define GPIO_CHG_EN_AF	GPIO_TA_EN_AF
-
 
 #define GPIO_KEYSCAN_0	GPIO_KBR0
 #define GPIO_KEYSCAN_1	GPIO_KBR1
@@ -559,10 +569,8 @@
 #define GPIO_KEYSENSE_6	GPIO_KBC6
 #endif
 
-#ifdef GPIO_CAM_3M_nSTBY
 #define GPIO_CAM_3M_STBY_N	GPIO_CAM_3M_nSTBY
 #define GPIO_CAM_3M_STBY_N_AF	GPIO_CAM_3M_nSTBY_AF
-#endif
 
 #define GPIO_MIC_SEL_N	GPIO_MIC_SEL
 #define GPIO_MIC_SEL_N_AF	GPIO_MIC_SEL_AF
@@ -571,11 +579,8 @@
 #define GPIO_USB_SEL		GPIO_CP_USB_ON
 #define GPIO_USB_SEL_AF		GPIO_CP_USB_ON_AF
 #endif
-#ifdef GPIO_FLM_SEL
 #define GPIO_CP_BOOT_SEL	GPIO_FLM_SEL
 #define GPIO_CP_BOOT_SEL_AF	GPIO_FLM_SEL_AF
-#endif
-
 #define GPIO_ONEDRAM_INT_N	GPIO_nONED_INT_AP
 #define GPIO_WLAN_HOST_WAKE	GPIO_HOST_WAKE
 #define GPIO_WLAN_HOST_WAKE_AF	GPIO_HOST_WAKE_AF

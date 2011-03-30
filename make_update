@@ -22,6 +22,7 @@ then
 	B7610)
 		export PHONEMODEL=$1
         	./make_kernel -ckme
+#        	./make_kernel -kme
 		image=zImage
 	;;
 	I920)
@@ -124,10 +125,10 @@ then
 
 		OLDPATH=`pwd`
 		cd ../updates ; cp -rf changelog.txt ${OLDPATH}       ; cd ${OLDPATH}
-		cd ../updates ; cp -rf changelog-B7610.txt ${OLDPATH} ; cd ${OLDPATH}
+		cd ../updates ; cp -rf changelog-${PHONEMODEL}.txt ${OLDPATH} ; cd ${OLDPATH}
 
 		echo "try to create ${FileName} ..."
-		zip ${FileName} ./o2b2update.tar.gz ./${image} ./changelog.txt ./changelog-B7610.txt
+		zip ${FileName} ./o2b2update.tar.gz ./${image} ./changelog.txt ./changelog-${PHONEMODEL}.txt
 		if [ $? -gt 0 ]
 		then
 			 echo -e "\nERROR! while creating zip-file ${FileName} of o2b2update.tar.gz & ${image}\n"
