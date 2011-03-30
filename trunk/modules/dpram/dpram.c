@@ -84,10 +84,8 @@
 #define GPIO_FLM_TXD GPIO_AP_FLM_TXD
 #define GPIO_FLM_TXD_AF GPIO_AP_FLM_TXD_AF
 
-#ifdef GPIO_FLM_SEL
 #define GPIO_CP_BOOT_SEL GPIO_FLM_SEL
 #define GPIO_CP_BOOT_SEL_AF GPIO_FLM_SEL_AF
-#endif
 
 #define DRIVER_ID		"$Id: dpram.c, v0.01 2008/12/29 08:00:00 $"
 #define DRIVER_NAME 		"DPRAM"
@@ -967,9 +965,7 @@ static void dpram_phone_power_on(void)
 
 	if( phone_power_state ) {
 		printk("[OneDram] phone off (before phone power on).\n");
-#ifdef GPIO_PHONE_ON
 		gpio_set_value(GPIO_PHONE_ON, GPIO_LEVEL_LOW);
-#endif
 //		gpio_set_value(GPIO_PHONE_RST_N, GPIO_LEVEL_LOW);
 		interruptible_sleep_on_timeout(&dpram_wait, 100);	//	mdelay(500);
 		printk("[OneDram] phone rst low 500ms).\n");
@@ -977,27 +973,19 @@ static void dpram_phone_power_on(void)
 	
 	printk("[OneDram] phone power on.\n");
 	//Change power on sequence because of power on error 
-#ifdef GPIO_CP_BOOT_SEL
 	gpio_set_value(GPIO_CP_BOOT_SEL, GPIO_LEVEL_HIGH);
-#endif
-#ifdef GPIO_USIM_BOOT
 	gpio_set_value(GPIO_USIM_BOOT, GPIO_LEVEL_HIGH);
-#endif
 
 //	gpio_set_value(GPIO_PHONE_RST_N, GPIO_LEVEL_LOW);
 	interruptible_sleep_on_timeout(&dpram_wait, 40);	//	mdelay(200);
 
-#ifdef GPIO_PHONE_ON
 	gpio_set_value(GPIO_PHONE_ON, GPIO_LEVEL_HIGH);
-#endif
 	interruptible_sleep_on_timeout(&dpram_wait, 6);		//	mdelay(30);
 	
 //	gpio_set_value(GPIO_PHONE_RST_N, GPIO_LEVEL_HIGH);
 	interruptible_sleep_on_timeout(&dpram_wait, 100);	//	mdelay(500);
 
-#ifdef GPIO_PHONE_ON
 	gpio_set_value(GPIO_PHONE_ON, GPIO_LEVEL_LOW);
-#endif
 	interruptible_sleep_on_timeout(&dpram_wait, 20);	//	mdelay(100);
 
 	printk(" |      GPIO CONTROL FOR PHONE POWER ON        |\n");
@@ -1231,12 +1219,8 @@ print_onedram_status();
 	static void dpram_phone_image_load(void)
 	{
 
-#ifdef GPIO_CP_BOOT_SEL
 		gpio_set_value(GPIO_CP_BOOT_SEL, GPIO_LEVEL_LOW);
-#endif
-#ifdef GPIO_USIM_BOOT
 		gpio_set_value(GPIO_USIM_BOOT, GPIO_LEVEL_LOW);
-#endif
 	}
 
 	static int dpram_phone_getstatus(void)
@@ -1664,10 +1648,8 @@ static int dpram_tty_ioctl(struct tty_struct *tty, struct file *file,
 			printk("  - received DPRAM_PHONE_ON ioctl.\n");
 
 			dump_on = 0;
-#ifdef GPIO_PHONE_ON
 			gpio_set_value(GPIO_PHONE_ON, GPIO_LEVEL_LOW);
-#endif
-boot_complete = 1; //bss
+			boot_complete = 1; //bss
 			if(boot_complete) {
 				if(dpram_init_and_report() < 0) {
 					printk("  - Failed.. unexpected error when ipc transfer start.\n");
@@ -2390,32 +2372,26 @@ static void init_hw_setting(void)
 	s3c_gpio_cfgpin(GPIO_FLM_TXD, S3C_GPIO_SFN(GPIO_FLM_TXD_AF));
 	s3c_gpio_setpull(GPIO_FLM_TXD, S3C_GPIO_PULL_NONE); 
 
-#ifdef GPIO_PHONE_ON
 	if (gpio_is_valid(GPIO_PHONE_ON)) {
 		if (gpio_request(GPIO_PHONE_ON, S3C_GPIO_LAVEL(GPIO_PHONE_ON)))
 			printk(KERN_ERR "Filed to request GPIO_PHONE_ON!\n");
 		gpio_direction_output(GPIO_PHONE_ON, GPIO_LEVEL_LOW);
 	}
 	s3c_gpio_setpull(GPIO_PHONE_ON, S3C_GPIO_PULL_NONE); 
-#endif
 
-#ifdef GPIO_CP_BOOT_SEL
 	if (gpio_is_valid(GPIO_CP_BOOT_SEL)) {
 		if (gpio_request(GPIO_CP_BOOT_SEL, S3C_GPIO_LAVEL(GPIO_CP_BOOT_SEL)))
 			printk(KERN_ERR "Filed to request GPIO_CP_BOOT_SEL!\n");
 		gpio_direction_output(GPIO_CP_BOOT_SEL, GPIO_LEVEL_LOW);
 	}
 	s3c_gpio_setpull(GPIO_CP_BOOT_SEL, S3C_GPIO_PULL_NONE); 
-#endif
 
-#ifdef GPIO_USIM_BOOT
 	if (gpio_is_valid(GPIO_USIM_BOOT)) {
 		if (gpio_request(GPIO_USIM_BOOT, S3C_GPIO_LAVEL(GPIO_USIM_BOOT)))
 			printk(KERN_ERR "Filed to request GPIO_USIM_BOOT!\n");
 		gpio_direction_output(GPIO_USIM_BOOT, GPIO_LEVEL_LOW);
 	}
 	s3c_gpio_setpull(GPIO_USIM_BOOT, S3C_GPIO_PULL_NONE); 
-#endif
 
 	if (gpio_is_valid(GPIO_PHONE_RST_N)) {
 		if (gpio_request(GPIO_PHONE_RST_N, S3C_GPIO_LAVEL(GPIO_PHONE_RST_N)))
