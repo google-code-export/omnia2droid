@@ -5,7 +5,6 @@
 unmapped GPIO pins for b7610 (Omnia pro):
   * GPIO_CP_USB_ON
   * GPIO_TFLASH_EN
-  * GPIO_TVOUT_SEL
   * GPIO_EAR_SEND_END
 
 unmapped GPIO pins for m715 (T*Omnia):
@@ -32,7 +31,7 @@ unmapped GPIO pins for m715 (T*Omnia):
 ||GPB(7)|| || || || ||
 ||GPC(0)|| XSPIMISO0||GPIO_TP10024||GPIO_TP10024|| ||
 ||GPC(1)|| XSPICLK0|| || *_GPIO_CAM_CIF_nRST_* || GPIO_PM_SET1||
-||GPC(2)|| XSPIMOSI0|| || || GPIO_PM_SET2||
+||GPC(2)|| XSPIMOSI0|| || *_GPIO_TVOUT_SEL_* || GPIO_PM_SET2||
 ||GPC(3)|| XSPICS0|| || *_GPIO_MSENSE_RST_* || GPIO_PM_SET3||
 ||GPC(4)|| XSPIMISO1/XmmcCMD2||GPIO_WLAN_SPI_RXD||GPIO_WLAN_SPI_RXD|| GPIO_WLAN_CMD||
 ||GPC(5)|| XSPICLK1/XmmcCLK2||GPIO_WLAN_SPI_CLK||GPIO_WLAN_SPI_CLK|| GPIO_WLAN_CLK||
@@ -178,7 +177,7 @@ unmapped GPIO pins for m715 (T*Omnia):
 ||GPO(13)|| Xm0ADDR13||GPIO_DISPLAY_CLK||GPIO_DISPLAY_CLK|| GPIO_PDA_PS_HOLD // GPIO_LCD_SCLK||
 ||GPO(14)|| Xm0ADDR14||GPIO_LCD_ID||GPIO_LCD_ID|| ||
 ||GPO(15)|| Xm0ADDR15||GPIO_TV_EN||GPIO_TV_EN|| ||
+||GPP(1)||          || || *_???_* || ||
+||GPP(5)||          || || *_???_* || ||
 ||GPP(13)|| Xm0OEata||GPIO_PS_HOLD_PDA||GPIO_PS_HOLD_PDA|| ||
 ||GPQ(5)||          || || *_GPIO_CAM_EN_* || ||
-||GPQ(7)|| Xm0ADDR17|| || || ||
-||GPQ(8)|| Xm0ADDR16|| || || ||
