@@ -218,14 +218,15 @@ static struct sec_headset_port sec_headset_port[] = {
 			.gpio		= GPIO_DET_35,   
 			.gpio_af	= GPIO_DET_35_AF  , 
 			.low_active 	= 0
-		},{ // SEND/END info
+		}
 #ifdef GPIO_EAR_SEND_END
+		,{ // SEND/END info
 			.eint		= IRQ_EINT(11), 
 			.gpio		= GPIO_EAR_SEND_END, 
 			.gpio_af	= GPIO_EAR_SEND_END_AF, 
 			.low_active	= 1
-#endif
 		}
+#endif
         }
 };
  
