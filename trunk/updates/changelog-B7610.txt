@@ -1,4 +1,4 @@
-2011-04-03 (rev43):
+2011-04-03 (rev44):
 - reverted musicplayer fix (introduced headphone bug)
 - fixed ? and arrow keys (new qwert*.kl files)
 
