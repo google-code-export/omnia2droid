@@ -11,10 +11,10 @@ key 169   CALL         WAKE_DROPPED
 key 116   ENDCALL      WAKE		
 
 #HARDWARE-KEYBORD ARROWS
-key 108   DPAD_DOWN         
-key 103   DPAD_UP           
-key 105   DPAD_LEFT        
-key 106   DPAD_RIGHT        
+key 106   DPAD_DOWN         
+key 105   DPAD_UP           
+key 108   DPAD_LEFT        
+key 103   DPAD_RIGHT        
 
 #CAM
 key 102   HOME              			

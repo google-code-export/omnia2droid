@@ -1,15 +1,26 @@
-2011-03-30:
+2011-04-03 (rev43):
+- reverted musicplayer fix (introduced headphone bug)
+- fixed ? and arrow keys (new qwert*.kl files)
+
+2011-03-30 (rev40):
 - improved phone (de)init (missing GPIO pins found)
 - improved keyboard stability (phone GPIO pin excluded from keyboard matrix)
 - improved compass sensor (de)init (missing GPIO pin found)
 - fixed musicplayer trigger on keyboard slide (conficting GPIO pin found)
 
-2011-03-24:
+2011-03-24 (rev29):
 - fixed cam startup (missing GPIO pins found)
 - fixed landscape upsidedown screen (acc sensor fix)
+- merged til v116 (http://o2droid.phj.hu/trac/log/)
 
 2011-03-04:
 - fixed vibration (missing GPIO pin found)
 - fixed stability (patched unmapped GPIO pins)
 - added hardware keyboard support (modified keypad driver)
 - fixed keymapping (new .kl and .kcm.bin files)
+
+known B7610 bugs:
+* wifi and bluetooth not working
+* keyboard slideout is not handled properly (screenkeyboard and backlight stays on, musicplayer start)
+* compass sensor is working but 90 degrees off
+* some unmapped (missing and weird behaviour) and wrongly mapped (stability and battery life) GPIO's
