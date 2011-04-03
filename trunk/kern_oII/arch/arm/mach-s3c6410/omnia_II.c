@@ -222,8 +222,10 @@ static struct sec_headset_port sec_headset_port[] = {
 //#ifdef GPIO_EAR_SEND_END
 		,{ // SEND/END info
 			.eint		= IRQ_EINT(11), 
-			.gpio		= GPIO_EAR_SEND_END, 
-			.gpio_af	= GPIO_EAR_SEND_END_AF, 
+//			.gpio		= GPIO_EAR_SEND_END, 
+//			.gpio_af	= GPIO_EAR_SEND_END_AF, 
+			.gpio		= GPIO_HALL_SW, 
+			.gpio_af	= GPIO_HALL_SW_AF, 
 			.low_active	= 1
 		}
 //#endif
