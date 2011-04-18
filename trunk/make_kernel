@@ -13,8 +13,8 @@ EABI=~/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-eabi-
 EXPORTDIR=${PWD}/out
 
 #multicore compiling?
-J=-j2
-#J=""
+#J=-j2
+J=""
 
 if [ -z ${PHONEMODEL} ]
 then

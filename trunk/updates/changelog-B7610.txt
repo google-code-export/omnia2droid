@@ -1,6 +1,7 @@
-2011-04-18 (rev??):
+2011-04-18 (rev49)
 - merged from v116 till v126 except 2.6.32 tree (http://o2droid.phj.hu/trac/log/)
 - fixed musicplayer trigger on keyboard slide (inserted bogus gpio for sec_headset define)
+- changed updatefile to o2b3update.tar.gz for beta3 (froyo)
 
 2011-04-03 (rev46):
 - reverted musicplayer fix (introduced headphone bug)
@@ -25,6 +26,6 @@
 
 known B7610 bugs:
 * wifi and bluetooth not working
-* keyboard slideout is not handled properly (screenkeyboard and backlight stays on, musicplayer start)
-* compass sensor is working but 90 degrees off
+* keyboard slideout is not handled properly
+* compass sensor is working (not with froyo) but 90 degrees off
 * some unmapped (missing and weird behaviour) and wrongly mapped (stability and battery life) GPIO's
