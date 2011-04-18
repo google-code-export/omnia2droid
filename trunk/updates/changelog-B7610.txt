@@ -1,5 +1,6 @@
 2011-04-18 (rev??):
-- merged till v??? (http://o2droid.phj.hu/trac/log/)
+- merged from v116 till v126 except 2.6.32 tree (http://o2droid.phj.hu/trac/log/)
+- fixed musicplayer trigger on keyboard slide (inserted bogus gpio for sec_headset define)
 
 2011-04-03 (rev46):
 - reverted musicplayer fix (introduced headphone bug)
