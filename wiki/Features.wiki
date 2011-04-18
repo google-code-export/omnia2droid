@@ -25,7 +25,8 @@ Sections:
     * Vibrator
     * FM radio
     * Sound & Audio output via 3.5mm jack
-    * Orientation (Accelometer), Magnetic (Compass), Light and Temperature sensors
+    * Orientation (Accelometer), Magnetic (Compass)-in Froyo beta it doesn't work yet- , Light and Temperature sensors
+    * Camera (still photos up to 5MP , Video records but not up to 480P yet)
 
   * *Connectivity* 
     * Phone & messaging
@@ -35,7 +36,7 @@ Sections:
     * GPS
 
   * *Software*
-    * Android 2.1 (Eclair)
+    * Android 2.2 (Froyo)
     * Android market  
     * Superuser access (rooted) 
     * 2D/3D acceleration (libs are not included due to legal issues)
@@ -60,12 +61,10 @@ Sections:
     * Verizon Omnia II (I920): not working
  
 ==Features under active development==
-  * Camera's
   * Proximity sensor (only kernel support yet)
   * Bluetooth (only kernel support yet)
 
 ==Features under development==
-  * Android 2.2 (Froyo) {some Beta/Eclair features broken)
   * Android 2.3 (Gingerbread) {slooooow and some Beta/Eclair features broken}
  
 ==Possible future features==
