@@ -1,4 +1,7 @@
-2011-04-03 (rev45):
+2011-04-18 (rev??):
+- merged till v??? (http://o2droid.phj.hu/trac/log/)
+
+2011-04-03 (rev46):
 - reverted musicplayer fix (introduced headphone bug)
 - fixed ? and arrow keys (new qwert*.kl files)
 
