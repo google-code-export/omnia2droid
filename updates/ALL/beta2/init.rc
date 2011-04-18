@@ -77,7 +77,7 @@ setprop zygote.enable 1
     # We chown/chmod /data again so because mount is run as root + defaults
 ##    mount yaffs2 mtd@userdata /data nosuid nodev
 #    mount vfat /dev/block/mmcblk1p2 /system/sd
-#    mount vfat /dev/block/mmcblk0p5 /sdcard
+    mount vfat /dev/block/mmcblk1p1 /sdcard
     chown system system /sdcard
     chmod 0777 /sdcard
     mount vfat /dev/block/mmcblk0p5 /storage	

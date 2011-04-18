@@ -219,16 +219,25 @@ static struct sec_headset_port sec_headset_port[] = {
 			.gpio_af	= GPIO_DET_35_AF  , 
 			.low_active 	= 0
 		}
-//#ifdef GPIO_EAR_SEND_END
 		,{ // SEND/END info
-			.eint		= IRQ_EINT(11), 
-//			.gpio		= GPIO_EAR_SEND_END, 
-//			.gpio_af	= GPIO_EAR_SEND_END_AF, 
-			.gpio		= GPIO_HALL_SW, 
-			.gpio_af	= GPIO_HALL_SW_AF, 
+#ifdef PHONE_B7610
+			.eint		= IRQ_EINT(13), 
+			.gpio		= GPIO_BOOT_EINT13, 
+			.gpio_af	= GPIO_BOOT_EINT13_AF, 
 			.low_active	= 1
+
+//			.eint		= IRQ_EINT(11), 
+//			.gpio		= GPIO_HALL_SW, 
+//			.gpio_af	= GPIO_HALL_SW_AF, 
+//			.low_active	= 1
+
+#else
+			.eint		= IRQ_EINT(11), 
+			.gpio		= GPIO_EAR_SEND_END, 
+			.gpio_af	= GPIO_EAR_SEND_END_AF, 
+			.low_active	= 1
+#endif
 		}
-//#endif
         }
 };
  

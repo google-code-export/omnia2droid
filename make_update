@@ -22,7 +22,6 @@ then
 	B7610)
 		export PHONEMODEL=$1
         	./make_kernel -ckme
-#        	./make_kernel -kme
 		image=zImage
 	;;
 	I920)
