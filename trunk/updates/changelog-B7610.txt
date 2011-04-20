@@ -1,4 +1,4 @@
-2011-04-18 (rev50):
+2011-04-20 (rev51):
 - merged from v116 till v126 except 2.6.32 tree (http://o2droid.phj.hu/trac/log/)
 - fixed musicplayer trigger on keyboard slide (inserted bogus gpio for sec_headset define)
 - changed support from beta2 (eclair) to beta3 (froyo)
