@@ -4,7 +4,9 @@
 ####
 
 #UpdateFileName=o2b2update
+#BetaVersion=2
 UpdateFileName=o2b3update
+BetaVersion=3
 
 KERNEL_MODULES_PATH=~/omnia2droid/svn/trunk/out
 if [ ! -d "${KERNEL_MODULES_PATH}" ]
@@ -66,7 +68,9 @@ then
 		if [ ! -d "./modules" ]
 		then
 			# ... it will be created
-			mkdir -m 777 ./modules
+			#mkdir -m 777 ./modules
+			mkdir ./modules
+			chown root.src ./modules
 		else
 			# else : remove older version modules (just to get sure)
 			rm -f ./modules/*
@@ -93,11 +97,27 @@ then
 		else
 			 echo "modules copied"
 		fi
+		chown root.src ./modules/*
+		if [ $?  -gt 0 ]
+		then
+			 echo -e "\nERROR! failed to change root.src ownership to modules\n"
+			 exit 1;
+		else
+			 echo "modules ownership fixed"
+		fi
+		chmod 644 ./modules/*
+		if [ $?  -gt 0 ]
+		then
+			 echo -e "\nERROR! failed to change rw-r--r-- permissions to modules\n"
+			 exit 1;
+		else
+			 echo "modules permissions fixed"
+		fi
 
 		# include other files than ./modules/* in update file
 		OLDPATH=`pwd`
-		cd ../updates/ALL/beta2           ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
-		cd ../updates/${PHONEMODEL}/beta2 ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
+		cd ../updates/ALL/beta${BetaVersion}           ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
+		cd ../updates/${PHONEMODEL}/beta${BetaVersion} ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
 		find . -type d -name "\.svn" -exec rm -rf {} \;
 		
 		# create tar-ball from modules
