@@ -1,0 +1,11 @@
+drwxr-xr-x root root system/
+drwxr-xr-x root root system/usr/
+drwxr-xr-x root root system/usr/keylayout/
+-rw-r--r-- root root system/usr/keylayout/qwerty.kl
+-rw-r--r-- root root system/usr/keylayout/qwerty.kl.new.b7610
+-rw-r--r-- root root system/usr/keylayout/qwertz.kl
+lrwxrwxrwx root root system/usr/keylayout/s3c-keypad.kl -> ./qwerty.kl
+drwxr-xr-x root root system/usr/keychars/
+-rw-r--r-- root root system/usr/keychars/qwerty.kcm.bin
+-rw-r--r-- root root system/usr/keychars/qwertz.kcm.bin
+lrwxrwxrwx root root system/usr/keychars/s3c-keypad.kcm.bin -> ./qwerty.kcm.bin

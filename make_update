@@ -3,10 +3,70 @@
 # made by Mosci, adapted by Elbee
 ####
 
-#UpdateFileName=o2b2update
 #BetaVersion=2
-UpdateFileName=o2b3update
 BetaVersion=3
+UpdateFileName=o2b${BetaVersion}update
+
+function fix_permissions () {
+	Debug=true
+	Debug=false
+	BaseDir=`pwd`
+
+	# PropertiesFileName defined global
+	# PropertiesFilename syntax: <filepropertiesstring> <fileuser> <filegroup> <fullfilename> [-> linktargetfilename]
+	# example: lrwxrwxrwx root root system/usr/keychars/s3c-keypad.kcm.bin -> ./qwerty.kcm.bin
+	
+	cat ${PropertiesFileName} | while true
+	do
+	  read line
+	  if [ $? -ne 0 ]; then exit; fi
+	  set -- $line
+	  case ${1:0:1} in
+	  "d")
+	    # Directory entry
+	    if [ "${Debug}" = "true" ] ; then echo "($@)"; fi
+	    #echo mkdir $4
+	    sudo chown $2.$3 $4
+	  ;;
+	  "l")
+	    # Symbolic link entry
+	    LinkDir=${4%\/*}/
+	    LinkTarget="$6"
+	    LinkName=${4##*\/}
+	    if [ "${Debug}" = "true" ] ; then echo "($@)"; fi
+	    cd ${LinkDir}
+	    sudo ln -s ${LinkTarget} ${LinkName}
+	    cd ${BaseDir}
+	  ;;
+	  "-")
+	    # File entry
+	    UserMod=0; GroupMod=0; OtherMod=0
+	    if [ "${1:1:1}" = "r" ] ; then UserMod=`expr $UserMod + 4`; fi
+	    if [ "${1:2:1}" = "w" ] ; then UserMod=`expr $UserMod + 2`; fi
+	    if [ "${1:3:1}" = "x" ] ; then UserMod=`expr $UserMod + 1`; fi
+	    if [ "${1:4:1}" = "r" ] ; then GroupMod=`expr $GroupMod + 4`; fi
+	    if [ "${1:5:1}" = "w" ] ; then GroupMod=`expr $GroupMod + 2`; fi
+	    if [ "${1:6:1}" = "x" ] ; then GroupMod=`expr $GroupMod + 1`; fi
+	    if [ "${1:7:1}" = "r" ] ; then OtherMod=`expr $OtherMod + 4`; fi
+	    if [ "${1:8:1}" = "w" ] ; then OtherMod=`expr $OtherMod + 2`; fi
+	    if [ "${1:9:1}" = "x" ] ; then OtherMod=`expr $OtherMod + 1`; fi
+	    if [ "${Debug}" = "true" ] ; then echo "($@)"; fi
+	    sudo chown $2.$3 $4
+	    sudo chmod ${UserMod}${GroupMod}${OtherMod} $4
+	  ;;
+	  "#")
+	    # Comment entry
+	    if [ "${Debug}" = "true" ] ; then echo "($@)"; fi
+	  ;;
+	  *)
+	    # Unexpected entry
+	    if [ "${Debug}" = "true" ] ; then echo "($@)"; fi
+	    echo "Error: unexpected line in config file."
+	    exit 1
+	  ;;
+	  esac
+	done
+}
 
 KERNEL_MODULES_PATH=~/omnia2droid/svn/trunk/out
 if [ ! -d "${KERNEL_MODULES_PATH}" ]
@@ -70,10 +130,10 @@ then
 			# ... it will be created
 			#mkdir -m 777 ./modules
 			mkdir ./modules
-			chown root.src ./modules
+			sudo chown root.src ./modules
 		else
 			# else : remove older version modules (just to get sure)
-			rm -f ./modules/*
+			sudo rm -f ./modules/*
 		fi
 		
 		# remove older version zImage
@@ -89,7 +149,7 @@ then
 		fi
 		
 		# copy kernel-modules
-		cp ${KERNEL_MODULES_PATH}/*.ko ./modules/
+		sudo cp ${KERNEL_MODULES_PATH}/*.ko ./modules/
 		if [ $?  -gt 0 ]
 		then
 			 echo -e "\nERROR! no modules found in  ${KERNEL_MODULES_PATH}\n"
@@ -97,7 +157,7 @@ then
 		else
 			 echo "modules copied"
 		fi
-		chown root.src ./modules/*
+		sudo chown root.src ./modules/*
 		if [ $?  -gt 0 ]
 		then
 			 echo -e "\nERROR! failed to change root.src ownership to modules\n"
@@ -105,7 +165,7 @@ then
 		else
 			 echo "modules ownership fixed"
 		fi
-		chmod 644 ./modules/*
+		sudo chmod 644 ./modules/*
 		if [ $?  -gt 0 ]
 		then
 			 echo -e "\nERROR! failed to change rw-r--r-- permissions to modules\n"
@@ -116,12 +176,16 @@ then
 
 		# include other files than ./modules/* in update file
 		OLDPATH=`pwd`
-		cd ../updates/ALL/beta${BetaVersion}           ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
-		cd ../updates/${PHONEMODEL}/beta${BetaVersion} ; cp -rf * ${OLDPATH} ; cd ${OLDPATH}
-		find . -type d -name "\.svn" -exec rm -rf {} \;
-		
+		cd ../updates/beta${BetaVersion}/ALL           ; sudo cp -rpf * ${OLDPATH} ; cd ${OLDPATH}
+		cd ../updates/beta${BetaVersion}/${PHONEMODEL} ; sudo cp -rpf * ${OLDPATH} ; cd ${OLDPATH}
+		sudo find . -type d -name "\.svn" -exec sudo rm -rf {} \;
+
+		# fix permissions and ownership of dirs/files/links
+		PropertiesFileName=../updates/beta${BetaVersion}/ALL.prop           ; fix_permissions
+		PropertiesFileName=../updates/beta${BetaVersion}/${PHONEMODEL}.prop ; fix_permissions
+
 		# create tar-ball from modules
-		tar -cvzpf ${UpdateFileName}.tar.gz *
+		tar -czpf ${UpdateFileName}.tar.gz *
 		if [ $? -eq 0 ]
 		then
 			# grant all permissions (just to get sure)
@@ -131,6 +195,7 @@ then
 			echo -e "\nERROR! while creating tar-ball (${UpdateFileName}.tar.gz)\n"
 			exit 1;
 		fi
+		#tar -tvzf ${UpdateFileName}.tar.gz
 
 		# copy kernel
 		cp ${KERNEL_MODULES_PATH}/${image} ./
@@ -170,7 +235,7 @@ then
 		fi
 
  		# remove ./${UpdateFileName} path with contents
-		rm -rf ./${UpdateFileName}
+		sudo rm -rf ./${UpdateFileName}
 	else
 		echo "could not change into directory ./${UpdateFileName}";
 		exit 1;

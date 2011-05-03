@@ -1,0 +1,10 @@
+key 11    VOLUME_UP
+key 19    VOLUME_DOWN
+key 9     CALL              WAKE_DROPPED
+key 17    MENU              WAKE_DROPPED
+key 249   ENDCALL           WAKE
+key 250   FOCUS
+key 252   CAMERA
+key 247   DUMP              WAKE_DROPPED
+key 2     BACK              WAKE_DROPPED
+key 1     POWER             WAKE
