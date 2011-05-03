@@ -1,0 +1,15 @@
+drwxr-xr-x root root system/
+drwxr-xr-x root root system/usr/
+drwxr-xr-x root root system/usr/keychars/
+-rw-r--r-- root root system/usr/keychars/qwerty.kcm.bin
+-rw-r--r-- root root system/usr/keychars/qwertz.kcm.bin
+lrwxrwxrwx root root system/usr/keychars/s3c-keypad.kcm.bin -> ./qwerty.kcm.bin
+drwxr-xr-x root root system/usr/keylayout/
+-rw-r--r-- root root system/usr/keylayout/qwerty.kl
+-rw-r--r-- root root system/usr/keylayout/qwertz.kl
+lrwxrwxrwx root root system/usr/keylayout/s3c-keypad.kl -> ./qwerty.kl
+# -rw-rw-rw- root root system/usr/keychars/s3c-keypad-rev0020.kcm.bin
+# -rw-r--r-- root root system/usr/keychars/qwerty2.kcm.bin
+# -rw-rw-rw- root root system/usr/keylayout/s3c-keypad.kl
+# -rw-r--r-- root root system/usr/keylayout/AVRCP.kl
+# -rw-r--r-- root root system/usr/keylayout/sec_headset.kl
