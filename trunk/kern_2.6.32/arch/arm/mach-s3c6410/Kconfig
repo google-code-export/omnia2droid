@@ -1,0 +1,87 @@
+# arch/arm/mach-s3c6410/Kconfig
+#
+# Copyright 2008 Openmoko, Inc.
+# Copyright 2008 Simtec Electronics
+#
+# Licensed under GPLv2
+
+# Configuration options for the S3C6410 CPU
+
+config CPU_S3C6410
+	bool
+	select CPU_S3C64XX_INIT
+	select CPU_S3C64XX_CLOCK
+	help
+	  Enable S3C6410 CPU support
+
+config S3C6410_SETUP_SDHCI
+	bool
+	help
+	  Internal helper functions for S3C6410 based SDHCI systems
+
+menu "Samsung S3C6410 Implementations"
+
+choice
+	prompt "Select Machine"
+
+config MACH_OMNIA_II
+	bool "OMNIA_II"
+	select CPU_S3C6410
+	select S3C_DEV_HSMMC
+	select S3C_DEV_HSMMC1
+	select S3C_DEV_I2C1
+	select S3C6410_SETUP_SDHCI
+	select S3C64XX_SETUP_I2C1
+#	select S3C_DMA_PL080_NEW
+	help
+	  Machine support for the Samsung INSTINCTQ
+
+
+config MACH_INSTINCTQ
+	bool "INSTINCTQ"
+	select CPU_S3C6410
+	select S3C_DEV_HSMMC
+	select S3C_DEV_HSMMC2
+	select S3C_DEV_I2C1
+	select S3C6410_SETUP_SDHCI
+	select S3C64XX_SETUP_I2C1
+#	select S3C_DMA_PL080_NEW
+	help
+	  Machine support for the Samsung INSTINCTQ
+
+endchoice
+
+choice
+    prompt "Select Sub-Machine"
+
+config MACH_VINSQ
+    bool "VINSQ"
+    help
+      Machine support for the Samsung VINSQ
+
+config MACH_VITAL
+	bool "VITAL"
+	help
+	  Machine support for the Samsung VITAL
+
+endchoice
+
+config BOARD_REVISION
+	hex "Select H/W Revision"
+	depends on MACH_INSTINCTQ
+	default "0x00"
+
+config SEC_HEADSET
+        tristate "SEC 2 Wire detection driver"
+        default n
+        help
+         Provides support for detecting SEC 2 wire devices, such as wired
+         headset.
+
+config SEC_LOG_BUF
+	tristate "SEC Log Buffer"
+	default n
+	help
+	  Provides support for SEC log buffer shared with Loke bootloader.
+
+endmenu
