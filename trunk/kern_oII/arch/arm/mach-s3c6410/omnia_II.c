@@ -34,7 +34,9 @@
 
 #ifdef PHONE_B7610
 #include <linux/spi/wl12xx.h>
+#include <linux/spi/libertas_spi.h>
 #else
+#include <linux/spi/wl12xx.h>
 #include <linux/spi/libertas_spi.h>
 #endif
 
@@ -301,13 +303,13 @@ static int wl12xx_teardown(struct spi_device *spi)
 	printk("wl12xx: disable wlan chip\n");
 	return 0;
 }
-
+/*
 static struct wl12xx_spi_platform_data wl12xx_spi_pdata = {
         .use_dummy_writes	= 0,
 	.setup			= wl12xx_setup,
 	.teardown		= wl12xx_teardown,
 };
-
+*/
 void set_cs_level( void __iomem *regs_base, unsigned line_id, int lvl) {
 	gpio_set_value(GPIO_WLAN_SPI_nCS, lvl);
 };
@@ -328,7 +330,7 @@ static struct spi_board_info s3c6410_spi_board_info[] = {
 		.irq			= IRQ_EINT(1),
                 .chip_select		= 0,
                 .controller_data	= &wl12xx_chip_cs,
-                .platform_data		= &wl12xx_spi_pdata,
+//                .platform_data		= &wl12xx_spi_pdata,
         },
 
 };

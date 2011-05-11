@@ -57,6 +57,17 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 		printk("[BT] Device Powering ON \n");
 		s3c_setup_uart_cfg_gpio(1);
 
+#ifdef PHONE_B7610
+		if (gpio_is_valid(GPIO_BT_nEN))
+		{
+			ret = gpio_request(GPIO_BT_nEN, S3C_GPIO_LAVEL(GPIO_BT_nEN));
+			if (ret < 0) {
+					printk("[BT] Failed to request GPIO_BT_nEN!\n");
+				return ret;
+			}
+			gpio_direction_output(GPIO_BT_nEN, GPIO_LEVEL_LOW); // inverted
+		}
+#else
 		if (gpio_is_valid(GPIO_BT_EN))
 		{
 			ret = gpio_request(GPIO_BT_EN, S3C_GPIO_LAVEL(GPIO_BT_EN));
@@ -66,18 +77,33 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 			}
 			gpio_direction_output(GPIO_BT_EN, GPIO_LEVEL_HIGH);
 		}
+#endif
 				
 		if (gpio_is_valid(GPIO_BT_nRST))
 		{
 			ret = gpio_request(GPIO_BT_nRST, S3C_GPIO_LAVEL(GPIO_BT_nRST));
 			if (ret < 0) {
+#ifdef PHONE_B7610
+				gpio_free(GPIO_BT_nEN);
+#else
 				gpio_free(GPIO_BT_EN);
+#endif
 					printk("[BT] Failed to request GPIO_BT_nRST!\n");
 				return ret;			
 			}
 			gpio_direction_output(GPIO_BT_nRST, GPIO_LEVEL_LOW);
 		}
 		
+#ifdef PHONE_B7610
+		/* Set GPIO_BT_EN low */ 
+		s3c_gpio_setpull(GPIO_BT_nEN, S3C_GPIO_PULL_NONE);
+		gpio_set_value(GPIO_BT_nEN, GPIO_LEVEL_LOW);
+		
+		s3c_gpio_slp_cfgpin(GPIO_BT_nEN, S3C_GPIO_SLP_OUT1);  
+		s3c_gpio_slp_setpull_updown(GPIO_BT_nEN, S3C_GPIO_PULL_NONE);
+		
+		printk("[BT] GPIO_BT_nEN = %d\n", gpio_get_value(GPIO_BT_nEN));		
+#else
 		/* Set GPIO_BT_EN high */ 
 		s3c_gpio_setpull(GPIO_BT_EN, S3C_GPIO_PULL_NONE);
 		gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_HIGH);
@@ -86,6 +112,7 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 		s3c_gpio_slp_setpull_updown(GPIO_BT_EN, S3C_GPIO_PULL_NONE);
 		
 		printk("[BT] GPIO_BT_EN = %d\n", gpio_get_value(GPIO_BT_EN));		
+#endif
 
 		msleep(150);  // 100msec, delay  between reg_on & rst. (bcm4325 powerup sequence)
 		
@@ -99,7 +126,11 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 		printk("[BT] GPIO_BT_nRST = %d\n", gpio_get_value(GPIO_BT_nRST));
 
 		gpio_free(GPIO_BT_nRST);
+#ifdef PHONE_B7610
+		gpio_free(GPIO_BT_nEN);
+#else
 		gpio_free(GPIO_BT_EN);
+#endif
 
 		break;
 		
@@ -117,6 +148,15 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 		
 		if(gpio_get_value(GPIO_WLAN_RST_N) == 0)
 		{		
+#ifdef PHONE_B7610
+			s3c_gpio_setpull(GPIO_BT_nEN, S3C_GPIO_PULL_NONE);
+			gpio_set_value(GPIO_BT_nEN, GPIO_LEVEL_HIGH);
+			
+			s3c_gpio_slp_cfgpin(GPIO_BT_nEN, S3C_GPIO_SLP_OUT0);
+			s3c_gpio_slp_setpull_updown(GPIO_BT_nEN, S3C_GPIO_PULL_NONE);
+			
+			printk("[BT] GPIO_BT_nEN = %d\n", gpio_get_value(GPIO_BT_nEN));
+#else
 			s3c_gpio_setpull(GPIO_BT_EN, S3C_GPIO_PULL_NONE);
 			gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_LOW);
 			
@@ -124,10 +164,15 @@ static int bluetooth_set_power(void *data, enum rfkill_user_states state)
 			s3c_gpio_slp_setpull_updown(GPIO_BT_EN, S3C_GPIO_PULL_NONE);
 			
 			printk("[BT] GPIO_BT_EN = %d\n", gpio_get_value(GPIO_BT_EN));
+#endif
 		}
 		
 		gpio_free(GPIO_BT_nRST);
+#ifdef PHONE_B7610
+		gpio_free(GPIO_BT_nEN);
+#else
 		gpio_free(GPIO_BT_EN);
+#endif
 		
 		break;
 		
