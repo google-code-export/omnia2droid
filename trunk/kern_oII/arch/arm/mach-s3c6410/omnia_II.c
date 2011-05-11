@@ -31,7 +31,13 @@
 #include <linux/reboot.h>
 #include <linux/pwm_backlight.h>
 #include <linux/spi/spi.h>
+
+#ifdef PHONE_B7610
+#include <linux/spi/wl12xx.h>
+#else
 #include <linux/spi/libertas_spi.h>
+#endif
+
 #include <plat/spi-clocks.h>
 #include <plat/s3c64xx-spi.h>
 
@@ -264,8 +270,95 @@ struct platform_device sec_device_btsleep = {
 			.id = -1,
 };
 
+#ifdef PHONE_B7610
 
-// Libertas SPI Wlan setup
+// TI WL1271 (B7610) SPI Wlan setup
+// check with linux/arch/arm/mach-omap2/board-rx51-peripherals.c simular omap spi setup
+
+static int wl12xx_setup(struct spi_device *spi)
+{
+	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_HIGH);
+//	gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_HIGH); 	
+	gpio_set_value(GPIO_BT_nEN, GPIO_LEVEL_LOW); 	
+	mdelay(600); // check value
+	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_LOW);
+	mdelay(20); // check value
+	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_HIGH);
+	mdelay(100); // check value
+	printk("wl12xx: enable wlan chip\n");
+//	spi->bits_per_word = 16;
+//	spi_setup(spi);
+	return 0;
+}
+
+static int wl12xx_teardown(struct spi_device *spi)
+{
+	if (gpio_get_value(GPIO_BT_nRST) == 0) {
+//		gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_LOW);
+		gpio_set_value(GPIO_BT_nEN, GPIO_LEVEL_HIGH);
+	}
+	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_LOW);
+	printk("wl12xx: disable wlan chip\n");
+	return 0;
+}
+
+static struct wl12xx_spi_platform_data wl12xx_spi_pdata = {
+        .use_dummy_writes	= 0,
+	.setup			= wl12xx_setup,
+	.teardown		= wl12xx_teardown,
+};
+
+void set_cs_level( void __iomem *regs_base, unsigned line_id, int lvl) {
+	gpio_set_value(GPIO_WLAN_SPI_nCS, lvl);
+};
+
+struct s3c64xx_spi_csinfo  wl12xx_chip_cs = {
+	.fb_delay	= 0,
+	.line		= 1,
+	.set_level	= set_cs_level,
+};
+
+static struct spi_board_info s3c6410_spi_board_info[] = {
+	{
+                .modalias		= "wl12xx_spi",
+                .mode			= SPI_MODE_0,
+//              .max_speed_hz   	= 48000000,
+                .max_speed_hz   	= 24000000,
+                .bus_num		= 1,
+		.irq			= IRQ_EINT(1),
+                .chip_select		= 0,
+                .controller_data	= &wl12xx_chip_cs,
+                .platform_data		= &wl12xx_spi_pdata,
+        },
+
+};
+
+#define ARRAY_AND_SIZE(x)        (x), ARRAY_SIZE(x)
+static void __init init_spi(void)
+{
+	s3c_gpio_cfgpin(GPIO_HOST_WAKE, S3C_GPIO_SFN(GPIO_HOST_WAKE_AF));
+	s3c_gpio_setpull(GPIO_HOST_WAKE_AF, S3C_GPIO_PULL_UP); 
+	set_irq_type(GPIO_HOST_WAKE, IRQ_TYPE_EDGE_FALLING); 
+
+//	s3c_gpio_cfgpin(GPIO_BT_EN, S3C_GPIO_SFN(GPIO_BT_EN_AF));
+	s3c_gpio_cfgpin(GPIO_BT_nEN, S3C_GPIO_SFN(GPIO_BT_nEN_AF));
+	s3c_gpio_cfgpin(GPIO_BT_nRST, S3C_GPIO_SFN(GPIO_BT_nRST_AF));
+	s3c_gpio_cfgpin(GPIO_WLAN_nRST, S3C_GPIO_SFN(GPIO_WLAN_nRST_AF));
+	s3c_gpio_cfgpin(GPIO_WLAN_SPI_nCS, S3C_GPIO_SFN(1)); // Output
+
+	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_LOW);
+//	gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_LOW); 	
+	gpio_set_value(GPIO_BT_nEN, GPIO_LEVEL_HIGH); 	
+	
+//	s3c64xx_spi_set_info(1, S3C64XX_SPI_SRCCLK_PCLK, 1);
+	s3c64xx_spi_set_info(1, S3C64XX_SPI_SRCCLK_SPIBUS, 1);
+	spi_register_board_info(ARRAY_AND_SIZE(s3c6410_spi_board_info));
+}
+
+#else
+
+// Libertas (I8000 and others) SPI Wlan setup
+
 static int libertas_setup(struct spi_device *spi)
 {
 	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_HIGH);
@@ -275,7 +368,7 @@ static int libertas_setup(struct spi_device *spi)
 	mdelay(20);
 	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_HIGH);
 	mdelay(100);
-printk("Sanya: Power on wlan\n");
+	printk("Sanya: Power on wlan\n");
 	spi->bits_per_word = 16;
 	spi_setup(spi);
 	return 0;
@@ -341,7 +434,7 @@ static void __init init_spi(void)
 	spi_register_board_info(ARRAY_AND_SIZE(s3c6410_spi_board_info));
 }
 
-
+#endif
 
 static struct s3c6410_pmem_setting pmem_setting = {
         .pmem_start = RESERVED_PMEM_START,

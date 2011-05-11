@@ -49,6 +49,8 @@
 #define GPIO_AP_FLM_TXD_AF	(2)
 
 #ifdef PHONE_B7610
+#define GPIO_BT_nEN		S3C64XX_GPA(2)
+#define GPIO_BT_nEN_AF		(1) // doublecheck signal seems inverted
 #define GPIO_VIB_EN		S3C64XX_GPA(3)
 #define GPIO_VIB_EN_AF		(1)
 #endif
@@ -122,12 +124,23 @@
 #define GPIO_I2S_SDO_AF         (3)
 
 /* GPE Group */
+
+#ifdef PHONE_B7610
+#define GPIO_WLAN_nRST		S3C64XX_GPE(0)
+#define GPIO_WLAN_nRST_AF	(1)
+#else
 #define GPIO_BT_nRST		S3C64XX_GPE(0)
 #define GPIO_BT_nRST_AF		(1)
+#endif
+
 #define GPIO_BOOT_MODE		S3C64XX_GPE(1)
 #define GPIO_BOOT_MODE_AF	(0)
+
+#ifndef PHONE_B7610
 #define GPIO_WLAN_nRST		S3C64XX_GPE(2)
 #define GPIO_WLAN_nRST_AF	(1)
+#endif
+
 #define GPIO_PWR_I2C_SCL	S3C64XX_GPE(3)
 #define GPIO_PWR_I2C_SCL_AF	(1)
 #define GPIO_PWR_I2C_SDA	S3C64XX_GPE(4)
@@ -298,9 +311,7 @@
 #define GPIO_KBR5_AF            (3)
 #define GPIO_KBR6               S3C64XX_GPK(14)
 #define GPIO_KBR6_AF            (3)
-#endif
-
-#ifndef PHONE_B7610
+#else
 #define GPIO_FLM_SEL		S3C64XX_GPK(11)
 #define GPIO_FLM_SEL_AF		(1)
 #define GPIO_CAM_CIF_nRST       S3C64XX_GPK(12)
@@ -331,9 +342,7 @@
 #define GPIO_KBC5_AF            (3)
 #define GPIO_KBC6               S3C64XX_GPL(6)
 #define GPIO_KBC6_AF            (3)
-#endif
-
-#ifndef PHONE_B7610
+#else
 #define GPIO_CAM_3M_nSTBY	S3C64XX_GPL(3)
 #define GPIO_CAM_3M_nSTBY_AF	(1)
 #define GPIO_VIB_EN             S3C64XX_GPL(4)
@@ -382,8 +391,15 @@
 #define GPIO_MSENSE_IRQ_AF	(2)
 #define GPIO_ACC_INT		S3C64XX_GPN(3)
 #define GPIO_ACC_INT_AF		(2)
+
+#ifdef PHONE_B7610
+#define GPIO_BT_nRST		S3C64XX_GPN(4)
+#define GPIO_BT_nRST_AF		(1)
+#else
 #define GPIO_BT_EN		S3C64XX_GPN(4)
 #define GPIO_BT_EN_AF		(1)
+#endif
+
 #define GPIO_nPOWER             S3C64XX_GPN(5)
 #define GPIO_nPOWER_AF          (2)
 #define GPIO_T_FLASH_DETECT     S3C64XX_GPN(6)
@@ -437,6 +453,7 @@
 #define GPIO_PS_HOLD_PDA_AF     (1)
 
 /* GPQ Group */
+
 #ifdef PHONE_B7610
 #define GPIO_CAM_EN             S3C64XX_GPQ(5)
 #define GPIO_CAM_EN_AF          (1)

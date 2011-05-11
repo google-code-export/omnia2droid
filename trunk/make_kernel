@@ -1,9 +1,11 @@
 #!/bin/bash
 
 #path to the kernel-source
+KDIR=${PWD}/kern_2.6.32
 KDIR=${PWD}/kern_oII
 
 #path to the extra-modules-source
+EXTRAMODDIR=${PWD}/modules32
 EXTRAMODDIR=${PWD}/modules
 
 #path to the crossbuild-toolchain
