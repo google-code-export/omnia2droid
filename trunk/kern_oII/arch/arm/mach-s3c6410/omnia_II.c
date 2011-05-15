@@ -34,9 +34,7 @@
 
 #ifdef PHONE_B7610
 #include <linux/spi/wl12xx.h>
-#include <linux/spi/libertas_spi.h>
 #else
-#include <linux/spi/wl12xx.h>
 #include <linux/spi/libertas_spi.h>
 #endif
 
@@ -277,7 +275,35 @@ struct platform_device sec_device_btsleep = {
 // TI WL1271 (B7610) SPI Wlan setup
 // check with linux/arch/arm/mach-omap2/board-rx51-peripherals.c simular omap spi setup
 
-static int wl12xx_setup(struct spi_device *spi)
+void set_cs_level( void __iomem *regs_base, unsigned line_id, int lvl) {
+	gpio_set_value(GPIO_WLAN_SPI_nCS, lvl);
+};
+
+struct s3c64xx_spi_csinfo  wl12xx_chip_cs = {
+	.fb_delay	= 0,
+	.line		= 1,
+	.set_level	= set_cs_level,
+};
+
+static struct wl12xx_platform_data wl12xx_pdata;
+
+static struct spi_board_info s3c6410_spi_board_info[] = {
+	{
+                .modalias		= "wl12xx_spi",
+                .mode			= SPI_MODE_0,
+//              .max_speed_hz   	= 48000000,
+                .max_speed_hz   	= 24000000,
+                .bus_num		= 1,
+		.irq			= IRQ_EINT(1),
+                .chip_select		= 0,
+                .controller_data	= &wl12xx_chip_cs,
+                .platform_data		= &wl12xx_pdata,
+        },
+
+};
+
+//static int wl12xx_setup(struct spi_device *spi)
+static int wl12xx_setup(void)
 {
 	gpio_set_value(GPIO_WLAN_nRST, GPIO_LEVEL_HIGH);
 //	gpio_set_value(GPIO_BT_EN, GPIO_LEVEL_HIGH); 	
@@ -289,6 +315,7 @@ static int wl12xx_setup(struct spi_device *spi)
 	mdelay(100); // check value
 	printk("wl12xx: enable wlan chip\n");
 //	spi->bits_per_word = 16;
+//	spi_setup done in wl12xx_probe()
 //	spi_setup(spi);
 	return 0;
 }
@@ -303,37 +330,6 @@ static int wl12xx_teardown(struct spi_device *spi)
 	printk("wl12xx: disable wlan chip\n");
 	return 0;
 }
-/*
-static struct wl12xx_spi_platform_data wl12xx_spi_pdata = {
-        .use_dummy_writes	= 0,
-	.setup			= wl12xx_setup,
-	.teardown		= wl12xx_teardown,
-};
-*/
-void set_cs_level( void __iomem *regs_base, unsigned line_id, int lvl) {
-	gpio_set_value(GPIO_WLAN_SPI_nCS, lvl);
-};
-
-struct s3c64xx_spi_csinfo  wl12xx_chip_cs = {
-	.fb_delay	= 0,
-	.line		= 1,
-	.set_level	= set_cs_level,
-};
-
-static struct spi_board_info s3c6410_spi_board_info[] = {
-	{
-                .modalias		= "wl12xx_spi",
-                .mode			= SPI_MODE_0,
-//              .max_speed_hz   	= 48000000,
-                .max_speed_hz   	= 24000000,
-                .bus_num		= 1,
-		.irq			= IRQ_EINT(1),
-                .chip_select		= 0,
-                .controller_data	= &wl12xx_chip_cs,
-//                .platform_data		= &wl12xx_spi_pdata,
-        },
-
-};
 
 #define ARRAY_AND_SIZE(x)        (x), ARRAY_SIZE(x)
 static void __init init_spi(void)
@@ -354,6 +350,7 @@ static void __init init_spi(void)
 	
 //	s3c64xx_spi_set_info(1, S3C64XX_SPI_SRCCLK_PCLK, 1);
 	s3c64xx_spi_set_info(1, S3C64XX_SPI_SRCCLK_SPIBUS, 1);
+	wl12xx_setup();
 	spi_register_board_info(ARRAY_AND_SIZE(s3c6410_spi_board_info));
 }
 
