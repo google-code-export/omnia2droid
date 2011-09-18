@@ -1508,11 +1508,13 @@ static unsigned int s3c_bat_check_v_f(void)
 		if(vf_cnt >= 30){
 			dev_info(dev, "%s: Unauthorized battery!\n", __func__);
 			// if this state is set, it remains forever.
+#ifndef PHONE_B7610
 			s3c_set_bat_health(POWER_SUPPLY_HEALTH_UNSPEC_FAILURE);
 			s3c_set_chg_en(DISABLE);
 			force_update = 1;
 			rc = 0;
 			vf_cnt = 0;
+#endif
       		}
 	}
 	return rc;
@@ -1589,8 +1591,10 @@ charger_type_t status = 0;
 			status = CHARGER_AC;
         
 		if (s3c_get_bat_health() != POWER_SUPPLY_HEALTH_GOOD) {
+#ifndef PHONE_B7610
 			dev_info(dev, "%s: Unhealth battery state!\n", __func__);
 			s3c_set_chg_en(DISABLE);
+#endif
 		} 
 		else {
 			if((status == CHARGER_USB) && (s3c_bat_info.bat_info.batt_slate_mode)){
