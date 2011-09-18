@@ -38,7 +38,7 @@
 #define GPIO_AP_FLM_TXD		S3C64XX_GPA(1)
 #define GPIO_AP_FLM_TXD_AF	(2)
 #ifdef PHONE_B7610
-#define GPIO_BT_EN             S3C64XX_GPA(2) //EC BT_nEN in kern_oII 
+#define GPIO_BT_EN             S3C64XX_GPA(2) 
 #define GPIO_BT_EN_AF          (1) // doublecheck signal seems inverted 
 #define GPIO_VIB_EN             S3C64XX_GPA(3) 
 #define GPIO_VIB_EN_AF          (1) 
@@ -262,7 +262,7 @@
 #define GPIO_FM_nRST            S3C64XX_GPK(5)
 #define GPIO_FM_nRST_AF         (1)
 #ifdef PHONE_B7610 
-#define GPIO_PHONE_ON           S3C64XX_GPL(6) //EC: from kern_oII. Is GPK(6). generates multiple keyscans if defined GPL
+#define GPIO_PHONE_ON           S3C64XX_GPL(6)//EC: from kern_oII. Is GPK(6). generates multiple keyscans if defined GP 
 #define GPIO_PHONE_ON_AF        (1) 
 #else
 #define GPIO_CAM_EN             S3C64XX_GPK(6)
@@ -417,8 +417,10 @@
 
 /* GPP Group */
 
+#ifdef PHONE_b7610
 #define GPIO_USB_SEL            S3C64XX_GPP(5) //correct???
 #define GPIO_USB_SEL_AF         (1)
+#endif
 #define GPIO_PS_HOLD_PDA	S3C64XX_GPP(13)
 #define GPIO_PS_HOLD_PDA_AF     (1)
 
