@@ -242,11 +242,25 @@ static struct sec_headset_port sec_headset_port[] = {
 			.gpio		= GPIO_DET_35,   
 			.gpio_af	= GPIO_DET_35_AF  , 
 			.low_active 	= 0
-		},{ // SEND/END info
+                 } 
+                ,{ // SEND/END info
+#ifdef PHONE_B7610 
+                        .eint           = IRQ_EINT(13),  
+                        .gpio           = GPIO_BOOT_EINT13,  
+                        .gpio_af        = GPIO_BOOT_EINT13_AF,  
+                        .low_active     = 1 
+ 
+//                      .eint           = IRQ_EINT(11),  
+//                      .gpio           = GPIO_HALL_SW,  
+//                      .gpio_af        = GPIO_HALL_SW_AF,  
+//                      .low_active     = 1 
+ 
+#else
 			.eint		= IRQ_EINT(11), 
 			.gpio		= GPIO_EAR_SEND_END, 
 			.gpio_af	= GPIO_EAR_SEND_END_AF, 
 			.low_active	= 1
+#endif
 		}
         }
 };
@@ -745,6 +759,7 @@ void s3c_setup_keypad_cfg_gpio(int rows, int columns)
 	unsigned int gpio;
 	unsigned int end;
 
+#ifndef PHONE_B7610 
 	end = S3C64XX_GPK(8 + rows);
 
 	/* Set all the necessary GPK pins to special-function 0 */
@@ -760,6 +775,7 @@ void s3c_setup_keypad_cfg_gpio(int rows, int columns)
 		s3c_gpio_cfgpin(gpio, S3C_GPIO_SFN(3));
 		s3c_gpio_setpull(gpio, S3C_GPIO_PULL_NONE);
 	}
+#endif
 }
 
 EXPORT_SYMBOL(s3c_setup_keypad_cfg_gpio);
@@ -917,7 +933,9 @@ static void print_gpios(void)
 	printk("GPIO_USIM_BOOT: %d\n", gpio_get_value(GPIO_USIM_BOOT));
 	printk("GPIO_FLM_SEL: %d\n", gpio_get_value(GPIO_FLM_SEL));
 
+#ifdef GPIO_USB_SEL
 	printk("GPIO_USB_SEL: %d\n", gpio_get_value(GPIO_USB_SEL));
+#endif
 	printk("GPIO_PDA_ACTIVE: %d\n", gpio_get_value(GPIO_PDA_ACTIVE));
 	printk("GPIO_PM_INT_N: %d\n", gpio_get_value(GPIO_PM_INT_N));
 }
@@ -969,7 +987,7 @@ void s3c_config_wakeup_source(void)
 	 */
 	eint0pend_val= __raw_readl(S3C64XX_EINT0PEND);
 	eint0pend_val |= (0x1 << 25) | (0x1 << 22) | (0x1 << 19) |
-	//bss	(0x1 << 17) | (0x1 << 11) | (0x1 << 10) | (0x1 << 9) | (0x1 << 6) | (0x1 << 5) | (0x1 << 1) | 0x1;
+		//bss (0x1 << 17) | (0x1 << 11) | (0x1 << 10) | (0x1 << 9) | (0x1 << 6) | (0x1 << 5) | (0x1 << 1) | 0x1;
 		(0x1 << 17) | (0x1 << 11) | (0x1 << 10) | (0x1 << 6) | (0x1 << 5) | (0x1 << 1) | 0x1;
 	__raw_writel(eint0pend_val, S3C64XX_EINT0PEND);
 
