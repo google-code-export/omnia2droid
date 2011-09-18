@@ -1383,9 +1383,11 @@ static unsigned int s3c_bat_check_v_f(void)
 		}	
 		rc = 1;
 	} else {
+#ifndef PHONE_B7610
 		dev_info(dev, "%s: Unauthorized battery!\n", __func__);
 		s3c_set_bat_health(POWER_SUPPLY_HEALTH_UNSPEC_FAILURE);
 		rc = 0;
+#endif
 	}
 	return rc;
 }
@@ -1406,7 +1408,9 @@ static void s3c_cable_check_status(void)
 
 		if (s3c_get_bat_health() != POWER_SUPPLY_HEALTH_GOOD) {
 			dev_info(dev, "%s: Unhealth battery state!\n", __func__);
+#ifndef PHONE_B7610
 			s3c_set_chg_en(DISABLE);
+#endif
 		} else 
 			s3c_set_chg_en(ENABLE);
 
