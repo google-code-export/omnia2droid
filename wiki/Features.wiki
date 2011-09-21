@@ -25,26 +25,28 @@ Sections:
     * Vibrator
     * FM radio
     * Sound & Audio output via 3.5mm jack
-    * Orientation (Accelometer), Magnetic (Compass)-in Froyo beta it doesn't work yet- , Light and Temperature sensors
-    * Camera (still photos up to 5MP , Video records but not up to 480P yet)
+    * All sensors work: Orientation (Accelometer), Magnetic (Compass), Proximity Sensor , Light and Temperature sensors
+    * Camera (still photos up to 5MP , Video records but limited at CIF for now)
 
   * *Connectivity* 
     * Phone & messaging
-    * Wifi
+    * Wifi (with a sleep bug)
     * GSM data (GPRS/2G/3G/..)
-    * USB (ADB)
+    * USB (ADB,UMS)
     * GPS
 
   * *Software*
     * Android 2.2 (Froyo)
     * Android market  
     * Superuser access (rooted) 
-    * 2D/3D acceleration (libs are not included due to legal issues)
+    * 2D/3D acceleration (can play 3GP/MP4 videos right out-of-the-box)
     * Open-source patches: [http://o2droid.phj.hu/trac/browser I8000] [http://code.google.com/p/omnia2droid/issues/detail?id=6 B7610] [http://howto.homelinux.com/trac/log/ M715&M8400]  
 
   * *Other Features*
     * Battery driver/charging
     * Brightness control/backlight
+    * Ext4 support
+    * Froyo 2 beta uses kernel 2.6.32.9 (latest from Samsung)
 
   * *Compatibility on Omnia II (I8000) like phones*
     * Omnia pro (B7610): wifi not working [http://code.google.com/p/omnia2droid/issues/detail?id=12 issue]
@@ -61,7 +63,7 @@ Sections:
     * Verizon Omnia II (I920): not working
  
 ==Features under active development==
-  * Proximity sensor (only kernel support yet)
+  * 24-bit driver (to fix banding)
   * Bluetooth (only kernel support yet)
 
 ==Features under development==
