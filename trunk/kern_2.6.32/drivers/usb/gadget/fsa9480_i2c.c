@@ -407,12 +407,13 @@ EXPORT_SYMBOL(fsa9480_check_usb_connection);
 static void usb_sel(int sel)
 {  
     DEBUG_FSA9480("[FSA9480]%s\n ", __func__);
+#ifdef USB_SEL
 	if (sel == SWITCH_PDA) { // PDA
 		gpio_set_value(GPIO_USB_SEL, 0);
 	} else { // MODEM
 		gpio_set_value(GPIO_USB_SEL, 1);
 	}
-
+#endif
 	usb_path = sel;
 }
 
@@ -592,6 +593,7 @@ static int __devinit fsa9480_codec_probe(struct i2c_client *client, const struct
 	s3c_gpio_setpull(GPIO_JACK_INT_N, S3C_GPIO_PULL_NONE);
 
 	/* USB_SEL */
+#ifdef USB_SEL
 	if (gpio_is_valid(GPIO_USB_SEL)) {
 		if (gpio_request(GPIO_USB_SEL, S3C_GPIO_LAVEL(GPIO_USB_SEL))) 
 			DEBUG_FSA9480(KERN_ERR "[FSA9480]Failed to request GPIO_USB_SEL! \n");
@@ -626,6 +628,8 @@ static int __devinit fsa9480_codec_probe(struct i2c_client *client, const struct
 	if (device_create_file(switch_dev, &dev_attr_usb_state) < 0)
 		DEBUG_FSA9480("[FSA9480]Failed to create device file(%s)!\n", dev_attr_usb_state.attr.name);
 	
+#endif
+
 
 	/*init wakelock*/
 	wake_lock_init(&fsa9480_wake_lock, WAKE_LOCK_SUSPEND, "fsa9480_wakelock");
