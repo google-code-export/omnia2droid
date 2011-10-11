@@ -263,7 +263,7 @@
 #define GPIO_FM_nRST_AF         (1)
 #ifdef PHONE_B7610 
 #define GPIO_PHONE_ON           S3C64XX_GPK(6)//EC: from kern_oII. Is GPK(6). generates multiple keyscans if defined GP 
-#define GPIO_PHONE_ON_AF        (1) 
+#define GPIO_PHONE_ON_AF        (1)
 #else
 #define GPIO_CAM_EN             S3C64XX_GPK(6)
 #define GPIO_CAM_EN_AF          (1)
