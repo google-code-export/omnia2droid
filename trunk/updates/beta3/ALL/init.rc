@@ -5,6 +5,7 @@ sysclktz 0
 loglevel 3
 
 setprop rilcorrect.enable 1
+setprop zygote.enable 1
 
 # setup the global environment
     export PATH /bin:/sbin:/system/sbin:/system/bin:/system/xbin:/sd/bin:/data/xbin
@@ -14,11 +15,8 @@ setprop rilcorrect.enable 1
     export ANDROID_ROOT /system
     export ANDROID_ASSETS /system/app
     export ANDROID_DATA /data
-    export ASEC_MOUNTPOINT /mnt/asec
-    export EXTERNAL_STORAGE /mnt/sdcard
-    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar
-    export TERMINFO /system/etc/terminfo
-
+    export EXTERNAL_STORAGE /sdcard
+    export BOOTCLASSPATH /system/framework/core.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/com.google.android.gtalkservice.jar
 
 # Backward compatibility
     symlink /system/etc /etc
@@ -31,20 +29,7 @@ setprop rilcorrect.enable 1
     insmod /modules/vibrator.ko
 
 # create mountpoints and mount tmpfs on sqlite_stmt_journals
-    mkdir /mnt/sdcard 0755 system system
-    # Directory for putting things only root should see.
-    mkdir /mnt/secure 0700 root root
-    mkdir /mnt/secure/staging 0700 root root
-    # Directory for staging bindmounts                             
-    mkdir /mnt/secure/staging 0700 root root
-    # Directory-target for where the secure container
-    # imagefile directory will be bind-mounted
-    mkdir /mnt/secure/asec  0700 root root
-                                       
-    # Secure container public mount points.
-    mkdir /mnt/asec  0700 root system                                           
-    mount tmpfs tmpfs /mnt/asec mode=0755,gid=1000
-
+    mkdir /sdcard 0755 system system
     mkdir /storage 0755 system system
     mkdir /xbin
     mkdir /system
@@ -89,14 +74,12 @@ setprop rilcorrect.enable 1
 ##  mount yaffs2 mtd@system /system
 ##  mount yaffs2 mtd@system /system ro remount
 
-write /sys/devices/platform/s3c6410-usbgadget/gadget/lun0/file /dev/block/mmcblk1
-
     # We chown/chmod /data again so because mount is run as root + defaults
 ##    mount yaffs2 mtd@userdata /data nosuid nodev
 #    mount vfat /dev/block/mmcblk1p2 /system/sd
-#    mount vfat /dev/block/mmcblk0p5 /sdcard
-    chown system system /mnt/sdcard
-    chmod 0777 /mnt/sdcard
+    mount vfat /dev/block/mmcblk1p1 /sdcard
+    chown system system /sdcard
+    chmod 0777 /sdcard
     mount vfat /dev/block/mmcblk0p5 /storage	
     chown system system /storage
     chmod 0777 /storage	
@@ -351,7 +334,8 @@ on boot
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "conservative"
-
+# lightsensor
+    write /sys/class/lightsensor/switch_cmd/lightsensor_file_cmd 1
 # Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
     setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
@@ -364,6 +348,8 @@ on boot
 
 #    setprop net.cdma.datalinkinterface ttyCDMA0
 
+
+    start sysinit
 
     class_start default
 
@@ -379,12 +365,7 @@ service rilcorrect /bin/bash /loadmod
 	oneshot
 on property:rilcorrect.enable=1
 	start rilcorrect
-
-service akmd /system/bin/akmd 0 0
-    user compass
-    group compass misc input
-
-	
+ 
 # adbd is controlled by the persist.service.adb.enable system property
 service adbd /sbin/adbd
     disabled
@@ -404,7 +385,7 @@ on property:persist.service.adb.enable=0
 #service klog /system/bin/dd if=/proc/kmsg of=/kernel.log bs=1
 #   oneshot
 
-#service logcat /system/bin/logcat -r 10000 -f /logcat.log
+#service logcat /system/bin/logcat -r 10000 -f /log.txt
 #   oneshot
 #   user root	
 
@@ -423,12 +404,9 @@ service servicemanager /system/bin/servicemanager
 service vold /system/bin/vold
     socket vold stream 0660 root mount
 
-service netd /system/bin/netd
-    socket netd stream 0660 root system	
-	
-#service nexus /system/bin/nexus
-#    socket nexus stream 0660 root system
-#    disabled
+service nexus /system/bin/nexus
+    socket nexus stream 0660 root system
+    disabled
 
 #service mountd /system/bin/mountd
 #    socket mountd stream 0660 root mount
@@ -446,9 +424,9 @@ service ifcfg_eth0 /system/bin/ifconfig eth0 up
     disabled
     oneshot
 
-#service akmd2 /system/bin/akmd2
-#    disabled
-#    oneshot
+service akmd2 /system/bin/akmd2
+    disabled
+    oneshot
 
 service debuggerd /system/bin/debuggerd
 
@@ -463,6 +441,10 @@ service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-sys
     onrestart write /sys/android_power/request_state wake
     onrestart write /sys/power/state on
     onrestart restart media
+on property:zygote.enable=1
+    start zygote
+on property:zygote.enable=0
+    stop zygote
 
 
 service media /system/bin/mediaserver
