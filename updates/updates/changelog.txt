@@ -1,0 +1,13 @@
+2011-03-19:
+- kernel rev112:
+	- SDHCI/MMC ported from 2.6.32 which causes external SD is almost as fast as internal memory
+	- battery profile is now like in Windows Mobile
+	- compass calibration bugfix
+	- GPIO fixes for camera
+- keylayout	
+
+2011-03-03:
+- kernel + modules with support for accelerometer, compass and light sensors
+- init.rc with enabled sensors
+- keylayout for new kernel
+- link to sensors lib
