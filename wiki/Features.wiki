@@ -30,8 +30,9 @@ Sections:
 
   * *Connectivity* 
     * Phone & messaging
-    * Wifi (with a sleep bug)
     * GSM data (GPRS/2G/3G/..)
+    * Wifi
+    * Bluetooth
     * USB (ADB,UMS)
     * GPS
 
@@ -64,10 +65,9 @@ Sections:
  
 ==Features under active development==
   * 24-bit driver (to fix banding)
-  * Bluetooth (only kernel support yet)
 
 ==Features under development==
-  * Android 2.3 (Gingerbread) {slooooow and some Beta/Eclair features broken}
+  * Android 2.3 (Gingerbread) {slooooow and some Beta/Froyo features broken}
  
 ==Possible future features==
   * Android kernel and image build from github.com
