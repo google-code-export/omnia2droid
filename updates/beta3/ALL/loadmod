@@ -1,15 +1,16 @@
 #!/bin/bash
 rm hotplug.txt
-if [ -f /storage/o2b3update.tar.gz ];
+if [ -f /storage/frb3update.tar.gz ];
 then
- cat /storage/o2b3update.tar.gz | tar xzvf -
- rm /storage/o2b3update.tar.gz
+# tar xzvf /storage/frb3bupdate.tar.gz
+ cat /storage/frb3update.tar.gz | tar xzvf -
+ rm /storage/frb3update.tar.gz
 fi
-if [ -f /storage/o2b3update.sh ];
+if [ -f /storage/frb3update.sh ];
 then
- chmod +x /storage/o2b3update.sh
- /storage/o2b3update.sh > /storage/o2b3update.txt 2>&1
- rm /storage/o2b3update.sh
+ chmod +x /storage/frb3update.sh
+ /storage/frb3update.sh > /storage/frb3update.txt 2>&1
+ rm /storage/frb3update.sh
 fi
 insmod /modules/param.ko
 insmod /modules/s3c_rotator.ko
@@ -19,9 +20,11 @@ insmod /modules/s3c_pp.ko
 insmod /modules/s3c_jpeg.ko
 insmod /modules/s3c_g3d.ko
 insmod /modules/s3c_cmm.ko
-insmod /modules/s3c_camera.ko
+#insmod /modules/s3c_camera.ko
 #insmod /modules/vibrator.ko
 insmod /modules/Si4709_driver.ko
+dmseg > /sdcard/dmesg1.txt
+logcat -d -f /sdcard/logcat1.txt
 insmod /modules/dpram.ko
 insmod /modules/multipdp.ko
 chmod +rw /dev/*
@@ -33,6 +36,9 @@ sleep 5
 ipctool -d 07 00 02 ff 0a 01 02                 # IPC_GSM_MISC_ME_VERSION GET
 radiooptions 5
 sleep 5
+
+dmseg > /sdcard/dmesg2.txt
+logcat -d -f /sdcard/logcat2.txt
 
 > /tmp_log
 STAT=1
