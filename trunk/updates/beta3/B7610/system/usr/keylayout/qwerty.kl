@@ -27,7 +27,7 @@ key 38   VOLUME_UP
 key 30   VOLUME_DOWN        	            
 
 #W&L
-key 13   BACK	       
+key 13   HOME	       
 
 key 1     Q            WAKE_DROPPED
 key 9     W            WAKE_DROPPED
