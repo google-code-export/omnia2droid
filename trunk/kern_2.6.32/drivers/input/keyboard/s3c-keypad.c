@@ -555,8 +555,8 @@ module_exit(s3c_keypad_exit);
 #include <linux/kernel_sec_common.h>
 #endif
 
-
-#define S3C_KEYPAD_DEBUG
+#undef S3C_KEYPAD_DEBUG
+//#define S3C_KEYPAD_DEBUG
 
 #ifdef S3C_KEYPAD_DEBUG
 #define DPRINTK(x...) printk("S3C-Keypad " x)
