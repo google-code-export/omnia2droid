@@ -676,6 +676,43 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			Makm_sign = 7;
 			break;
 
+/*#ifdef PHONE_B7610
+		case 20:
+			MakmY = O_MakmX;
+			MakmX = O_MakmY;
+			MakmZ = O_MakmZ;
+			break;
+
+		case 21:
+			MakmY = O_MakmX;
+			MakmX = O_MakmZ;
+			MakmZ = O_MakmY;
+			break;
+
+		case 22:
+			MakmY = O_MakmY;
+			MakmX = O_MakmX;
+			MakmZ = O_MakmZ;
+			break;
+
+		case 23:
+			MakmY = O_MakmY;
+			MakmX = O_MakmZ;
+			MakmZ = O_MakmX;
+			break;
+
+		case 24:
+			MakmY = O_MakmZ;
+			MakmX = O_MakmX;
+			MakmZ = O_MakmY;
+			break;
+
+		case 25:
+			MakmY = O_MakmZ;
+			MakmX = O_MakmY;
+			MakmZ = O_MakmX;
+			break;
+#else*/
 		case 20:
 			MakmX = O_MakmX;
 			MakmY = O_MakmY;
@@ -711,7 +748,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			MakmY = O_MakmY;
 			MakmZ = O_MakmX;
 			break;
-
+//#endif
 		case 110:
 			accel_inp_dev_sign = 0;
 			break;
@@ -743,7 +780,44 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 		case 117:
 			accel_inp_dev_sign = 7;
 			break;
+#ifdef PHONE_B7610
+		case 120:
+			AY = O_AX;
+			AX = -O_AY;
+			AZ = O_AZ;
+			break;
 
+		case 121:
+			AY = O_AX;
+			AX = -O_AZ;
+			AZ = O_AY;
+			break;
+
+		case 122:
+			AY = O_AY;
+			AX = -O_AX;
+			AZ = O_AZ;
+			break;
+
+		case 123:
+			AY = O_AY;
+			AX = -O_AZ;
+			AZ = O_AX;
+			break;
+
+		case 124:
+			AY = O_AZ;
+			AX = -O_AX;
+			AZ = O_AY;
+			break;
+
+		case 125:
+			AY = O_AZ;
+			AX = -O_AY;
+			AZ = O_AX;
+			break;
+
+#else
 		case 120:
 			AX = O_AX;
 			AY = O_AY;
@@ -779,7 +853,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			AY = O_AY;
 			AZ = O_AX;
 			break;
-
+#endif
 		case 210:
 			mag_inpf_sign = 1;
 			break;
@@ -811,7 +885,43 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 		case 217:
 			mag_inpf_sign = 7;
 			break;
+#ifdef PHONE_B7610
+		case 220:
+			MX = -O_MX;
+			MY = -O_MY;
+			MZ = O_MZ;
+			break;
 
+		case 221:
+			MX = -O_MX;
+			MY = -O_MZ;
+			MZ = O_MY;
+			break;
+
+		case 222:
+			MX = -O_MY;
+			MY = -O_MX;
+			MZ = O_MZ;
+			break;
+
+		case 223:
+			MX = -O_MY;
+			MY = -O_MZ;
+			MZ = O_MX;
+			break;
+
+		case 224:
+			MX = -O_MZ;
+			MY = -O_MX;
+			MZ = O_MY;
+			break;
+
+		case 225:
+			MX = -O_MZ;
+			MY = -O_MY;
+			MZ = O_MX;
+			break;
+#else
 		case 220:
 			MX = O_MX;
 			MY = O_MY;
@@ -847,6 +957,9 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			MY = O_MY;
 			MZ = O_MX;
 			break;
+
+#endif
+
 		case 300:
 			print_flag = 0;
 			break;
@@ -906,18 +1019,19 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 				if ( Makm_sign & 4) akmX *= -1;
 				if ( Makm_sign & 2) akmY *= -1;
 				if ( Makm_sign & 1) akmZ *= -1;
-				rwbuf[O_MakmX] = akmX;
-				rwbuf[O_MakmY] = akmY;
+				rwbuf[O_MakmX] = akmY;
+				rwbuf[O_MakmY] = -akmX;
 				rwbuf[O_MakmZ] = akmZ;
 			}
 #endif 
 
-#if 0 //bss for i6500 eclair akmd2 on onmia_II
+#if 0
+//bss for i6500 eclair akmd2 on onmia_II
 			// for akmd, must revert and re-sign the x,y values: x=-y, y=x!!
 			{
-				char ch = rwbuf[2];
-				rwbuf[2] = -rwbuf[3];
-				rwbuf[3] = ch;
+				char ch = rwbuf[akmX];
+				rwbuf[akmX] = rwbuf[akmY];
+				rwbuf[akmY] = ch;
 			}
 #endif		
 			for(i=0; i<rwbuf[0]; i++){
@@ -952,12 +1066,13 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 #endif 
 
 
-#if 0 //bss for i6500 eclair akmd2 on onmia_II
+#if 0
+//bss for i6500 eclair akmd2 on onmia_II
 			if (rwbuf[0] == 4) {
 				// the calibratin feedback must be exchanged too  x=y, y=-x !!
-				char ch = -rwbuf[2];
-				rwbuf[2] = rwbuf[3];
-				rwbuf[3] = ch;
+				char ch = rwbuf[akmX];
+				rwbuf[akmX] = rwbuf[akmY];
+				rwbuf[akmY] = ch;
 			}			
 #endif 
 			ret = AKI2C_TxData(&rwbuf[1], rwbuf[0]);

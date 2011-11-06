@@ -551,9 +551,16 @@ module_exit(s3c_keypad_exit);
 #include <plat/s3c64xx-dvfs.h>
 #endif
 
-#ifdef CONFIG_KERNEL_DEBUG_SEC
+//#ifdef CONFIG_KERNEL_DEBUG_SEC
 #include <linux/kernel_sec_common.h>
-#endif
+//#endif
+typedef enum
+{
+	UPLOAD_CAUSE_INIT           = 0x00000000,
+
+}kernel_sec_upload_cause_type;
+extern void kernel_sec_set_upload_cause(kernel_sec_upload_cause_type uploadType);
+extern void kernel_sec_hw_reset(bool bSilentReset);
 
 #undef S3C_KEYPAD_DEBUG
 //#define S3C_KEYPAD_DEBUG
