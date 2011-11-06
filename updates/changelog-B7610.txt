@@ -1,3 +1,14 @@
+2011-10-21 (rev 90)
+- phj rev 181 Froyo Beta3 kern 2.6.32
+- accelerometer adjusted to B7610. Autorotate behaves as expected
+- Homekey assigned to W&L key
+
+2011-10-21 (rev 75)
+- phj rev 175 Froyo Beta3 kern 2.6.32
+- keyboardslide with autorotate
+- working cam key (keep halfpress to start cam, press to take pic)
+- gps working
+
 2011-04-20 (rev51):
 - merged from v116 till v126 except 2.6.32 tree (http://o2droid.phj.hu/trac/log/)
 - fixed musicplayer trigger on keyboard slide (inserted bogus gpio for sec_headset define)
