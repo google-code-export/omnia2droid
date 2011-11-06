@@ -183,38 +183,38 @@ static void kxsd9_read_accel(void)
 
 #ifdef PHONE_B7610
 		case 0:
-			acc_data.x = (x - 2080) / div_val; 
-			acc_data.y = (y - 2080) / -div_val;
+			acc_data.y = (x - 2080) / div_val; 
+			acc_data.x = (y - 2080) / -div_val;
 			acc_data.z = (z - 2080) / div_val;
 			break;	
 		case 1:
-			acc_data.x = (x - 2080) / div_val; 
-			acc_data.y = (z - 2080) / -div_val;
+			acc_data.y = (x - 2080) / div_val; 
+			acc_data.x = (z - 2080) / -div_val;
 			acc_data.z = (y - 2080) / div_val;
 			break;	
 		case 2:
-			acc_data.x = (y - 2080) / div_val; 
-			acc_data.y = (x - 2080) / -div_val;
+			acc_data.y = (y - 2080) / div_val; 
+			acc_data.x = (x - 2080) / -div_val;
 			acc_data.z = (z - 2080) / div_val;
 			break;	
 		case 3:
-			acc_data.x = (y - 2080) / div_val; 
-			acc_data.y = (z - 2080) / -div_val;
+			acc_data.y = (y - 2080) / div_val; 
+			acc_data.x = (z - 2080) / -div_val;
 			acc_data.z = (x - 2080) / div_val;
 			break;	
 		case 4:
-			acc_data.x = (z - 2080) / div_val; 
-			acc_data.y = (x - 2080) / -div_val;
+			acc_data.y = (z - 2080) / div_val; 
+			acc_data.x = (x - 2080) / -div_val;
 			acc_data.z = (y - 2080) / div_val;
 			break;	
 		case 5:
-			acc_data.x = (z - 2080) / div_val; 
-			acc_data.y = (y - 2080) / -div_val;
+			acc_data.y = (z - 2080) / div_val; 
+			acc_data.x = (y - 2080) / -div_val;
 			acc_data.z = (x - 2080) / div_val;
 			break;	
 		default:
-			acc_data.x = (x - 2080) / div_val; 
-			acc_data.y = (y - 2080) / -div_val;
+			acc_data.y = (x - 2080) / div_val; 
+			acc_data.x = (y - 2080) / -div_val;
 			acc_data.z = (z - 2080) / div_val;
 			break;
 	}	
