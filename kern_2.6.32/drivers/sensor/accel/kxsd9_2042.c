@@ -177,8 +177,52 @@ static void kxsd9_read_accel(void)
 	y = kxsd9_get_valid_value(&buf_read[2]);
 	z = kxsd9_get_valid_value(&buf_read[4]);
 
+
 	
 	switch (swap) {
+
+#ifdef PHONE_B7610
+		case 0:
+			acc_data.x = (x - 2080) / div_val; 
+			acc_data.y = (y - 2080) / -div_val;
+			acc_data.z = (z - 2080) / div_val;
+			break;	
+		case 1:
+			acc_data.x = (x - 2080) / div_val; 
+			acc_data.y = (z - 2080) / -div_val;
+			acc_data.z = (y - 2080) / div_val;
+			break;	
+		case 2:
+			acc_data.x = (y - 2080) / div_val; 
+			acc_data.y = (x - 2080) / -div_val;
+			acc_data.z = (z - 2080) / div_val;
+			break;	
+		case 3:
+			acc_data.x = (y - 2080) / div_val; 
+			acc_data.y = (z - 2080) / -div_val;
+			acc_data.z = (x - 2080) / div_val;
+			break;	
+		case 4:
+			acc_data.x = (z - 2080) / div_val; 
+			acc_data.y = (x - 2080) / -div_val;
+			acc_data.z = (y - 2080) / div_val;
+			break;	
+		case 5:
+			acc_data.x = (z - 2080) / div_val; 
+			acc_data.y = (y - 2080) / -div_val;
+			acc_data.z = (x - 2080) / div_val;
+			break;	
+		default:
+			acc_data.x = (x - 2080) / div_val; 
+			acc_data.y = (y - 2080) / -div_val;
+			acc_data.z = (z - 2080) / div_val;
+			break;
+	}	
+	if ( change_sign & 4) acc_data.x *= -1;
+	if ( change_sign & 2) acc_data.y *= 1;
+	if ( change_sign & 1) acc_data.z *= -1;
+
+#else
 		case 0:
 			acc_data.x = (x - 2080) / div_val; 
 			acc_data.y = (y - 2080) / div_val;
@@ -214,12 +258,14 @@ static void kxsd9_read_accel(void)
 	if ( change_sign & 4) acc_data.x *= -1;
 	if ( change_sign & 2) acc_data.y *= -1;
 	if ( change_sign & 1) acc_data.z *= -1;
-
+#endif
 
 	if ( print_flag ) {
 		printk("Read value_o [x=%d, y=%d, z=%d]\n", x, y, z);
 		printk("Read value   [x=%d, y=%d, z=%d]\n", acc_data.x, acc_data.y, acc_data.z);
 	}
+
+
 //	printk("============ END ============\n");
 }
 
