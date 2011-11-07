@@ -676,7 +676,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			Makm_sign = 7;
 			break;
 
-/*#ifdef PHONE_B7610
+#ifdef PHONE_B7610
 		case 20:
 			MakmY = O_MakmX;
 			MakmX = O_MakmY;
@@ -712,7 +712,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			MakmX = O_MakmY;
 			MakmZ = O_MakmX;
 			break;
-#else*/
+#else
 		case 20:
 			MakmX = O_MakmX;
 			MakmY = O_MakmY;
@@ -748,7 +748,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			MakmY = O_MakmY;
 			MakmZ = O_MakmX;
 			break;
-//#endif
+#endif
 		case 110:
 			accel_inp_dev_sign = 0;
 			break;
@@ -1013,14 +1013,14 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 						rwbuf[O_MakmX], rwbuf[O_MakmY], rwbuf[O_MakmZ]);
 #if 1  //bss 
 			{ char akmX, akmY, akmZ;
-				akmY = rwbuf[MakmX];
-				akmX = rwbuf[MakmY];
+				akmX = rwbuf[MakmX];
+				akmY = rwbuf[MakmY];
 				akmZ = rwbuf[MakmZ];
 				if ( Makm_sign & 4) akmX *= -1;
 				if ( Makm_sign & 2) akmY *= -1;
 				if ( Makm_sign & 1) akmZ *= -1;
-				rwbuf[O_MakmX] = akmY;
-				rwbuf[O_MakmY] = akmX;
+				rwbuf[O_MakmX] = akmX;
+				rwbuf[O_MakmY] = akmY;
 				rwbuf[O_MakmZ] = akmZ;
 			}
 #endif 
