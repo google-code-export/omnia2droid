@@ -784,37 +784,37 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 		case 120:
 			AY = O_AX;
 			AX = -O_AY;
-			AZ = O_AZ;
+			AZ = -O_AZ;
 			break;
 
 		case 121:
 			AY = O_AX;
 			AX = -O_AZ;
-			AZ = O_AY;
+			AZ = -O_AY;
 			break;
 
 		case 122:
 			AY = O_AY;
 			AX = -O_AX;
-			AZ = O_AZ;
+			AZ = -O_AZ;
 			break;
 
 		case 123:
 			AY = O_AY;
 			AX = -O_AZ;
-			AZ = O_AX;
+			AZ = -O_AX;
 			break;
 
 		case 124:
 			AY = O_AZ;
 			AX = -O_AX;
-			AZ = O_AY;
+			AZ = -O_AY;
 			break;
 
 		case 125:
 			AY = O_AZ;
 			AX = -O_AY;
-			AZ = O_AX;
+			AZ = -O_AX;
 			break;
 
 #else
@@ -887,39 +887,39 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			break;
 #ifdef PHONE_B7610
 		case 220:
-			MX = -O_MX;
+			MX = O_MX;
 			MY = -O_MY;
-			MZ = O_MZ;
+			MZ = -O_MZ;
 			break;
 
 		case 221:
-			MX = -O_MX;
+			MX = O_MX;
 			MY = -O_MZ;
-			MZ = O_MY;
+			MZ = -O_MY;
 			break;
 
 		case 222:
-			MX = -O_MY;
+			MX = O_MY;
 			MY = -O_MX;
-			MZ = O_MZ;
+			MZ = -O_MZ;
 			break;
 
 		case 223:
-			MX = -O_MY;
+			MX = O_MY;
 			MY = -O_MZ;
-			MZ = O_MX;
+			MZ = -O_MX;
 			break;
 
 		case 224:
-			MX = -O_MZ;
+			MX = O_MZ;
 			MY = -O_MX;
-			MZ = O_MY;
+			MZ = -O_MY;
 			break;
 
 		case 225:
-			MX = -O_MZ;
+			MX = O_MZ;
 			MY = -O_MY;
-			MZ = O_MX;
+			MZ = -O_MX;
 			break;
 #else
 		case 220:
@@ -1013,14 +1013,14 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 						rwbuf[O_MakmX], rwbuf[O_MakmY], rwbuf[O_MakmZ]);
 #if 1  //bss 
 			{ char akmX, akmY, akmZ;
-				akmX = rwbuf[MakmX];
-				akmY = rwbuf[MakmY];
+				akmY = rwbuf[MakmX];
+				akmX = rwbuf[MakmY];
 				akmZ = rwbuf[MakmZ];
 				if ( Makm_sign & 4) akmX *= -1;
 				if ( Makm_sign & 2) akmY *= -1;
 				if ( Makm_sign & 1) akmZ *= -1;
 				rwbuf[O_MakmX] = akmY;
-				rwbuf[O_MakmY] = -akmX;
+				rwbuf[O_MakmY] = akmX;
 				rwbuf[O_MakmZ] = akmZ;
 			}
 #endif 

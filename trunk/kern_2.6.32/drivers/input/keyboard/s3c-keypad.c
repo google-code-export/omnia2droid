@@ -552,7 +552,7 @@ module_exit(s3c_keypad_exit);
 #endif
 
 //#ifdef CONFIG_KERNEL_DEBUG_SEC
-#include <linux/kernel_sec_common.h>
+//#include <linux/kernel_sec_common.h>
 //#endif
 typedef enum
 {
