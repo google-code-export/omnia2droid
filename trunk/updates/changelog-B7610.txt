@@ -1,4 +1,11 @@
-2011-10-21 (rev 90)
+2011-11-07 (rev 87)
+- phj rev 182 Froyo Beta3 kern 2.6.32
+- accelerometer adjusted to B7610 with original akmd2 from Beta3, operates smoother and quicker
+- Done some work on compass for B7610, not working properly yet
+- adjusted keyboarddriver B7610 to match kernel config rev 182 phj
+- Rev 182 PHJ: mem bug fix, reserved memory changed, charging battery fixes, compass calibration
+
+2011-11-06 (rev 80)
 - phj rev 181 Froyo Beta3 kern 2.6.32
 - accelerometer adjusted to B7610. Autorotate behaves as expected
 - Homekey assigned to W&L key
