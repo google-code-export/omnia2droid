@@ -65,6 +65,7 @@ Sections:
  
 ==Features under active development==
   * 24-bit driver (to fix banding)
+  * IMEI on modem.bin from I6500
 
 ==Features under development==
   * Android 2.3 (Gingerbread) {slooooow and some Beta/Froyo features broken}
