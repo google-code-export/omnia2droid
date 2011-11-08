@@ -64,13 +64,11 @@ Sections:
     * Verizon Omnia II (I920): not working
  
 ==Features under active development==
-  * 24-bit driver (to fix banding)
   * IMEI on modem.bin from I6500
 
-==Features under development==
+==Features under possible development==
+  * 24-bit driver (to fix banding)
   * Android 2.3 (Gingerbread) {slooooow and some Beta/Froyo features broken}
- 
-==Possible future features==
   * Android kernel and image build from github.com
   * TV-Out 
   * B7610: wifi driver
