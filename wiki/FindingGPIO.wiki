@@ -22,7 +22,7 @@ Hardware differences we already know:
 || wifi/BT/FM || SWB-T30 chip for wifi/bt/radio connected through SPI for WLAN ( UARTI for BT) with WL1271 driver || SWB-M20 chip for wifi connected through spi with libertas driver ||
 
 ||          || *I920*                                   || *I8000/B7610*           ||
-|| phone || CMDS phone part with ?? chip connected by ?? and driven by ?? driver ||  GSM phone part with [http://www.datasheetpro.com/268132_download_RTR6285_datasheet.html RTR6285] chip connected by ?? and driven by ?? driver ||
+|| phone || CMDS phone part with ?? chip connected by ?? and driven by ?? driver ||  GSM phone part with Qualcomm MSM6290 for I800 and probably MSM6246 for B7610 ||
 
 == Reverse engineering tools ==
 Sometimes detailed hardware info is not available so reverse engineering is needed.
