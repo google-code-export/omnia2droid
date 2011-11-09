@@ -5,8 +5,8 @@
  * 123g
 
 ===General===
- * CPU S3C6410 frequency 800MHZ
- * Dedicated graphics accelerator
+ * CPU S3C6410, max frequency 800MHZ
+ * Dedicated graphics accelerator (built in S3C6410)
  * 2/8/16G  storage
  * 256 Mb RAM
  * 512 Mb ROM
@@ -17,7 +17,7 @@
 ===Screen====
  * 3.7 inches
  * 480x800 Pixels
- * 16M colors AMOLED (65K effective colors)
+ * 16M colors AMOLED (65K effective colors on Windows Mobile)
  * Resistive touchscreen
 
 ===Camera===
