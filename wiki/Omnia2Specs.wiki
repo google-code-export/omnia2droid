@@ -28,15 +28,15 @@
  * Secondary Video Camera 640x480
 
 ===Sensors===
- * Accelerometer (3 axis)
- * geo magnetic sensor (3 axis)
- * Luminance sensor
+ * Accelerometer (3 axis) (Kionix KXSD9 chip)
+ * Magnetic sensor (3 axis) (AKM AK8973B chip)
+ * Light sensor (Intersil ISL29023 chip)
  * Proximity sensor
 
 ===Wireless===
- * HSPDA 900/1900/2100 7.2Mbps ; HSUPA 5.76Mbps
- * Wi-Fi 802.11 b/g
- * Bluetooth 2.0 with ADP
+ * HSPDA 900/1900/2100 7.2Mbps ; HSUPA 5.76Mbps (Qualcomm MSM6290 chip)
+ * Wi-Fi 802.11 b/g (MARVEL88W8686 chip)
+ * Bluetooth 2.0 with ADP (Broadcom chip)
  * GPS with A-GPS support
 
 ===Input/output===
