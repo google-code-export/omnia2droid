@@ -5,7 +5,7 @@ Sections:
   *  [http://code.google.com/p/omnia2droid/wiki/Features#Supported_features_in_latest_public_beta_release Supported features in latest public beta release]
   * [http://code.google.com/p/omnia2droid/wiki/Features#Features_under_active_development Features under active development]
   * [http://code.google.com/p/omnia2droid/wiki/Features#Features_under_development Features under development]
-  * [http://code.google.com/p/omnia2droid/wiki/Features#Possible_future_features Possible future features]
+  * [http://code.google.com/p/omnia2droid/wiki/Features#Features_under_possible_development Features under possible development]
 ----
 
 ==Supported features in public alpha release==
