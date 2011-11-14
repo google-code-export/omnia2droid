@@ -1,3 +1,8 @@
+2011-11-14 (rev 95)
+- introduced B7610 sensorlib (based on GT-I5700)
+- azimuth fix for B7610 in ak8973.c compass working right now on B7610
+- landscape/portrait fix for B7610 reworked, now fixed in ak8973.c
+
 2011-11-07 (rev 87)
 - phj rev 182 Froyo Beta3 kern 2.6.32
 - accelerometer adjusted to B7610 with original akmd2 from Beta3, operates smoother and quicker

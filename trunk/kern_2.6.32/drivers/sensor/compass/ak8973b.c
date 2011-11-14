@@ -46,6 +46,8 @@ static int MakmZ = O_MakmZ;
 #define O_MY 10
 #define O_MZ 11
 
+
+
 static int AX = O_AY;
 static int AY = O_AX;
 static int AZ = O_AZ;
@@ -233,20 +235,43 @@ short ax, ay, az, mx, my, mz;
 	/*if flag is set, execute report */
 	/* Report Orientation information */
 	if (atomic_read(&m_flag)) {
+
+
+#ifdef PHONE_B7610
+		short AzConst_b7610_correction = 90 * 64;
+		short AzConst_b7610_correction_1 = 270 * 64;
+#else
 		short AzConst = 180 * 64;
+#endif
 		short azimut = rbuf[0];
+#ifdef PHONE_B7610
+
+		short azimut_conv = ((azimut < AzConst_b7610_correction) ? azimut + AzConst_b7610_correction_1 : azimut - AzConst_b7610_correction);
+#else
 		short azimut_conv = ((azimut < AzConst) ? azimut + AzConst : azimut - AzConst);
+#endif
 		input_report_abs(data->input_dev, ABS_RX, azimut_conv);
 //		input_report_abs(data->input_dev, ABS_RX, rbuf[0]);
+#ifdef PHONE_B7610
+		input_report_abs(data->input_dev, ABS_RY, rbuf[1]);
+		input_report_abs(data->input_dev, ABS_RZ, rbuf[2]);
+#else
 		input_report_abs(data->input_dev, ABS_RY, -rbuf[1]);
 		input_report_abs(data->input_dev, ABS_RZ, -rbuf[2]);
+#endif
 		input_report_abs(data->input_dev, ABS_RUDDER, rbuf[4]);
 	}
 
 	/* Report acceleration sensor information */
+#ifdef PHONE_B7610
+	ay = rbuf[AX];
+	ax = -rbuf[AY];
+	az = -rbuf[AZ];
+#else
 	ax = rbuf[AX];
 	ay = rbuf[AY];
 	az = rbuf[AZ];
+#endif
 	if ( accel_inp_dev_sign & 4)  ax *= -1;
 	if ( accel_inp_dev_sign & 2)  ay *= -1;
 	if ( accel_inp_dev_sign & 1)  az *= -1;
@@ -267,6 +292,7 @@ short ax, ay, az, mx, my, mz;
 	mx = rbuf[MX];
 	my = rbuf[MY];
 	mz = rbuf[MZ];
+
 	if ( mag_inpf_sign & 4)  mx *= -1;
 	if ( mag_inpf_sign & 2)  my *= -1;
 	if ( mag_inpf_sign & 1)  mz *= -1;
@@ -676,44 +702,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			Makm_sign = 7;
 			break;
 
-#ifdef PHONE_B7610
-		case 20:
-			MakmY = O_MakmX;
-			MakmX = O_MakmY;
-			MakmZ = O_MakmZ;
-			break;
-
-		case 21:
-			MakmY = O_MakmX;
-			MakmX = O_MakmZ;
-			MakmZ = O_MakmY;
-			break;
-
-		case 22:
-			MakmY = O_MakmY;
-			MakmX = O_MakmX;
-			MakmZ = O_MakmZ;
-			break;
-
-		case 23:
-			MakmY = O_MakmY;
-			MakmX = O_MakmZ;
-			MakmZ = O_MakmX;
-			break;
-
-		case 24:
-			MakmY = O_MakmZ;
-			MakmX = O_MakmX;
-			MakmZ = O_MakmY;
-			break;
-
-		case 25:
-			MakmY = O_MakmZ;
-			MakmX = O_MakmY;
-			MakmZ = O_MakmX;
-			break;
-#else
-		case 20:
+	case 20:
 			MakmX = O_MakmX;
 			MakmY = O_MakmY;
 			MakmZ = O_MakmZ;
@@ -748,7 +737,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			MakmY = O_MakmY;
 			MakmZ = O_MakmX;
 			break;
-#endif
+
 		case 110:
 			accel_inp_dev_sign = 0;
 			break;
@@ -780,44 +769,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 		case 117:
 			accel_inp_dev_sign = 7;
 			break;
-#ifdef PHONE_B7610
-		case 120:
-			AY = O_AX;
-			AX = -O_AY;
-			AZ = -O_AZ;
-			break;
 
-		case 121:
-			AY = O_AX;
-			AX = -O_AZ;
-			AZ = -O_AY;
-			break;
-
-		case 122:
-			AY = O_AY;
-			AX = -O_AX;
-			AZ = -O_AZ;
-			break;
-
-		case 123:
-			AY = O_AY;
-			AX = -O_AZ;
-			AZ = -O_AX;
-			break;
-
-		case 124:
-			AY = O_AZ;
-			AX = -O_AX;
-			AZ = -O_AY;
-			break;
-
-		case 125:
-			AY = O_AZ;
-			AX = -O_AY;
-			AZ = -O_AX;
-			break;
-
-#else
 		case 120:
 			AX = O_AX;
 			AY = O_AY;
@@ -853,7 +805,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			AY = O_AY;
 			AZ = O_AX;
 			break;
-#endif
+
 		case 210:
 			mag_inpf_sign = 1;
 			break;
@@ -885,43 +837,7 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 		case 217:
 			mag_inpf_sign = 7;
 			break;
-#ifdef PHONE_B7610
-		case 220:
-			MX = O_MX;
-			MY = -O_MY;
-			MZ = -O_MZ;
-			break;
 
-		case 221:
-			MX = O_MX;
-			MY = -O_MZ;
-			MZ = -O_MY;
-			break;
-
-		case 222:
-			MX = O_MY;
-			MY = -O_MX;
-			MZ = -O_MZ;
-			break;
-
-		case 223:
-			MX = O_MY;
-			MY = -O_MZ;
-			MZ = -O_MX;
-			break;
-
-		case 224:
-			MX = O_MZ;
-			MY = -O_MX;
-			MZ = -O_MY;
-			break;
-
-		case 225:
-			MX = O_MZ;
-			MY = -O_MY;
-			MZ = -O_MX;
-			break;
-#else
 		case 220:
 			MX = O_MX;
 			MY = O_MY;
@@ -957,8 +873,6 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			MY = O_MY;
 			MZ = O_MX;
 			break;
-
-#endif
 
 		case 300:
 			print_flag = 0;
@@ -1025,13 +939,12 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 			}
 #endif 
 
-#if 0
-//bss for i6500 eclair akmd2 on onmia_II
+#if 0 //bss for i6500 eclair akmd2 on onmia_II
 			// for akmd, must revert and re-sign the x,y values: x=-y, y=x!!
 			{
-				char ch = rwbuf[akmX];
-				rwbuf[akmX] = rwbuf[akmY];
-				rwbuf[akmY] = ch;
+				char ch = rwbuf[2];
+				rwbuf[2] = -rwbuf[3];
+				rwbuf[3] = ch;
 			}
 #endif		
 			for(i=0; i<rwbuf[0]; i++){
@@ -1066,13 +979,12 @@ akmd_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 #endif 
 
 
-#if 0
-//bss for i6500 eclair akmd2 on onmia_II
+#if 0 //bss for i6500 eclair akmd2 on onmia_II
 			if (rwbuf[0] == 4) {
 				// the calibratin feedback must be exchanged too  x=y, y=-x !!
-				char ch = rwbuf[akmX];
-				rwbuf[akmX] = rwbuf[akmY];
-				rwbuf[akmY] = ch;
+				char ch = -rwbuf[2];
+				rwbuf[2] = rwbuf[3];
+				rwbuf[3] = ch;
 			}			
 #endif 
 			ret = AKI2C_TxData(&rwbuf[1], rwbuf[0]);

@@ -3,12 +3,8 @@ drwxr-xr-x root root system/bin/
 -rwxr-xr-x root root system/bin/akmd2
 drwxr-xr-x root root system/lib/
 drwxr-xr-x root root system/lib/hw/
--rwxr-xr-x root root system/lib/hw/sensors.GT-I8000.so
--rwxr-xr-x root root system/lib/hw/lights.GT-I8000.so
--rwxr-xr-x root root system/lib/hw/gralloc.GT-I8000.so
-lrwxrwxrwx root     root system/lib/hw/sensors.default.so -> ./sensors.GT-I8000.so
-lrwxrwxrwx root     root system/lib/hw/lights.default.so -> ./lights.GT-I8000.so
-lrwxrwxrwx root     root system/lib/hw/gralloc.default.so -> ./gralloc.GT-I8000.so
+-rwxr-xr-x root root system/lib/hw/sensors.GT-B7610.so
+lrwxrwxrwx root root system/lib/hw/sensors.default.so -> ./sensors.GT-B7610.so
 drwxr-xr-x root root system/usr/
 drwxr-xr-x root root system/usr/keylayout/
 -rwxr-xr-x root root system/usr/keylayout/qwerty.kl
