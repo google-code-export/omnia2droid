@@ -5,7 +5,7 @@
 
 #BetaVersion=2
 BetaVersion=3
-UpdateFileName=o2b${BetaVersion}update
+UpdateFileName=frb${BetaVersion}update
 
 function fix_permissions () {
 	Debug=true
@@ -68,7 +68,7 @@ function fix_permissions () {
 	done
 }
 
-KERNEL_MODULES_PATH=~/omnia2droid/svn/trunk/out
+KERNEL_MODULES_PATH=~/omnia2droid/out
 if [ ! -d "${KERNEL_MODULES_PATH}" ]
 then
 	echo -e "\n ${KERNEL_MODULES_PATH} not found!\nplease correct the KERNEL_MODULES_PATH in ${0} !\n";
@@ -81,17 +81,17 @@ then
 	case $1 in
 	I8000)
 		export PHONEMODEL=$1
-        	./make_kernel -ckme
+        	./make_kernel32 -ckme
 		image=zImage
 	;;
 	B7610)
 		export PHONEMODEL=$1
-        	./make_kernel -ckme
+        	./make_kernel32 -ckme
 		image=zImage
 	;;
 	I920)
 		export PHONEMODEL=$1
-        	./make_kernel -cume
+        	./make_kernel32 -cume
 		image=Image
 	;;
 	*)
@@ -213,7 +213,6 @@ then
 		OLDPATH=`pwd`
 		cd ../updates ; cp -rf changelog.txt ${OLDPATH}       ; cd ${OLDPATH}
 		cd ../updates ; cp -rf changelog-${PHONEMODEL}.txt ${OLDPATH} ; cd ${OLDPATH}
-
 		echo "try to create ${FileName} ..."
 		zip ${FileName} ./${UpdateFileName}.tar.gz ./${image} ./changelog.txt ./changelog-${PHONEMODEL}.txt
 		if [ $? -gt 0 ]
