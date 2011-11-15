@@ -235,8 +235,6 @@ short ax, ay, az, mx, my, mz;
 	/*if flag is set, execute report */
 	/* Report Orientation information */
 	if (atomic_read(&m_flag)) {
-
-
 #ifdef PHONE_B7610
 		short AzConst_b7610_correction = 90 * 64;
 		short AzConst_b7610_correction_1 = 270 * 64;
@@ -252,13 +250,8 @@ short ax, ay, az, mx, my, mz;
 #endif
 		input_report_abs(data->input_dev, ABS_RX, azimut_conv);
 //		input_report_abs(data->input_dev, ABS_RX, rbuf[0]);
-#ifdef PHONE_B7610
-		input_report_abs(data->input_dev, ABS_RY, rbuf[1]);
-		input_report_abs(data->input_dev, ABS_RZ, rbuf[2]);
-#else
 		input_report_abs(data->input_dev, ABS_RY, -rbuf[1]);
 		input_report_abs(data->input_dev, ABS_RZ, -rbuf[2]);
-#endif
 		input_report_abs(data->input_dev, ABS_RUDDER, rbuf[4]);
 	}
 
@@ -289,8 +282,13 @@ short ax, ay, az, mx, my, mz;
 	}
 
 	/* Report magnetic sensor information */
+#ifdef PHONE_B7610
+	mx = -rbuf[MX];
+	my = -rbuf[MY];
+#else
 	mx = rbuf[MX];
 	my = rbuf[MY];
+#endif
 	mz = rbuf[MZ];
 
 	if ( mag_inpf_sign & 4)  mx *= -1;
