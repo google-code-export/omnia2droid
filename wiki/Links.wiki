@@ -5,12 +5,12 @@ _Links to useful resources_
   * [http://code.google.com/p/omnia2droid/wiki/Links#Porting_Android_to_other_devices Porting Android to other devices]
 ----
 ==Samsung Omnia 2 resources==
-  * I8000: [http://www.modaco.com/index.php?showtopic=322429&view=getnewpost discussion of using and enhancing this port to Android]
+  * I8000: [http://www.modaco.com/index.php?showtopic=346446&view=getnewpost discussion of using and enhancing this port to Android]
   * I8000: [https://fjallfoss.fcc.gov/prod/oet/forms/blobs/retrieve.cgi?attachment_id=1143048&native_or_pdf=pdf FCC internal photo's]
   * (pse post suggestions)
 
 ==Samsung Omnia Pro resources==
-  * B7610: [http://www.modaco.com/index.php?showtopic=329882&view=getnewpost discussion of using and enhancing this port to Android]
+  * B7610: [http://www.modaco.com/index.php?showtopic=346432&view=getnewpost discussion of using and enhancing this port to Android]
   * B7610: [http://www.modaco.com/content/b7610-omnia-pro-b7610-modaco-com/331038/b7610-hardware-teardown/#entry1582866 hardware teardown with high-res pictures and chip info]
   * (pse post suggestions)
 
