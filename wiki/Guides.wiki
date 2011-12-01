@@ -11,31 +11,29 @@
 _DISCLAIMER: own risk, but enjoy!_
 
 first, getting the files:
-  * get  beta512 or beta 1024 from [http://o2droid.phj.hu/index_en.php here]. One of them creates 1 GB partition on SD card, other one 512 MB. No difference except that.
-  * get o2droid.zip file from same site. this file includes all of the updates from first release.
-  * get 3d/2d drivers. This files are not included in release because of some copyright issues. If you don't install this files, android will be extremely unstable and will freeze every five minute.
-  * (optional) if you want to install to my storage, or if you don't have my storage, or you don't have SD card, you can download modified installer from [http://code.google.com/p/omnia2droid/downloads/list downloads section] of this site. This file is for 1 GB install only. It will install with 1 GB partition whether you used beta1024.zip or beta512.zip.
+  * get  CyanogenMod beta 1 from [http://o2droid.phj.hu/index_en.php here]. One of them creates 1 GB partition on SD card, other one 512 MB. No difference except that.
+  * get update files from same site. this file includes all of the updates from first release.
+  * (optional) if you want to install to my storage, or if you don't have my storage, or you don't have SD card, there is an alternative installer for my storage included. Read the included readme carefully.
 
 after getting all required files, decide two things. First install FROM "My storage" or "SD Card", second install TO "My storage" or "SD Card". Once you've decided, everything is ready to install android.
 
 
 Install procedures:
-  # Put all files in beta1024.zip/beta512.zip to where you want install from.
+  # Put all files in cm_beta1.zip to where you want install from.
   # if you want to install to "SD card" from "My storage" ignore next 2 steps.
-  # copy modified sd.cpio.gz file(the one from this site) in newly created o2beta folder.
-  # if you want to install to my storage, create a file named "installinternal" without quotes, all lower case. put it in where you want to install from. Files contents are not important, a simple text file will work, just don't forget deleting the extension.
-  # in windows mobile, using a file explorer enter o2beta folder, run haret.exe. Press run in haret window. After that install process will turn off windows mobile. Installer seems stopped on two points. Shrinking partitons and creating new one step, and untar ext2.tar.gz step. Be patience, it supposed to take some time. After untarring step, you should see a kernel panic and restarting in 30 seconds. This is not a problem.
-  # After starting windows mobile again, put 2d/3d binaries update (it should be a file named "o2bupdate.tar.gz")in my storage, than enter disk of your opened beta files, there is another haret.exe apart from the one in o2beta folder. This is the file starts Android, you can delete o2beta folder from your phone for disk space.Run haret, and click on run.
+  # if you want to install to my storage, read included readme in cm_beta1.zip carefully.
+  # in windows mobile, using a file explorer enter o2beta folder, run androidinstall.exe. After that install process will turn off windows mobile. Installer seems stopped on two points. Shrinking partitons and creating new one step, and untar ext4.tar.gz step. Be patience, it supposed to take some time. After untarring step, you should see a kernel panic and restarting in 30 seconds. This is not a problem.
+  # You can delete o2beta folder and the ext4.tar.gz from your phone for disk space.Run haret, and click on run.
   # android will boot for first time. It will take long, for this time only. When Android starts, it will ask for a action, select default action. Other one needs internet connection, doesn't lets skipping and some times even after adding google account it starts over forever.
   # after adding accounts, and setting time, you have first version of android on omniaII project. You can use it, but there is updates with some critical fixes, so keep going.
   # restart your phone with press and hold lockscreen button, and select power off. Than start windows mobile normally.
   # when windows boots up, extract all files from o2droid.zip to "my storage" than start haret again. 
-  # If you want to use 2g/3g/edge, enter settings > wireless & networks > mobile networks > access point names. press cube button, click new APN. Enter your providers settings. after settings, press cube again, click save APN. You should be in same menu, select new created APN. In task bar you will see data symbol ( 3g/E etc ).
+  # If you need to use 2g/3g/edge, enter settings > wireless & networks > mobile networks > access point names. press cube button, click new APN. Enter your providers settings. after settings, press cube again, click save APN. You should be in same menu, select new created APN. In task bar you will see data symbol ( 3g/E etc ).
 
 Everything is ready for use, enjoy.
 
 ===Optional dualboot===
-You can start Harret as a program or shortcut from Win-Mo, but also use a bootloader. This program is  executed automaticly after Win-Mo boot, but before loading Today screens and other widgets. The loader lets you you choose if you want to stay in Win-Mo or boot linux.  A nice bootloader is Gen.Y DualBOOT and info can be found [http://forum.xda-developers.com/showthread.php?t=623792 here].
+You can start Haret as a program or shortcut from Win-Mo, but also use a bootloader. This program is  executed automaticly after Win-Mo boot, but before loading Today screens and other widgets. The loader lets you you choose if you want to stay in Win-Mo or boot linux.  A nice bootloader is Gen.Y DualBOOT and info can be found [http://forum.xda-developers.com/showthread.php?t=623792 here].
   * Get Gen.Y DualBOOT from [http://www.megaupload.com/?d=HRPO9CC7 megaupload]
   * Only use "Gen.Y DualBOOT WVGA v1.0.6.0 - Storage Card.cab" delete other cabs 
   * Install cab on "Internal Storage" (otherwise doesn't work)
