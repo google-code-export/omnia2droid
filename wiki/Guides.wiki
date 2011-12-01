@@ -43,6 +43,8 @@ You can start Haret as a program or shortcut from Win-Mo, but also use a bootloa
 ===Tweaking and manual install=== 
 _DISCLAIMER: this tweaking section is for experts only, you can realy mess up your omnia2 and your laptop/pc if you don't know what you are doing !! own risk, but enjoy !!_
 
+A good guide for manual install can be found [http://www.modaco.com/topic/346446-froyo-beta-3-for-omnia-2-updated-18102011/page__view__findpost__p__1829477 here]. Guide provided by *Gardakkan*
+
 The sd.cpio.gz contains tools and scripts which prepares the external microSD card for Android. It tries to shrink the existing FAT32 partition and put a small ext2 filesystem on the first partition and the FAT32 as a second partition. Afterwards it copies the rootfs to the ext2 partition.
 
 You can prepare your own (linux) partitions on microSD but you will need some (linux) tools to do that. Also you need to copy the rootfs to the (linux) partitions and change the harret configuration file where to find the rootfs. You may have to change some init files inside the rootfs so Android will mount the right volumes on startup.
