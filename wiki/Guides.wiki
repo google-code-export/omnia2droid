@@ -11,16 +11,15 @@
 _DISCLAIMER: own risk, but enjoy!_
 
 first, getting the files:
-  * get  CyanogenMod beta 1 from [http://o2droid.phj.hu/index_en.php here]. One of them creates 1 GB partition on SD card, other one 512 MB. No difference except that.
+  * get  CyanogenMod beta 1 from [http://o2droid.phj.hu/index_en.php here]. One of them creates 1 GB partition on SD card, other one 1 GB or more. No difference except that.
   * get update files from same site. this file includes all of the updates from first release.
   * IMPORTANT: You will need an untouched "My Storage" for installing. This means that your "My Storage" has a partition #5 and a (hidden) partition #6. If you have not, or you are not sure you have, and the installer complains about missing partition on "My Storage", flash a WM rom (offcourse, BACK UP data first!) 
 
 
-after getting all required files, decide two things. First install FROM "My storage" or "SD Card", second install TO "My storage" or "SD Card". Once you've decided, everything is ready to install android.
 
 
 Install procedures:
-  # Put all files in cm_beta1.zip to where you want install from.
+  # Put all files in cm_beta1.zip to My Storage.
   # if you want to install to "SD card" from "My storage" ignore next 2 steps.
   # if you want to install to my storage, read included readme in cm_beta1.zip carefully.
   # in windows mobile, using a file explorer enter o2beta folder, run androidinstall.exe. After that install process will turn off windows mobile. Installer seems stopped on two points. Shrinking partitons and creating new one step, and untar ext4.tar.gz step. Be patience, it supposed to take some time. After untarring step, you should see a kernel panic and restarting in 30 seconds. This is not a problem.
