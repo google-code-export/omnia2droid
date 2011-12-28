@@ -13,7 +13,8 @@ _DISCLAIMER: own risk, but enjoy!_
 first, getting the files:
   * get  CyanogenMod beta 1 from [http://o2droid.phj.hu/index_en.php here]. One of them creates 1 GB partition on SD card, other one 512 MB. No difference except that.
   * get update files from same site. this file includes all of the updates from first release.
-  * (optional) if you want to install to my storage, or if you don't have my storage, or you don't have SD card, there is an alternative installer for my storage included. Read the included readme carefully.
+  * IMPORTANT: You will need an untouched "My Storage" for installing. This means that your "My Storage" has a partition #5 and a (hidden) partition #6. If you have not, or you are not sure you have, and the installer complains about missing partition on "My Storage", flash a WM rom (offcourse, BACK UP data first!) 
+
 
 after getting all required files, decide two things. First install FROM "My storage" or "SD Card", second install TO "My storage" or "SD Card". Once you've decided, everything is ready to install android.
 
@@ -27,8 +28,7 @@ Install procedures:
   # android will boot for first time. It will take long, for this time only. When Android starts, it will ask for a action, select default action. Other one needs internet connection, doesn't lets skipping and some times even after adding google account it starts over forever.
   # after adding accounts, and setting time, you have first version of android on omniaII project. You can use it, but there is updates with some critical fixes, so keep going.
   # restart your phone with press and hold lockscreen button, and select power off. Than start windows mobile normally.
-  # when windows boots up, extract all files from o2droid.zip to "my storage" than start haret again. 
-  # If you need to use 2g/3g/edge, enter settings > wireless & networks > mobile networks > access point names. press cube button, click new APN. Enter your providers settings. after settings, press cube again, click save APN. You should be in same menu, select new created APN. In task bar you will see data symbol ( 3g/E etc ).
+  # If you need to use 2g/3g/edge and your provider is not in the list, enter settings > wireless & networks > mobile networks > access point names. press cube button, click new APN. Enter your providers settings. after settings, press cube again, click save APN. You should be in same menu, select new created APN. In task bar you will see data symbol ( 3g/E etc ).
 
 Everything is ready for use, enjoy.
 
